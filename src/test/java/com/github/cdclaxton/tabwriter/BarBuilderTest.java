@@ -38,7 +38,7 @@ class BarBuilderTest {
         assertTrue(BarBuilder.buildTabLine(4, ImmutableMap.of(3, "1")).equals("---1"));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testBuildTabLinesBeyondEnd() {
         assertThrows(TabBuildingException.class, () -> BarBuilder.buildTabLine(4, ImmutableMap.of(4, "12")));
     }
@@ -49,5 +49,20 @@ class BarBuilderTest {
         assertTrue(BarBuilder.buildTabLine(4, ImmutableMap.of(0, "1", 2, "2")).equals("1-2-"));
         assertTrue(BarBuilder.buildTabLine(4, ImmutableMap.of(0, "1", 3, "2")).equals("1--2"));
         assertTrue(BarBuilder.buildTabLine(4, ImmutableMap.of(0, "1", 2, "34")).equals("1-34"));
+    }
+
+    @Test
+    void testBuildRuler() throws TabBuildingException {
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Main, 1, 2).equals("1  "));
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Main, 2, 2).equals("1  2  "));
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Main, 3, 2).equals("1  2  3  "));
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Main, 4, 2).equals("1  2  3  4  "));
+
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Secondary, 1, 2).equals("1  +  "));
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Secondary, 2, 2).equals("1  +  2  +  "));
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Secondary, 3, 2).equals("1  +  2  +  3  +  "));
+
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Tertiary, 1, 2).equals("1  .  +  .  "));
+        assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Tertiary, 2, 2).equals("1  .  +  .  2  .  +  .  "));
     }
 }

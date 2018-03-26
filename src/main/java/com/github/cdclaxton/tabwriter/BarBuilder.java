@@ -9,10 +9,70 @@ public class BarBuilder {
 
     private static final char lineCharacter = '-';
 
+    public enum Markings{ Main, Secondary, Tertiary }
+    private static final String secondarySymbol = "+";
+    private static final String tertiarySymbol = ".";
+    private static final char rulerSpacingSymbol = ' ';
+
     public BarBuilder(Bar bar) {
 
     }
 
+    /**
+     * Build the ruler that shows the timing.
+     *
+     * @param markings Type of markings to display.
+     * @param nBeats Number of main beats, e.g. 4 for 4/4.
+     * @param spacing Number of spaces between markings.
+     * @return Ruler.
+     * @throws TabBuildingException
+     */
+    protected static String buildRuler(Markings markings, int nBeats, int spacing) throws TabBuildingException {
+        // Preconditions
+        if (nBeats < 0) {
+            throw new TabBuildingException("Invalid number of beats: " + nBeats);
+        }
+        if (spacing <= 0) {
+            throw new TabBuildingException("Invalid spacing: " + spacing);
+        }
+
+        // Build the spacing string
+        final char[] spacingString = new char[spacing];
+        Arrays.fill(spacingString, rulerSpacingSymbol);
+
+        // Build the rule
+        StringBuilder line = new StringBuilder();
+        for (int beat = 1; beat <= nBeats; beat++) {
+            line.append(beat);
+            line.append(spacingString);
+
+            if (markings == Markings.Tertiary) {
+                line.append(tertiarySymbol);
+                line.append(spacingString);
+            }
+
+            if (markings == Markings.Secondary || markings == Markings.Tertiary) {
+                line.append(secondarySymbol);
+                line.append(spacingString);
+            }
+
+            if (markings == Markings.Tertiary) {
+                line.append(tertiarySymbol);
+                line.append(spacingString);
+            }
+        }
+
+        return line.toString();
+    }
+
+    /**
+     * Build a single line of guitar tab.
+     *
+     * @param nElements Number of elements (typically dashes).
+     * @param positionToMarking Map of index to marking, e.g. fret number, tilde, etc.
+     * @return Single tab line.
+     * @throws TabBuildingException
+     */
     protected static String buildTabLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
 
         // Precondition
