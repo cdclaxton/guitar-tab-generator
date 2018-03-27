@@ -65,4 +65,20 @@ class BarBuilderTest {
         assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Tertiary, 1, 2).equals("1  .  +  .  "));
         assertTrue(BarBuilder.buildRuler(BarBuilder.Markings.Tertiary, 2, 2).equals("1  .  +  .  2  .  +  .  "));
     }
+
+    @Test
+    void testBuildEmptyChordLines() throws TabBuildingException {
+        assertTrue(BarBuilder.buildChordLine(1, Collections.emptyMap()).equals(" "));
+        assertTrue(BarBuilder.buildChordLine(2, Collections.emptyMap()).equals("  "));
+        assertTrue(BarBuilder.buildChordLine(3, Collections.emptyMap()).equals("   "));
+        assertTrue(BarBuilder.buildChordLine(4, Collections.emptyMap()).equals("    "));
+    }
+
+    @Test
+    void testBuildNonEmptyChordLines() throws TabBuildingException {
+        assertTrue(BarBuilder.buildChordLine(4, ImmutableMap.of(0, "Am")).equals("Am  "));
+        assertTrue(BarBuilder.buildChordLine(4, ImmutableMap.of(1, "A")).equals(" A  "));
+        assertTrue(BarBuilder.buildChordLine(4, ImmutableMap.of(0, "A", 2, "Bm")).equals("A Bm"));
+        assertTrue(BarBuilder.buildChordLine(4, ImmutableMap.of(3, "D")).equals("   D"));
+    }
 }

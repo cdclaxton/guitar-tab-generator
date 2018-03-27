@@ -65,15 +65,18 @@ public class BarBuilder {
         return line.toString();
     }
 
+
     /**
-     * Build a single line of guitar tab.
+     * Build a single line (tab or chords).
      *
-     * @param nElements Number of elements (typically dashes).
+     * @param nElements Number of elements (characters) in the line.
      * @param positionToMarking Map of index to marking, e.g. fret number, tilde, etc.
-     * @return Single tab line.
+     * @param spacer Character to use to create the 'background' of the line.
+     * @return Single line.
      * @throws TabBuildingException
      */
-    protected static String buildTabLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
+    protected static String buildLine(int nElements, Map<Integer, String> positionToMarking, char spacer)
+            throws TabBuildingException {
 
         // Precondition
         if (nElements <= 0) {
@@ -82,7 +85,7 @@ public class BarBuilder {
 
         // Construct an empty line
         final char[] line = new char[nElements];
-        Arrays.fill(line, lineCharacter);
+        Arrays.fill(line, spacer);
 
         // Add the frets at the required positions
         for (Map.Entry<Integer, String> entry : positionToMarking.entrySet()) {
@@ -98,7 +101,7 @@ public class BarBuilder {
 
             // Check the characters will fit onto the line
             if (position + fret.length() > nElements) {
-                throw new TabBuildingException("Text '" + fret + "' will go beyond the end of the tab line");
+                throw new TabBuildingException("Text '" + fret + "' will go beyond the end of the line");
             }
 
             // Insert the characters onto the line
@@ -109,6 +112,30 @@ public class BarBuilder {
         }
 
         return new String(line);
+    }
+
+    /**
+     * Build a single line of guitar tab.
+     *
+     * @param nElements Number of elements (typically dashes).
+     * @param positionToMarking Map of index to marking, e.g. fret number, tilde, etc.
+     * @return Single tab line.
+     * @throws TabBuildingException
+     */
+    protected static String buildTabLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
+        return BarBuilder.buildLine(nElements, positionToMarking, BarBuilder.lineCharacter);
+    }
+
+    /**
+     * Build a single line of chords.
+     *
+     * @param nElements Number of elements.
+     * @param positionToMarking Map of index to chord markings.
+     * @return Single chord line.
+     * @throws TabBuildingException
+     */
+    protected static String buildChordLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
+        return BarBuilder.buildLine(nElements, positionToMarking, ' ');
     }
 
 }
