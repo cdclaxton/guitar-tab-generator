@@ -19,6 +19,46 @@ public class BarBuilder {
     }
 
     /**
+     * Add padding (of spaces) to a line.
+     *
+     * @param line Line to pad.
+     * @param leftPadding Number of characters to the left of the line.
+     * @param rightPadding Number of characters to the right of the line.
+     * @return Padded line.
+     */
+    protected static String addPaddingToLine(String line, int leftPadding, int rightPadding) {
+        return addPaddingToLine(line, leftPadding, rightPadding, ' ');
+    }
+
+    /**
+     * Adding padding to a line.
+     *
+     * @param line Line to pad.
+     * @param leftPadding Number of characters to the left of the line.
+     * @param rightPadding Number of characters to the right of the line.
+     * @param paddingChar Character to use to pad the line.
+     * @return Padded line.
+     */
+    protected static String addPaddingToLine(String line, int leftPadding, int rightPadding, char paddingChar) {
+        StringBuilder output = new StringBuilder();
+
+        // Add the left padding
+        for (int i = 0; i < leftPadding; i++) {
+            output.append(paddingChar);
+        }
+
+        // Insert the original line
+        output.append(line);
+
+        // Add the right padding
+        for (int i = 0; i < rightPadding; i++) {
+            output.append(paddingChar);
+        }
+
+        return output.toString();
+    }
+
+    /**
      * Build the ruler that shows the timing.
      *
      * @param markings Type of markings to display.
@@ -64,7 +104,6 @@ public class BarBuilder {
 
         return line.toString();
     }
-
 
     /**
      * Build a single line (tab or chords).

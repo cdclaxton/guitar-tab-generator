@@ -81,4 +81,11 @@ class BarBuilderTest {
         assertTrue(BarBuilder.buildChordLine(4, ImmutableMap.of(0, "A", 2, "Bm")).equals("A Bm"));
         assertTrue(BarBuilder.buildChordLine(4, ImmutableMap.of(3, "D")).equals("   D"));
     }
+
+    @Test
+    void testAddPaddingToLine() {
+        assertTrue(BarBuilder.addPaddingToLine("A", 1, 2).equals(" A  "));
+        assertTrue(BarBuilder.addPaddingToLine("A", 0, 2).equals("A  "));
+        assertTrue(BarBuilder.addPaddingToLine("A", 2, 0).equals("  A"));
+    }
 }
