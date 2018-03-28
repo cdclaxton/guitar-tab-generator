@@ -1,5 +1,6 @@
 package com.github.cdclaxton.tabwriter;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 
@@ -83,9 +84,18 @@ class BarBuilderTest {
     }
 
     @Test
-    void testAddPaddingToLine() {
-        assertTrue(BarBuilder.addPaddingToLine("A", 1, 2).equals(" A  "));
-        assertTrue(BarBuilder.addPaddingToLine("A", 0, 2).equals("A  "));
-        assertTrue(BarBuilder.addPaddingToLine("A", 2, 0).equals("  A"));
+    void testPadLeft() {
+        assertEquals("  ", BarBuilder.padLeft("", 2, ' '));
+        assertEquals(" A", BarBuilder.padLeft("A", 1, ' '));
+        assertEquals("  A", BarBuilder.padLeft("A", 2, ' '));
+        assertEquals("   A", BarBuilder.padLeft(" A", 2, ' '));
+    }
+
+    @Test
+    void testPadRight() {
+        assertEquals("  ", BarBuilder.padRight("", 2, ' '));
+        assertEquals("A ", BarBuilder.padRight("A", 1, ' '));
+        assertEquals("A  ", BarBuilder.padRight("A", 2, ' '));
+        assertEquals(" A  ", BarBuilder.padRight(" A", 2, ' '));
     }
 }

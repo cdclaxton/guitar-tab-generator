@@ -1,6 +1,7 @@
 package com.github.cdclaxton.tabwriter;
 
 import com.github.cdclaxton.music.Bar;
+import com.google.common.base.Strings;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -19,43 +20,35 @@ public class BarBuilder {
     }
 
     /**
-     * Add padding (of spaces) to a line.
+     * Pad a line to the left.
      *
      * @param line Line to pad.
-     * @param leftPadding Number of characters to the left of the line.
-     * @param rightPadding Number of characters to the right of the line.
+     * @param padding Number of characters to pad.
+     * @param paddingChar Character to ue to pad.
      * @return Padded line.
      */
-    protected static String addPaddingToLine(String line, int leftPadding, int rightPadding) {
-        return addPaddingToLine(line, leftPadding, rightPadding, ' ');
+    protected static String padLeft(String line, int padding, char paddingChar) {
+        if (line == null) {
+            throw new IllegalArgumentException("Can't pad a null string");
+        }
+
+        return Strings.padStart(line, line.length() +  padding, paddingChar);
     }
 
     /**
-     * Adding padding to a line.
+     * Pad a line to the right.
      *
      * @param line Line to pad.
-     * @param leftPadding Number of characters to the left of the line.
-     * @param rightPadding Number of characters to the right of the line.
-     * @param paddingChar Character to use to pad the line.
+     * @param padding Number of characters to pad.
+     * @param paddingChar Character to ue to pad.
      * @return Padded line.
      */
-    protected static String addPaddingToLine(String line, int leftPadding, int rightPadding, char paddingChar) {
-        StringBuilder output = new StringBuilder();
-
-        // Add the left padding
-        for (int i = 0; i < leftPadding; i++) {
-            output.append(paddingChar);
+    protected static String padRight(String line, int padding, char paddingChar) {
+        if (line == null) {
+            throw new IllegalArgumentException("Can't pad a null string");
         }
 
-        // Insert the original line
-        output.append(line);
-
-        // Add the right padding
-        for (int i = 0; i < rightPadding; i++) {
-            output.append(paddingChar);
-        }
-
-        return output.toString();
+        return Strings.padEnd(line, line.length() +  padding, paddingChar);
     }
 
     /**
