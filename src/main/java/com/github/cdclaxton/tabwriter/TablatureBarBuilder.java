@@ -1,9 +1,10 @@
 package com.github.cdclaxton.tabwriter;
 
 import com.github.cdclaxton.music.Bar;
+import com.github.cdclaxton.music.Note;
+import com.github.cdclaxton.music.TimedChord;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 public class TablatureBarBuilder {
 
@@ -14,7 +15,86 @@ public class TablatureBarBuilder {
     private static final String tertiarySymbol = ".";
     private static final char rulerSpacingSymbol = ' ';
 
-    private TablatureBarBuilder(Bar bar) {}
+    private TablatureBarBuilder() {}
+
+    public TablatureBar buildTabFromBar(Bar bar) {
+        return null;
+    }
+
+    protected static TablatureBar buildSixteenthTabIn44FromBar(Bar bar) throws TabBuildingException {
+
+        int spacing = 3;
+
+        // Build the ruler
+        String ruler = null;
+        try {
+            ruler = TablatureBarBuilder.buildRuler(Markings.Tertiary, 4, spacing);
+        } catch (TabBuildingException e) {
+            e.printStackTrace();
+        }
+
+        int nElements = ruler.length();
+
+        // Build the chord line
+        String chordLine = null;
+        Map<Integer, String> chordPosToMarking = TablatureBarBuilder.buildPositionToMarking(bar.getTimedChords(), spacing);
+        try {
+            chordLine = TablatureBarBuilder.buildChordLine(nElements, chordPosToMarking);
+        } catch (TabBuildingException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(ruler);
+        System.out.println(chordLine);
+
+        // Build a tab line for each guitar string
+        List<String> tabLines = new ArrayList<>();
+        for (int guitarString = 1; guitarString <= 6; guitarString++) {
+            Map<Integer, String> tabPosToMarking = TablatureBarBuilder.buildPositionToMarking(bar.getNotes(), spacing, guitarString);
+            try {
+                String tabLine = TablatureBarBuilder.buildTabLine(nElements, tabPosToMarking);
+                System.out.println(tabLine);
+                tabLines.add(tabLine);
+            } catch (TabBuildingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new TablatureBar(ruler, chordLine, tabLines);
+
+    }
+
+    protected static Map<Integer, String> buildPositionToMarking(List<Note> notes, int spacing, int stringNumber) {
+        Map<Integer, String> pos = new HashMap<>();
+
+        for (Note n : notes) {
+            if (n.getFret().getStringNumber() == stringNumber) {
+                int position = TablatureBarBuilder.getPosition(n.getTiming().getSixteenthNumber(), spacing);
+                String marking = n.getFret().getFretMarking();
+                pos.put(position, marking);
+            }
+        }
+
+        return pos;
+    }
+
+    protected static int getPosition(int sixteenthNumber, int spacing) {
+        return (spacing + 1) * sixteenthNumber;
+    }
+
+    protected static Map<Integer, String> buildPositionToMarking(List<TimedChord> timedChords, int spacing) {
+
+        Map<Integer, String> pos = new HashMap<>();
+
+        for (TimedChord timedChord : timedChords) {
+            int i = TablatureBarBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), spacing);
+            pos.put(i, timedChord.getChord());
+        }
+
+        return pos;
+    }
+
+
 
     /**
      * Build the ruler that shows the timing.

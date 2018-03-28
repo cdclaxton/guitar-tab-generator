@@ -165,4 +165,5 @@ public class TablatureBar {
     public List<String> getTabLines() {
         return tabLines;
     }
+
 }
