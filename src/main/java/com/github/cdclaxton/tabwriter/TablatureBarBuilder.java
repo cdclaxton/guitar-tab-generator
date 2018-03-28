@@ -26,23 +26,13 @@ public class TablatureBarBuilder {
         int spacing = 3;
 
         // Build the ruler
-        String ruler = null;
-        try {
-            ruler = TablatureBarBuilder.buildRuler(Markings.Tertiary, 4, spacing);
-        } catch (TabBuildingException e) {
-            e.printStackTrace();
-        }
+        String ruler = TablatureBarBuilder.buildRuler(Markings.Tertiary, 4, spacing);
 
         int nElements = ruler.length();
 
         // Build the chord line
-        String chordLine = null;
         Map<Integer, String> chordPosToMarking = TablatureBarBuilder.buildPositionToMarking(bar.getTimedChords(), spacing);
-        try {
-            chordLine = TablatureBarBuilder.buildChordLine(nElements, chordPosToMarking);
-        } catch (TabBuildingException e) {
-            e.printStackTrace();
-        }
+        String chordLine = TablatureBarBuilder.buildChordLine(nElements, chordPosToMarking);
 
         System.out.println(ruler);
         System.out.println(chordLine);
@@ -51,15 +41,12 @@ public class TablatureBarBuilder {
         List<String> tabLines = new ArrayList<>();
         for (int guitarString = 1; guitarString <= 6; guitarString++) {
             Map<Integer, String> tabPosToMarking = TablatureBarBuilder.buildPositionToMarking(bar.getNotes(), spacing, guitarString);
-            try {
-                String tabLine = TablatureBarBuilder.buildTabLine(nElements, tabPosToMarking);
-                System.out.println(tabLine);
-                tabLines.add(tabLine);
-            } catch (TabBuildingException e) {
-                e.printStackTrace();
-            }
+            String tabLine = TablatureBarBuilder.buildTabLine(nElements, tabPosToMarking);
+            tabLines.add(tabLine);
+            System.out.println(tabLine);
         }
 
+        // Build an return the single bar of tab
         return new TablatureBar(ruler, chordLine, tabLines);
 
     }
