@@ -83,19 +83,5 @@ class BarBuilderTest {
         assertTrue(BarBuilder.buildChordLine(4, ImmutableMap.of(3, "D")).equals("   D"));
     }
 
-    @Test
-    void testPadLeft() {
-        assertEquals("  ", BarBuilder.padLeft("", 2, ' '));
-        assertEquals(" A", BarBuilder.padLeft("A", 1, ' '));
-        assertEquals("  A", BarBuilder.padLeft("A", 2, ' '));
-        assertEquals("   A", BarBuilder.padLeft(" A", 2, ' '));
-    }
 
-    @Test
-    void testPadRight() {
-        assertEquals("  ", BarBuilder.padRight("", 2, ' '));
-        assertEquals("A ", BarBuilder.padRight("A", 1, ' '));
-        assertEquals("A  ", BarBuilder.padRight("A", 2, ' '));
-        assertEquals(" A  ", BarBuilder.padRight(" A", 2, ' '));
-    }
 }

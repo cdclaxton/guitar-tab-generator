@@ -20,38 +20,6 @@ public class BarBuilder {
     }
 
     /**
-     * Pad a line to the left.
-     *
-     * @param line Line to pad.
-     * @param padding Number of characters to pad.
-     * @param paddingChar Character to ue to pad.
-     * @return Padded line.
-     */
-    protected static String padLeft(String line, int padding, char paddingChar) {
-        if (line == null) {
-            throw new IllegalArgumentException("Can't pad a null string");
-        }
-
-        return Strings.padStart(line, line.length() +  padding, paddingChar);
-    }
-
-    /**
-     * Pad a line to the right.
-     *
-     * @param line Line to pad.
-     * @param padding Number of characters to pad.
-     * @param paddingChar Character to ue to pad.
-     * @return Padded line.
-     */
-    protected static String padRight(String line, int padding, char paddingChar) {
-        if (line == null) {
-            throw new IllegalArgumentException("Can't pad a null string");
-        }
-
-        return Strings.padEnd(line, line.length() +  padding, paddingChar);
-    }
-
-    /**
      * Build the ruler that shows the timing.
      *
      * @param markings Type of markings to display.
