@@ -28,6 +28,10 @@ public class Fret {
         this.fretNumber = fretNumber;
     }
 
+    public String getFretMarking() {
+        return String.valueOf(this.fretNumber);
+    }
+
     public int getFretNumber() {
         return fretNumber;
     }
