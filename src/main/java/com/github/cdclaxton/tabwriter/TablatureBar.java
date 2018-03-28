@@ -61,19 +61,19 @@ public class TablatureBar {
     }
 
     /**
-     * Add bar lines to the tab lines (and pad the ruler and chords).
+     * Add bar lines to the end of the tab lines (and pad the ruler and chords).
      *
      * @param barLineType Type of bar line to add.
      */
     public void addBarLines(BarLineType barLineType) {
 
-        // Width of the bar line
+        // Width (in characters) of the bar line
         int barLineWidth = getWidthOfBarSeparator(barLineType);
 
-        // Pad the ruler
+        // Pad the ruler with spaces
         this.ruler = TabLineUtils.padRight(this.ruler, barLineWidth, ' ');
 
-        // Pad the chord line
+        // Pad the chord line with spaces
         this.chordLine = TabLineUtils.padRight(this.chordLine, barLineWidth, ' ');
 
         // Add the barline to each of the tab lines
