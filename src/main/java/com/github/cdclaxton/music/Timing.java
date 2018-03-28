@@ -15,4 +15,7 @@ public class Timing {
         this.sixteenthNumber = sixteenthNumber;
     }
 
+    public int getSixteenthNumber() {
+        return sixteenthNumber;
+    }
 }
