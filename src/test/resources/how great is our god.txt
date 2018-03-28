@@ -1,0 +1,28 @@
+title = How great is our God
+artist = Chris Tomlin
+key = Db
+time.signature = 4/4
+strings = E a d g b e
+metadata.video = https://www.youtube.com/watch?v=vg5qDljEw7Q
+---
+
+>Effects:
+>Overdrive -> dotted eighth delay -> light reverb
+
+[Intro and verse]
+() 1/g6 1+/g6 2/b9 2+/g6 3/g6 3+/g6 4/b9 4+/g6
+() 1/g6 1+/g6 2/b9 2+/g6 3/g6 3+/g6 4/b6 4e/b7 4+/b6
+
+[Chorus]
+> Repeat over all chords
+() 1/g6 1+/g6 2/b9 2+/g6 3/b7 3+/g6 4/b6 4+/g6
+
+[Name above all names ...]
+(1/Db) 1/<a4 d6 g6>
+() 3/<a4 d6 g6> 4/<a3 g5>
+(1/Bbm) 1/<E6 a8 d8>
+() 3/<E6 a8 d8> 4/<E4 a6 d6>
+(1/Gb) 1/<E2 b4 d4>
+(1/Ab)
+(1/Db)
+()
