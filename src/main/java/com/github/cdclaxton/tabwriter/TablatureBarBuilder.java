@@ -1,12 +1,11 @@
 package com.github.cdclaxton.tabwriter;
 
 import com.github.cdclaxton.music.Bar;
-import com.google.common.base.Strings;
 
 import java.util.Arrays;
 import java.util.Map;
 
-public class BarBuilder {
+public class TablatureBarBuilder {
 
     private static final char lineCharacter = '-';
 
@@ -15,9 +14,7 @@ public class BarBuilder {
     private static final String tertiarySymbol = ".";
     private static final char rulerSpacingSymbol = ' ';
 
-    public BarBuilder(Bar bar) {
-
-    }
+    private TablatureBarBuilder(Bar bar) {}
 
     /**
      * Build the ruler that shows the timing.
@@ -123,7 +120,7 @@ public class BarBuilder {
      * @throws TabBuildingException
      */
     protected static String buildTabLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
-        return BarBuilder.buildLine(nElements, positionToMarking, BarBuilder.lineCharacter);
+        return TablatureBarBuilder.buildLine(nElements, positionToMarking, TablatureBarBuilder.lineCharacter);
     }
 
     /**
@@ -135,7 +132,7 @@ public class BarBuilder {
      * @throws TabBuildingException
      */
     protected static String buildChordLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
-        return BarBuilder.buildLine(nElements, positionToMarking, ' ');
+        return TablatureBarBuilder.buildLine(nElements, positionToMarking, ' ');
     }
 
 }
