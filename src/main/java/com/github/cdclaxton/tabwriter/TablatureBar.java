@@ -11,10 +11,28 @@ public class TablatureBar {
 
     public enum BarLineType { single }
 
+    /**
+     * Instantiate a single bar of tablature (convenience constructor).
+     *
+     * @param ruler Ruler showing timings.
+     * @param chordLine Single line of chords.
+     * @param lines Varargs list of tab lines.
+     * @throws TabBuildingException
+     */
     public TablatureBar(String ruler, String chordLine, String... lines) throws TabBuildingException {
         this(ruler, chordLine,  Arrays.asList(lines));
     }
 
+    /**
+     * Instantiate a single bar of tablature.
+     *
+     * Note that each of the lines in the tab must be the same length.
+     *
+     * @param ruler Ruler showing timings.
+     * @param chordLine Single line of chords.
+     * @param tabLines Tab lines.
+     * @throws TabBuildingException
+     */
     public TablatureBar(String ruler, String chordLine, List<String> tabLines) throws TabBuildingException {
 
         // Preconditions
@@ -42,6 +60,11 @@ public class TablatureBar {
         this.tabLines = tabLines;
     }
 
+    /**
+     * Add bar lines to the tab lines (and pad the ruler and chords).
+     *
+     * @param barLineType Type of bar line to add.
+     */
     public void addBarLines(BarLineType barLineType) {
 
         // Width of the bar line
@@ -59,6 +82,12 @@ public class TablatureBar {
         }
     }
 
+    /**
+     * Get the number of characters that will be used to show the bar line.
+     *
+     * @param barLineType Type of bar line.
+     * @return Number of characters.
+     */
     private static int getWidthOfBarSeparator(BarLineType barLineType) {
         if (barLineType == BarLineType.single) {
             return 1;
@@ -67,6 +96,12 @@ public class TablatureBar {
         throw new IllegalStateException("Shouldn't reach here.");
     }
 
+    /**
+     * Get the separator to use given the bar line type.
+     *
+     * @param barLineType Type of bar line.
+     * @return Separator.
+     */
     private static String getBarSeparator(BarLineType barLineType) {
         if (barLineType == BarLineType.single) {
             return "|";
