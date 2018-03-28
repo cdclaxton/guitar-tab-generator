@@ -44,6 +44,10 @@ public class TablatureBar {
             throw new TabBuildingException("There must be at least one tab line");
         }
 
+        if (tabLines.size() != 6) {
+            throw new TabBuildingException("Currently only supports six strings in standard tuning");
+        }
+
         for (int i = 0; i < tabLines.size() - 1; i++) {
             if (tabLines.get(i).length() != tabLines.get(i+1).length()) {
                 throw new TabBuildingException("Tab lines " + i + " and " + (i+1) + " have differing lengths");
@@ -60,12 +64,51 @@ public class TablatureBar {
         this.tabLines = tabLines;
     }
 
+    public void addStringLetters() {
+
+        // Pad the ruler with spaces
+        this.ruler = TabLineUtils.padLeft(this.ruler, 1, ' ');
+
+        // Pad the chord line with spaces
+        this.chordLine = TabLineUtils.padLeft(this.chordLine, 1, ' ');
+
+        // Add the string letters
+        this.tabLines.set(0, "E" + this.tabLines.get(0));
+        this.tabLines.set(1, "B" + this.tabLines.get(1));
+        this.tabLines.set(2, "G" + this.tabLines.get(2));
+        this.tabLines.set(3, "D" + this.tabLines.get(3));
+        this.tabLines.set(4, "A" + this.tabLines.get(4));
+        this.tabLines.set(5, "E" + this.tabLines.get(5));
+    }
+
+    /**
+     * Add bar lines to the start of the tab lines (and pad the ruler and chords).
+     *
+     * @param barLineType Type of bar line to add.
+     */
+    public void addBarStartLines(BarLineType barLineType) {
+
+        // Width (in characters) of the bar line
+        int barLineWidth = getWidthOfBarSeparator(barLineType);
+
+        // Pad the ruler with spaces
+        this.ruler = TabLineUtils.padLeft(this.ruler, barLineWidth, ' ');
+
+        // Pad the chord line with spaces
+        this.chordLine = TabLineUtils.padLeft(this.chordLine, barLineWidth, ' ');
+
+        // Add the barline to each of the tab lines
+        for (int i = 0; i < this.tabLines.size(); i++) {
+            this.tabLines.set(i, getBarSeparator(barLineType) + this.tabLines.get(i));
+        }
+    }
+
     /**
      * Add bar lines to the end of the tab lines (and pad the ruler and chords).
      *
      * @param barLineType Type of bar line to add.
      */
-    public void addBarLines(BarLineType barLineType) {
+    public void addBarEndLines(BarLineType barLineType) {
 
         // Width (in characters) of the bar line
         int barLineWidth = getWidthOfBarSeparator(barLineType);
