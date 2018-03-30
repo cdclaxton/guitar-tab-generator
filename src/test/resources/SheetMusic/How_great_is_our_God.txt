@@ -4,7 +4,6 @@ key = Db
 time.signature = 4/4
 strings = E a d g b e
 metadata.video = https://www.youtube.com/watch?v=vg5qDljEw7Q
----
 
 > Effects:
 > Overdrive -> dotted eighth delay -> light reverb

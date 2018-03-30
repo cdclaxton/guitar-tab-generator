@@ -7,12 +7,35 @@
     <groupId>com.github.cdclaxton</groupId>
     <artifactId>guitartabgenerator</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <slf4jVersion>1.7.25</slf4jVersion>
+    </properties>
+
     <dependencies>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>24.1-jre</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4jVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4jVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.11.0</version>
         </dependency>
 
         <dependency>
