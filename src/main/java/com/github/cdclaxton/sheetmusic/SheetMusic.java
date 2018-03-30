@@ -1,32 +1,22 @@
 package com.github.cdclaxton.sheetmusic;
 
-import com.github.cdclaxton.music.Key;
-
 import java.util.List;
 import java.util.Map;
 
 public class SheetMusic {
 
-    private String title;
-    private String artist;
-    private Key key;
+    private Header header;
     private Map<String, Object> metadata;
     private List<Section> sections;
 
-    public SheetMusic(String title, String artist, Key key, Map<String, Object> metadata, List<Section> sections) {
-        this.title = title;
-        this.artist = artist;
-        this.key = key;
+    public SheetMusic(Header header, Map<String, Object> metadata, List<Section> sections) {
+        this.header = header;
         this.metadata = metadata;
         this.sections = sections;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArtist() {
-        return artist;
+    public Header getHeader() {
+        return header;
     }
 
     public Map<String, Object> getMetadata() {
@@ -37,7 +27,4 @@ public class SheetMusic {
         return sections;
     }
 
-    public Key getKey() {
-        return key;
-    }
 }
