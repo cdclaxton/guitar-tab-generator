@@ -6,7 +6,7 @@ import com.github.cdclaxton.music.TimedChord;
 
 import java.util.*;
 
-public class TablatureBarBuilder {
+public class SingleBarTablatureBuilder {
 
     private static final char lineCharacter = '-';
 
@@ -15,46 +15,58 @@ public class TablatureBarBuilder {
     private static final String tertiarySymbol = ".";
     private static final char rulerSpacingSymbol = ' ';
 
-    private TablatureBarBuilder() {}
+    private SingleBarTablatureBuilder() {}
 
-    public TablatureBar buildTabFromBar(Bar bar) {
-        return null;
+    /**
+     * Build a single bar of tab.
+     *
+     * @param bar Bar.
+     * @param markings Time markings to show.
+     * @return Tab.
+     * @throws TabBuildingException
+     */
+    public static SingleBarTablature buildTabFromBar(Bar bar, Markings markings) throws TabBuildingException {
+        if (bar.getTimeSignature() == Bar.TimeSignature.Four4) {
+            return buildTabIn44FromBar(bar, markings);
+        } else {
+            throw new UnsupportedOperationException("6/8 not implemented.");
+        }
     }
 
-    protected static TablatureBar buildTabIn44FromBar(Bar bar, Markings markings) throws TabBuildingException {
+    private static SingleBarTablature buildTabIn44FromBar(Bar bar, Markings markings) throws TabBuildingException {
 
         int spacing = 3;
 
         // Build the ruler
-        String ruler = TablatureBarBuilder.buildRuler(markings, 4, spacing);
+        String ruler = SingleBarTablatureBuilder.buildRuler(markings, 4, spacing);
 
         int nElements = ruler.length();
 
         // Build the chord line
         Map<Integer, String> chordPosToMarking =
-                TablatureBarBuilder.buildPositionToMarking(bar.getTimedChords(), markings, spacing);
-        String chordLine = TablatureBarBuilder.buildChordLine(nElements, chordPosToMarking);
+                SingleBarTablatureBuilder.buildPositionToMarking(bar.getTimedChords(), markings, spacing);
+        String chordLine = SingleBarTablatureBuilder.buildChordLine(nElements, chordPosToMarking);
 
         // Build a tab line for each guitar string
         List<String> tabLines = new ArrayList<>();
         for (int guitarString = 1; guitarString <= 6; guitarString++) {
             Map<Integer, String> tabPosToMarking =
-                    TablatureBarBuilder.buildPositionToMarking(bar.getNotes(), markings, spacing, guitarString);
-            String tabLine = TablatureBarBuilder.buildTabLine(nElements, tabPosToMarking);
+                    SingleBarTablatureBuilder.buildPositionToMarking(bar.getNotes(), markings, spacing, guitarString);
+            String tabLine = SingleBarTablatureBuilder.buildTabLine(nElements, tabPosToMarking);
             tabLines.add(tabLine);
         }
 
         // Build an return the single bar of tab
-        return new TablatureBar(ruler, chordLine, tabLines);
+        return new SingleBarTablature(ruler, chordLine, tabLines);
     }
 
-    protected static Map<Integer, String> buildPositionToMarking(List<Note> notes, Markings markings,
+    private static Map<Integer, String> buildPositionToMarking(List<Note> notes, Markings markings,
                                                                  int spacing, int stringNumber) throws TabBuildingException {
         Map<Integer, String> pos = new HashMap<>();
 
         for (Note n : notes) {
             if (n.getFret().getStringNumber() == stringNumber) {
-                int position = TablatureBarBuilder.getPosition(n.getTiming().getSixteenthNumber(), markings, spacing);
+                int position = SingleBarTablatureBuilder.getPosition(n.getTiming().getSixteenthNumber(), markings, spacing);
                 String marking = n.getFret().getFretMarking();
                 pos.put(position, marking);
             }
@@ -63,7 +75,7 @@ public class TablatureBarBuilder {
         return pos;
     }
 
-    protected static int getPosition(int sixteenthNumber, Markings markings, int spacing) throws TabBuildingException {
+    private static int getPosition(int sixteenthNumber, Markings markings, int spacing) throws TabBuildingException {
 
         if (markings == Markings.Tertiary) {
             return (spacing + 1) * sixteenthNumber;
@@ -82,20 +94,18 @@ public class TablatureBarBuilder {
         return -1;
     }
 
-    protected static Map<Integer, String> buildPositionToMarking(List<TimedChord> timedChords, Markings markings, int spacing)
+    private static Map<Integer, String> buildPositionToMarking(List<TimedChord> timedChords, Markings markings, int spacing)
             throws TabBuildingException {
 
         Map<Integer, String> pos = new HashMap<>();
 
         for (TimedChord timedChord : timedChords) {
-            int i = TablatureBarBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), markings, spacing);
+            int i = SingleBarTablatureBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), markings, spacing);
             pos.put(i, timedChord.getChord());
         }
 
         return pos;
     }
-
-
 
     /**
      * Build the ruler that shows the timing.
@@ -201,7 +211,7 @@ public class TablatureBarBuilder {
      * @throws TabBuildingException
      */
     protected static String buildTabLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
-        return TablatureBarBuilder.buildLine(nElements, positionToMarking, TablatureBarBuilder.lineCharacter);
+        return SingleBarTablatureBuilder.buildLine(nElements, positionToMarking, SingleBarTablatureBuilder.lineCharacter);
     }
 
     /**
@@ -213,7 +223,7 @@ public class TablatureBarBuilder {
      * @throws TabBuildingException
      */
     protected static String buildChordLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
-        return TablatureBarBuilder.buildLine(nElements, positionToMarking, ' ');
+        return SingleBarTablatureBuilder.buildLine(nElements, positionToMarking, ' ');
     }
 
 }

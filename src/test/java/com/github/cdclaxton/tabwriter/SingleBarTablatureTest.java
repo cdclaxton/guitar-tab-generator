@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TablatureBarTest {
+class SingleBarTablatureTest {
 
     @Test
     void testAddSingleStartBarLines() throws TabBuildingException {
@@ -18,10 +18,10 @@ class TablatureBarTest {
         String tab5   = "----------------";
 
         // Build the bar
-        TablatureBar bar = new TablatureBar(ruler, chords, tab0, tab1, tab2, tab3, tab4, tab5);
+        SingleBarTablature bar = new SingleBarTablature(ruler, chords, tab0, tab1, tab2, tab3, tab4, tab5);
 
         // Add a single bar line
-        bar.addBarStartLines(TablatureBar.BarLineType.single);
+        bar.addBarStartLines(SingleBarTablature.BarLineType.single);
 
         // Check
         assertEquals(" 1 + 2 + 3 + 4 + ", bar.getRuler());
@@ -46,10 +46,10 @@ class TablatureBarTest {
         String tab5   = "----------------";
 
         // Build the bar
-        TablatureBar bar = new TablatureBar(ruler, chords, tab0, tab1, tab2, tab3, tab4, tab5);
+        SingleBarTablature bar = new SingleBarTablature(ruler, chords, tab0, tab1, tab2, tab3, tab4, tab5);
 
         // Add a single bar line
-        bar.addBarEndLines(TablatureBar.BarLineType.single);
+        bar.addBarEndLines(SingleBarTablature.BarLineType.single);
 
         // Check
         assertEquals("1 + 2 + 3 + 4 +  ", bar.getRuler());
@@ -74,7 +74,7 @@ class TablatureBarTest {
         String tab5   = "|----------------|";
 
         // Build the bar
-        TablatureBar bar = new TablatureBar(ruler, chords, tab0, tab1, tab2, tab3, tab4, tab5);
+        SingleBarTablature bar = new SingleBarTablature(ruler, chords, tab0, tab1, tab2, tab3, tab4, tab5);
 
         // Add a single bar line
         bar.addStringLetters();

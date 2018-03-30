@@ -3,7 +3,7 @@ package com.github.cdclaxton.tabwriter;
 import java.util.Arrays;
 import java.util.List;
 
-public class TablatureBar {
+public class SingleBarTablature {
 
     private String ruler;
     private String chordLine;
@@ -19,7 +19,7 @@ public class TablatureBar {
      * @param lines Varargs list of tab lines.
      * @throws TabBuildingException
      */
-    public TablatureBar(String ruler, String chordLine, String... lines) throws TabBuildingException {
+    public SingleBarTablature(String ruler, String chordLine, String... lines) throws TabBuildingException {
         this(ruler, chordLine,  Arrays.asList(lines));
     }
 
@@ -33,7 +33,7 @@ public class TablatureBar {
      * @param tabLines Tab lines.
      * @throws TabBuildingException
      */
-    public TablatureBar(String ruler, String chordLine, List<String> tabLines) throws TabBuildingException {
+    public SingleBarTablature(String ruler, String chordLine, List<String> tabLines) throws TabBuildingException {
 
         // Preconditions
         if (ruler.length() != chordLine.length()) {
