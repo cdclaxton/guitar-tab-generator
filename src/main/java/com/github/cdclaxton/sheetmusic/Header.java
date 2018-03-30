@@ -1,12 +1,16 @@
 package com.github.cdclaxton.sheetmusic;
 
+import com.github.cdclaxton.music.Bar;
 import com.github.cdclaxton.music.Key;
+
+import java.util.Objects;
 
 public class Header {
 
     private String title;
     private String artist;
     private Key key;
+    private Bar.TimeSignature timeSignature;
 
     public Header() {}
 
@@ -46,4 +50,30 @@ public class Header {
     public void setKey(Key key) {
         this.key = key;
     }
+
+    public Bar.TimeSignature getTimeSignature() {
+        return timeSignature;
+    }
+
+    public void setTimeSignature(Bar.TimeSignature timeSignature) {
+        this.timeSignature = timeSignature;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Header header = (Header) o;
+        return Objects.equals(title, header.title) &&
+                Objects.equals(artist, header.artist) &&
+                Objects.equals(key, header.key) &&
+                timeSignature == header.timeSignature;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(title, artist, key, timeSignature);
+    }
+
 }
