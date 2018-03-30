@@ -21,42 +21,40 @@ public class TablatureBarBuilder {
         return null;
     }
 
-    protected static TablatureBar buildSixteenthTabIn44FromBar(Bar bar) throws TabBuildingException {
+    protected static TablatureBar buildTabIn44FromBar(Bar bar, Markings markings) throws TabBuildingException {
 
         int spacing = 3;
 
         // Build the ruler
-        String ruler = TablatureBarBuilder.buildRuler(Markings.Tertiary, 4, spacing);
+        String ruler = TablatureBarBuilder.buildRuler(markings, 4, spacing);
 
         int nElements = ruler.length();
 
         // Build the chord line
-        Map<Integer, String> chordPosToMarking = TablatureBarBuilder.buildPositionToMarking(bar.getTimedChords(), spacing);
+        Map<Integer, String> chordPosToMarking =
+                TablatureBarBuilder.buildPositionToMarking(bar.getTimedChords(), markings, spacing);
         String chordLine = TablatureBarBuilder.buildChordLine(nElements, chordPosToMarking);
-
-        System.out.println(ruler);
-        System.out.println(chordLine);
 
         // Build a tab line for each guitar string
         List<String> tabLines = new ArrayList<>();
         for (int guitarString = 1; guitarString <= 6; guitarString++) {
-            Map<Integer, String> tabPosToMarking = TablatureBarBuilder.buildPositionToMarking(bar.getNotes(), spacing, guitarString);
+            Map<Integer, String> tabPosToMarking =
+                    TablatureBarBuilder.buildPositionToMarking(bar.getNotes(), markings, spacing, guitarString);
             String tabLine = TablatureBarBuilder.buildTabLine(nElements, tabPosToMarking);
             tabLines.add(tabLine);
-            System.out.println(tabLine);
         }
 
         // Build an return the single bar of tab
         return new TablatureBar(ruler, chordLine, tabLines);
-
     }
 
-    protected static Map<Integer, String> buildPositionToMarking(List<Note> notes, int spacing, int stringNumber) {
+    protected static Map<Integer, String> buildPositionToMarking(List<Note> notes, Markings markings,
+                                                                 int spacing, int stringNumber) throws TabBuildingException {
         Map<Integer, String> pos = new HashMap<>();
 
         for (Note n : notes) {
             if (n.getFret().getStringNumber() == stringNumber) {
-                int position = TablatureBarBuilder.getPosition(n.getTiming().getSixteenthNumber(), spacing);
+                int position = TablatureBarBuilder.getPosition(n.getTiming().getSixteenthNumber(), markings, spacing);
                 String marking = n.getFret().getFretMarking();
                 pos.put(position, marking);
             }
@@ -65,16 +63,32 @@ public class TablatureBarBuilder {
         return pos;
     }
 
-    protected static int getPosition(int sixteenthNumber, int spacing) {
-        return (spacing + 1) * sixteenthNumber;
+    protected static int getPosition(int sixteenthNumber, Markings markings, int spacing) throws TabBuildingException {
+
+        if (markings == Markings.Tertiary) {
+            return (spacing + 1) * sixteenthNumber;
+        } else if (markings == Markings.Secondary) {
+            if (sixteenthNumber % 2 != 0) {
+                throw new TabBuildingException("Note can't be represented giving markings");
+            }
+            return (spacing + 1) * (sixteenthNumber / 2);
+        } else if (markings == Markings.Main) {
+            if (sixteenthNumber % 4 != 0) {
+                throw new TabBuildingException("Note can't be represented giving markings");
+            }
+            return (spacing + 1) * (sixteenthNumber / 4);
+        }
+
+        return -1;
     }
 
-    protected static Map<Integer, String> buildPositionToMarking(List<TimedChord> timedChords, int spacing) {
+    protected static Map<Integer, String> buildPositionToMarking(List<TimedChord> timedChords, Markings markings, int spacing)
+            throws TabBuildingException {
 
         Map<Integer, String> pos = new HashMap<>();
 
         for (TimedChord timedChord : timedChords) {
-            int i = TablatureBarBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), spacing);
+            int i = TablatureBarBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), markings, spacing);
             pos.put(i, timedChord.getChord());
         }
 

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -124,7 +123,64 @@ class TablatureBarBuilderTest {
         );
         Bar bar = new Bar(Bar.TimeSignature.Four4, notes, timedChords);
 
-        TablatureBarBuilder.buildSixteenthTabIn44FromBar(bar);
+        TablatureBar tab = TablatureBarBuilder.buildTabIn44FromBar(bar, TablatureBarBuilder.Markings.Tertiary);
+
+        assertEquals("1   .   +   .   2   .   +   .   3   .   +   .   4   .   +   .   ", tab.getRuler());
+        assertEquals("D               Bm              F#m                             ", tab.getChordLine());
+        assertEquals("2---------------------------------------------------------------", tab.getTabLines().get(0));
+        assertEquals("--------3-------------------------------------------------------", tab.getTabLines().get(1));
+        assertEquals("----------------4---7-------------------------------------------", tab.getTabLines().get(2));
     }
 
+    @Test
+    void testBuildEighthTabIn44FromBar() throws InvalidStringException, InvalidFretNumberException,
+            InvalidTimingException, InvalidChordException, TabBuildingException {
+
+        // Construct the bar
+        List<Note> notes = Arrays.asList(
+                new Note(new Fret(1, 2), new Timing(0)),
+                new Note(new Fret(2, 3), new Timing(4)),
+                new Note(new Fret(3, 4), new Timing(6))
+        );
+        List<TimedChord> timedChords = Arrays.asList(
+                new TimedChord(new Timing(0), "D"),
+                new TimedChord(new Timing(4), "Bm"),
+                new TimedChord(new Timing(8), "F#m")
+        );
+        Bar bar = new Bar(Bar.TimeSignature.Four4, notes, timedChords);
+
+        TablatureBar tab = TablatureBarBuilder.buildTabIn44FromBar(bar, TablatureBarBuilder.Markings.Secondary);
+
+        assertEquals("1   +   2   +   3   +   4   +   ", tab.getRuler());
+        assertEquals("D       Bm      F#m             ", tab.getChordLine());
+        assertEquals("2-------------------------------", tab.getTabLines().get(0));
+        assertEquals("--------3-----------------------", tab.getTabLines().get(1));
+        assertEquals("------------4-------------------", tab.getTabLines().get(2));
+    }
+
+    @Test
+    void testBuildQuarterTabIn44FromBar() throws InvalidStringException, InvalidFretNumberException,
+            InvalidTimingException, InvalidChordException, TabBuildingException {
+
+        // Construct the bar
+        List<Note> notes = Arrays.asList(
+                new Note(new Fret(1, 2), new Timing(0)),
+                new Note(new Fret(2, 3), new Timing(4)),
+                new Note(new Fret(3, 4), new Timing(8))
+        );
+        List<TimedChord> timedChords = Arrays.asList(
+                new TimedChord(new Timing(0), "D"),
+                new TimedChord(new Timing(4), "Bm"),
+                new TimedChord(new Timing(8), "F#m")
+        );
+        Bar bar = new Bar(Bar.TimeSignature.Four4, notes, timedChords);
+
+        TablatureBar tab = TablatureBarBuilder.buildTabIn44FromBar(bar, TablatureBarBuilder.Markings.Main);
+
+        assertEquals("1   2   3   4   ", tab.getRuler());
+        assertEquals("D   Bm  F#m     ", tab.getChordLine());
+        assertEquals("2---------------", tab.getTabLines().get(0));
+        assertEquals("----3-----------", tab.getTabLines().get(1));
+        assertEquals("--------4-------", tab.getTabLines().get(2));
+    }
 }
