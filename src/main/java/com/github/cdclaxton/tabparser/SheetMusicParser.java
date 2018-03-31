@@ -1,5 +1,9 @@
 package com.github.cdclaxton.tabparser;
 
+import com.github.cdclaxton.music.*;
+import com.github.cdclaxton.sheetmusic.Header;
+import com.github.cdclaxton.sheetmusic.Metadata;
+import com.github.cdclaxton.sheetmusic.Section;
 import com.github.cdclaxton.sheetmusic.SheetMusic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +29,8 @@ public class SheetMusicParser {
      * @return Parsed sheet music.
      * @throws IOException
      */
-    public static SheetMusic parseSheetMusic(File file) throws IOException, ExtractionException {
+    public static SheetMusic parseSheetMusic(File file)
+            throws IOException, ExtractionException, InvalidKeyException, InvalidStringException, InvalidFretNumberException, InvalidTimingException, InvalidChordException {
         logger.info("Reading sheet music from file: " + file);
 
         // Read the file into a list of components
@@ -35,15 +40,126 @@ public class SheetMusicParser {
         return componentsToSheetMusic(extractedComponents);
     }
 
-    protected static SheetMusic componentsToSheetMusic(List<ExtractedComponent> components) {
-        return null;
+    protected static SheetMusic componentsToSheetMusic(List<ExtractedComponent> components)
+            throws InvalidKeyException, ExtractionException, InvalidStringException, InvalidFretNumberException, InvalidTimingException, InvalidChordException {
+
+        Header header = SheetMusicParser.componentsToHeader(components);
+        Metadata metadata = SheetMusicParser.componentsToMetadata(components);
+        List<Section> sections = SheetMusicParser.componentsToSections(components, header.getTimeSignature());
+
+        return new SheetMusic(header, metadata, sections);
+    }
+
+    protected static List<Section> componentsToSections(List<ExtractedComponent> components, Bar.TimeSignature timeSignature)
+            throws ExtractionException, InvalidStringException, InvalidFretNumberException, InvalidTimingException, InvalidChordException {
+        final List<Section> sections = new ArrayList<>();
+
+        boolean sectionInProgress = false;
+        Section section = null;
+
+        for (ExtractedComponent component : components) {
+
+            // Section headers denote the start of a new section
+            if (component instanceof ExtractedSectionHeader) {
+               if (sectionInProgress) {
+                   sections.add(section);
+               }
+               section = new Section();
+               sectionInProgress = true;
+
+               ExtractedSectionHeader sectionHeader = (ExtractedSectionHeader) component;
+               section.setName(sectionHeader.getName());
+
+            }
+
+            // A section can contain zero or more lines of text
+            if (component instanceof ExtractedText) {
+                if (!sectionInProgress) {
+                    section = new Section();
+                    sectionInProgress = true;
+                }
+                ExtractedText text = (ExtractedText) component;
+                section.addText(text.getText());
+            }
+
+            // A section can contain zero or more bars
+            if (component instanceof ExtractedBar) {
+                if (!sectionInProgress) {
+                    section = new Section();
+                    sectionInProgress = true;
+                }
+                ExtractedBar extractedBar = (ExtractedBar) component;
+                Bar bar = extractedBar.toBar(timeSignature);
+                section.addBar(bar);
+            }
+        }
+
+        // Check if there is a final section to add
+        if (sectionInProgress) sections.add(section);
+
+        return sections;
+    }
+
+    protected static Header componentsToHeader(List<ExtractedComponent> components) throws InvalidKeyException, ExtractionException {
+        final Header header = new Header();
+
+        for (ExtractedComponent component : components) {
+            if (component instanceof ExtractedHeader) {
+                ExtractedHeader extractedHeader = (ExtractedHeader) component;
+                switch (extractedHeader.getKey().toLowerCase()) {
+                    case "title":
+                        header.setTitle(extractedHeader.getValue());
+                        break;
+                    case "artist":
+                        header.setArtist(extractedHeader.getValue());
+                        break;
+                    case "key":
+                        Key key = new Key(extractedHeader.getValue());
+                        header.setKey(key);
+                        break;
+                    case "time.signature":
+                        Bar.TimeSignature timeSignature = SheetMusicParser.parseTimeSignature(extractedHeader.getValue());
+                        header.setTimeSignature(timeSignature);
+                        break;
+                }
+            }
+        }
+
+        return header;
+    }
+
+    protected static Bar.TimeSignature parseTimeSignature(String value) throws ExtractionException {
+        final String trimmedValue = value.trim();
+        switch (trimmedValue) {
+            case "4/4":
+                return Bar.TimeSignature.Four4;
+            case "6/8":
+                return Bar.TimeSignature.Six8;
+            default:
+                throw new ExtractionException("Don't recognise time signature: " + value);
+        }
+    }
+
+    protected static Metadata componentsToMetadata(List<ExtractedComponent> components) {
+        final Metadata metadata = new Metadata();
+
+        for (ExtractedComponent component : components) {
+            if (component instanceof ExtractedHeader) {
+                ExtractedHeader extractedHeader = (ExtractedHeader) component;
+                if (extractedHeader.getKey().startsWith("metadata")) {
+                    metadata.addMetadata(extractedHeader.getKey(), extractedHeader.getValue());
+                }
+            }
+        }
+
+        return metadata;
     }
 
     protected static List<ExtractedComponent> readSheetMusic(File file) throws IOException, ExtractionException {
         // Read each of the lines from the sheet music
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        final BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String line;
-        List<ExtractedComponent> extractedComponents = new ArrayList<>();
+        final List<ExtractedComponent> extractedComponents = new ArrayList<>();
 
         while ((line = bufferedReader.readLine()) != null) {
             logger.debug("Processing line: " + line);

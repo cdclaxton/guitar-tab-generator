@@ -1,5 +1,6 @@
 package com.github.cdclaxton.tabparser;
 
+import com.github.cdclaxton.music.*;
 import com.github.cdclaxton.sheetmusic.SheetMusic;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class SheetMusicParserTest {
 
     @Test
-    void parseValidSheetMusic() throws IOException, ExtractionException {
+    void parseValidSheetMusic() throws IOException, ExtractionException, InvalidKeyException,
+            InvalidStringException, InvalidFretNumberException, InvalidTimingException, InvalidChordException {
         String path = this.getClass().getResource("/SheetMusic/How_great_is_our_God.txt").getFile();
         File file = new File(path);
         SheetMusic sheetMusic = SheetMusicParser.parseSheetMusic(file);
@@ -55,4 +57,34 @@ class SheetMusicParserTest {
         assertEquals("1/Db", extractedBar3.getChords());
         assertEquals("", extractedBar3.getTimedNotes());
     }
+
+    @Test
+    void testParseValidLine() throws ExtractionException {
+        // Section header
+        ExtractedComponent component1 = SheetMusicParser.parseLine("[Chorus]");
+        assertTrue(component1 instanceof ExtractedSectionHeader);
+        ExtractedSectionHeader sectionHeader = (ExtractedSectionHeader) component1;
+        assertEquals("Chorus", sectionHeader.getName());
+
+        // Bar
+        ExtractedComponent component2 = SheetMusicParser.parseLine("(1/Db) 1/<a4 d6 g6>");
+        assertTrue(component2 instanceof ExtractedBar);
+        ExtractedBar bar = (ExtractedBar) component2;
+        assertEquals("1/Db", bar.getChords());
+        assertEquals("1/<a4 d6 g6>", bar.getTimedNotes());
+
+        // Header
+        ExtractedComponent component3 = SheetMusicParser.parseLine("title = My Song");
+        assertTrue(component3 instanceof ExtractedHeader);
+        ExtractedHeader header = (ExtractedHeader) component3;
+        assertEquals("title", header.getKey());
+        assertEquals("My Song", header.getValue());
+
+        // Text
+        ExtractedComponent component4 = SheetMusicParser.parseLine("> Light overdrive");
+        assertTrue(component4 instanceof ExtractedText);
+        ExtractedText text = (ExtractedText) component4;
+        assertEquals("Light overdrive", text.getText());
+    }
+
 }

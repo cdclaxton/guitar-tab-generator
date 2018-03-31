@@ -18,4 +18,5 @@ public class Timing {
     public int getSixteenthNumber() {
         return sixteenthNumber;
     }
+
 }
