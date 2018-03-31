@@ -1,5 +1,6 @@
 package com.github.cdclaxton.tabwriter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -166,4 +167,21 @@ public class SingleBarTablature {
         return tabLines;
     }
 
+    public List<String> getFullBar() {
+        List<String> lines = new ArrayList<>();
+
+        if (ruler != null) {
+            lines.add(ruler);
+        }
+
+        if (chordLine != null) {
+            lines.add(chordLine);
+        }
+
+        if (tabLines != null) {
+            lines.addAll(tabLines);
+        }
+
+        return lines;
+    }
 }
