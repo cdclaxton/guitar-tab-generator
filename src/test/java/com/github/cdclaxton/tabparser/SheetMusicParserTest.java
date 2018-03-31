@@ -17,6 +17,38 @@ class SheetMusicParserTest {
         String path = this.getClass().getResource("/SheetMusic/How_great_is_our_God.txt").getFile();
         File file = new File(path);
         SheetMusic sheetMusic = SheetMusicParser.parseSheetMusic(file);
+
+        // Check the header
+        assertEquals("How great is our God", sheetMusic.getHeader().getTitle());
+        assertEquals("Chris Tomlin", sheetMusic.getHeader().getArtist());
+        assertEquals("Db", sheetMusic.getHeader().getKey().getKey());
+        assertEquals(Bar.TimeSignature.Four4, sheetMusic.getHeader().getTimeSignature());
+
+        // Check the number of sections
+        assertEquals(4, sheetMusic.getSections().size());
+
+        // Check section 0
+        assertEquals(2, sheetMusic.getSection(0).getText().size());
+        assertEquals("Effects:", sheetMusic.getSection(0).getText().get(0));
+        assertEquals("Overdrive -> dotted eighth delay -> light reverb", sheetMusic.getSection(0).getText().get(1));
+        assertEquals(0, sheetMusic.getSection(0).getBars().size());
+        assertEquals(null, sheetMusic.getSection(0).getName());
+
+        // Check section 1
+        assertEquals("Intro and verse", sheetMusic.getSection(1).getName());
+        assertEquals(0, sheetMusic.getSection(1).getText().size());
+        assertEquals(2, sheetMusic.getSection(1).getBars().size());
+
+        // Check section 2
+        assertEquals("Chorus", sheetMusic.getSection(2).getName());
+        assertEquals(1, sheetMusic.getSection(2).getText().size());
+        assertEquals("Repeat over all chords", sheetMusic.getSection(2).getText().get(0));
+        assertEquals(1, sheetMusic.getSection(2).getBars().size());
+
+        // Check section 3
+        assertEquals("Name above all names ...", sheetMusic.getSection(3).getName());
+        assertEquals(0, sheetMusic.getSection(3).getText().size());
+        assertEquals(8, sheetMusic.getSection(3).getBars().size());
     }
 
     @Test

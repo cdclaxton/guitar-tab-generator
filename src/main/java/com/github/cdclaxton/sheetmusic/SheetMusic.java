@@ -26,4 +26,8 @@ public class SheetMusic {
         return sections;
     }
 
+    public Section getSection(int section) {
+        return this.sections.get(section);
+    }
+
 }

@@ -30,7 +30,9 @@ public class SheetMusicParser {
      * @throws IOException
      */
     public static SheetMusic parseSheetMusic(File file)
-            throws IOException, ExtractionException, InvalidKeyException, InvalidStringException, InvalidFretNumberException, InvalidTimingException, InvalidChordException {
+            throws IOException, ExtractionException, InvalidKeyException, InvalidStringException,
+            InvalidFretNumberException, InvalidTimingException, InvalidChordException {
+
         logger.info("Reading sheet music from file: " + file);
 
         // Read the file into a list of components
