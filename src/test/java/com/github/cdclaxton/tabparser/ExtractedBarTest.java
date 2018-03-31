@@ -201,6 +201,9 @@ class ExtractedBarTest {
 
         List<TimedChord> chords3 = ExtractedBar.parseChords("1/Dbm");
         assertEquals(1, chords3.size());
+
+        List<TimedChord> chords4 = ExtractedBar.parseChords("");
+        assertEquals(0, chords4.size());
     }
 
     @Test

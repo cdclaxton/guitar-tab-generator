@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ExtractedBar implements ExtractedComponent {
 
@@ -88,11 +89,15 @@ public class ExtractedBar implements ExtractedComponent {
             throws ExtractionException, InvalidTimingException, InvalidChordException {
 
         // Separate chords into individual elements
-        List<String> chordStrings = ExtractedBar.separateChords(chords);
+        List<String> separateChordsStrings = ExtractedBar.separateChords(chords.trim());
+
+        // Remove any white space
+        List<String> chordStrings = separateChordsStrings.stream().filter(s -> s.length() > 0).collect(Collectors.toList());
 
         // Parse each of the string representation of the chords
         List<TimedChord> timedChords = new ArrayList<>();
         for (String c : chordStrings) {
+            logger.debug("About to parse chord: " + c);
             timedChords.add(ExtractedBar.notationToChord(c));
         }
 
