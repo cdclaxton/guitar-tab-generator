@@ -204,6 +204,11 @@ public class SingleBarTablature {
         return tabLines;
     }
 
+    /**
+     * Get the full bar (ruler, chords and tab lines) as a list of strings.
+     *
+     * @return List of strings representing the bar.
+     */
     public List<String> getFullBar() {
         List<String> lines = new ArrayList<>();
 
