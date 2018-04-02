@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LayoutEngineTest {
 
     @Test
-    void compactLayout() throws InvalidStringException, InvalidFretNumberException, InvalidTimingException, InvalidChordException {
+    void testCompactLayout() throws InvalidStringException, InvalidFretNumberException, InvalidTimingException, InvalidChordException {
         Fret fret = new Fret(1, 0);
 
         List<Note> notes = Arrays.asList(new Note(fret, new Timing(0)));
@@ -37,7 +37,7 @@ class LayoutEngineTest {
     }
 
     @Test
-    void allDivisible() {
+    void testAllDivisible() {
         assertEquals(true, LayoutEngine.allDivisible(Arrays.asList(0), 2));
         assertEquals(true, LayoutEngine.allDivisible(Arrays.asList(2, 4, 6, 8), 2));
         assertEquals(true, LayoutEngine.allDivisible(Arrays.asList(1, 2, 3, 4), 1));
@@ -53,5 +53,15 @@ class LayoutEngineTest {
         assertEquals(true, LayoutEngine.allDivisible(Arrays.asList(0), 4));
         assertEquals(true, LayoutEngine.allDivisible(Arrays.asList(0, 4, 8), 4));
         assertEquals(false, LayoutEngine.allDivisible(Arrays.asList(0, 4, 6, 8), 4));
+    }
+
+    @Test
+    void testBlockLayoutHorizontal() throws TabBuildingException {
+        LayoutEngine.Block b1 = new LayoutEngine.Block(Arrays.asList("ABC", "DEF"));
+        LayoutEngine.Block b2 = new LayoutEngine.Block(Arrays.asList("123", "456"));
+        b1.horizontalLayout(b2);
+        assertEquals(2, b1.lines.size());
+        assertEquals("ABC123", b1.lines.get(0));
+        assertEquals("DEF456", b2.lines.get(1));
     }
 }

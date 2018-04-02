@@ -29,10 +29,6 @@ public class TabSheetMusicBuilder {
             sheetMusicLines.add("");
         }
 
-        for (String line: sheetMusicLines) {
-            System.out.println(line);
-        }
-
         return sheetMusicLines;
     }
 
@@ -44,22 +40,11 @@ public class TabSheetMusicBuilder {
         }
 
         if (section.getText().size() > 0) {
-            for (String text : section.getText()) {
-                lines.add(text);
-            }
+            lines.addAll(section.getText());
         }
 
-        if (section.getBars().size() > 0) {
-            for (Bar b : section.getBars()) {
-                SingleBarTablature tab = SingleBarTablatureBuilder.buildTabFromBar(b, SingleBarTablatureBuilder.Markings.Tertiary);
-                tab.addBarEndLines(SingleBarTablature.BarLineType.single);
-                tab.addBarStartLines(SingleBarTablature.BarLineType.single);
-                tab.addStringLetters();
-                List<String> fullBar = tab.getFullBar();
-                lines.addAll(fullBar);
-                lines.add("");
-            }
-        }
+        // Layout the bars using the most compact form possible
+        lines.addAll(LayoutEngine.layoutBars(section.getBars(), pageWidth, 1));
 
         return lines;
     }

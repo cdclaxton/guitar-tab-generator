@@ -29,6 +29,15 @@ public class SingleBarTablature {
     public enum BarLineType { single }
 
     /**
+     * Get the width of the line required to represent the tab (in characters).
+     *
+     * @return Line width.
+     */
+    public int getLineWidth() {
+        return this.ruler.length();
+    }
+
+    /**
      * Instantiate a single bar of tablature (convenience constructor).
      *
      * @param ruler Ruler showing timings.

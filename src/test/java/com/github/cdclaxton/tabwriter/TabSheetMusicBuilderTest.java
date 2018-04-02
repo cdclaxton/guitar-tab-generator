@@ -25,7 +25,9 @@ class TabSheetMusicBuilderTest {
         SheetMusic sheetMusic = SheetMusicParser.parseSheetMusic(file);
 
         // Build the sheet music tab
-        List<String> sheetMusicLines = TabSheetMusicBuilder.buildTabSheetMusic(sheetMusic, 80);
+        List<String> sheetMusicLines = TabSheetMusicBuilder.buildTabSheetMusic(sheetMusic, 100);
+
+        sheetMusicLines.forEach(line -> System.out.println(line));
     }
 
 }
