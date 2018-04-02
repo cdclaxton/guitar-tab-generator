@@ -10,6 +10,22 @@ public class SingleBarTablature {
     private String chordLine;
     private List<String> tabLines;
 
+    private boolean hasStringLetters = false;
+    private boolean hasBarStartLines = false;
+    private boolean hasBarEndLines = false;
+
+    public boolean isHasStringLetters() {
+        return hasStringLetters;
+    }
+
+    public boolean isHasBarStartLines() {
+        return hasBarStartLines;
+    }
+
+    public boolean isHasBarEndLines() {
+        return hasBarEndLines;
+    }
+
     public enum BarLineType { single }
 
     /**
@@ -102,7 +118,11 @@ public class SingleBarTablature {
     /**
      * Add the guitar string letters to the tab (standard tuning).
      */
-    public void addStringLetters() {
+    public void addStringLetters() throws TabBuildingException {
+
+        if (this.hasStringLetters) {
+            throw new TabBuildingException("Bar already has string letters");
+        }
 
         // Pad the ruler with spaces
         this.ruler = TabLineUtils.padLeft(this.ruler, 1, ' ');
@@ -117,6 +137,8 @@ public class SingleBarTablature {
         this.tabLines.set(3, "D" + this.tabLines.get(3));
         this.tabLines.set(4, "A" + this.tabLines.get(4));
         this.tabLines.set(5, "E" + this.tabLines.get(5));
+
+        this.hasStringLetters = true;
     }
 
     /**
@@ -124,7 +146,11 @@ public class SingleBarTablature {
      *
      * @param barLineType Type of bar line to add.
      */
-    public void addBarStartLines(BarLineType barLineType) {
+    public void addBarStartLines(BarLineType barLineType) throws TabBuildingException {
+
+        if (this.hasBarStartLines) {
+            throw new TabBuildingException("Bar already has start lines");
+        }
 
         // Width (in characters) of the bar line
         int barLineWidth = getWidthOfBarSeparator(barLineType);
@@ -146,7 +172,11 @@ public class SingleBarTablature {
      *
      * @param barLineType Type of bar line to add.
      */
-    public void addBarEndLines(BarLineType barLineType) {
+    public void addBarEndLines(BarLineType barLineType) throws TabBuildingException {
+
+        if (this.hasBarEndLines) {
+            throw new TabBuildingException("Bar already has end lines");
+        }
 
         // Width (in characters) of the bar line
         int barLineWidth = getWidthOfBarSeparator(barLineType);
