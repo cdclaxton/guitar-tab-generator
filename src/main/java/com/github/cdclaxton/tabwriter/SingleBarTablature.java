@@ -65,6 +65,43 @@ public class SingleBarTablature {
         this.tabLines = tabLines;
     }
 
+    /**
+     * Add a space (or '-') to the start of each line of the bar.
+     */
+    public void addLeadingSpace() {
+
+        // Pad the ruler with a space
+        this.ruler = TabLineUtils.padLeft(this.ruler, 1, ' ');
+
+        // Pad the chord line with a space
+        this.chordLine = TabLineUtils.padLeft(this.chordLine, 1, ' ');
+
+        // Pad each of the tab lines with a '-'
+        for (int i = 0; i < this.tabLines.size(); i++) {
+            this.tabLines.set(i, "-" + this.tabLines.get(i));
+        }
+    }
+
+    /**
+     * Add a space (or '-') to the end of each line of the bar.
+     */
+    public void addTrailingSpace() {
+
+        // Pad the ruler with a space
+        this.ruler = TabLineUtils.padRight(this.ruler, 1, ' ');
+
+        // Pad the chord line with a space
+        this.chordLine = TabLineUtils.padRight(this.chordLine, 1, ' ');
+
+        // Pad each of the tab lines with a '-'
+        for (int i = 0; i < this.tabLines.size(); i++) {
+            this.tabLines.set(i, this.tabLines.get(i) + "-");
+        }
+    }
+
+    /**
+     * Add the guitar string letters to the tab (standard tuning).
+     */
     public void addStringLetters() {
 
         // Pad the ruler with spaces
