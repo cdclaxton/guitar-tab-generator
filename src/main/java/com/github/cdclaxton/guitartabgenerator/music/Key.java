@@ -29,7 +29,7 @@ public class Key {
      * @param key Key to check.
      * @return True if the key is valid.
      */
-    private boolean isValid(String key) {
+    public static boolean isValid(String key) {
         return isMajorKey(key) || isMinorKey(key);
     }
 
@@ -39,7 +39,7 @@ public class Key {
      * @param key Key.
      * @return Major key?
      */
-    private boolean isMajorKey(String key) {
+    public static boolean isMajorKey(String key) {
         String[] majorKeys = Key.validMajorKeys.split("\\|");
         HashSet<String> setMajorKeys = new HashSet<String>(Arrays.asList(majorKeys));
         return setMajorKeys.contains(key);
@@ -51,7 +51,7 @@ public class Key {
      * @param key Key.
      * @return Minor key?
      */
-    private boolean isMinorKey(String key) {
+    public static boolean isMinorKey(String key) {
         String[] minorKeys = Key.validMinorKeys.split("\\|");
         HashSet<String> setMinorKeys = new HashSet<String>(Arrays.asList(minorKeys));
         return setMinorKeys.contains(key);
