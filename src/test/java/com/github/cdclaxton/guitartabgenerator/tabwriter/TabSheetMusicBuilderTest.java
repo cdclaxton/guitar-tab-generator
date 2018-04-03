@@ -27,7 +27,11 @@ class TabSheetMusicBuilderTest {
         // Build the sheet music tab
         List<String> sheetMusicLines = TabSheetMusicBuilder.buildTabSheetMusic(sheetMusic, 100);
 
-        sheetMusicLines.forEach(line -> System.out.println(line));
+        //sheetMusicLines.forEach(line -> System.out.println(line));
+
+        // Write to a file
+        File outputFile = File.createTempFile("output1", ".txt");
+        TabSheetMusicWriter.writeLines(sheetMusicLines, outputFile.getPath());
     }
 
 }
