@@ -34,6 +34,15 @@ public final class Transposition {
         }
     }
 
+    /**
+     * Transpose a chord.
+     *
+     * @param chord Chord to transpose.
+     * @param oldKey Old musical key.
+     * @param newKey New musical key.
+     * @return Transposed chord.
+     * @throws TranspositionException
+     */
     public static String transposeChord(String chord, String oldKey, String newKey) throws TranspositionException {
 
         // Check the keys are valid
@@ -61,6 +70,15 @@ public final class Transposition {
         else return transposedBaseNote + parts.rest + "/" + transposeNote(parts.bassNote, nSemitones, newKey);
     }
 
+    /**
+     * Transpose a note a given number of semitones.
+     *
+     * @param note Note to transpose.
+     * @param nSemitones Number of semitones to transpose the note.
+     * @param newKey New musical key (after transposition).
+     * @return Transposed note.
+     * @throws TranspositionException
+     */
     protected static String transposeNote(String note, int nSemitones, String newKey) throws TranspositionException {
 
         // Get the index of the note
@@ -77,6 +95,13 @@ public final class Transposition {
         return transposedNote;
     }
 
+    /**
+     * Split a chord into three parts (base, rest, bass note).
+     *
+     * @param chord Chord to split.
+     * @return Chord parts.
+     * @throws TranspositionException
+     */
     protected static ChordParts splitChord(String chord) throws TranspositionException {
         final String pattern = "([ABCDEFG](?:#|b)?)([A-Za-z0-9]*)(/[ABCDEFG](?:#|b)?)?";
         final Pattern compiledPattern = Pattern.compile(pattern);
@@ -93,6 +118,14 @@ public final class Transposition {
         }
     }
 
+    /**
+     * Get the number of semitones different between two keys.
+     *
+     * @param oldKey Old musical key.
+     * @param newKey New musical key.
+     * @return Number of semitones different.
+     * @throws TranspositionException
+     */
     protected static int numSemitones(String oldKey, String newKey) throws TranspositionException {
         String oldKeyBaseNote = keyBaseNote(oldKey);
         String newKeyBaseNote = keyBaseNote(newKey);
@@ -106,42 +139,98 @@ public final class Transposition {
         return diff;
     }
 
+    /**
+     * Get the base note from a musical key, e.g. A# from A#m.
+     * @param key Musical key.
+     * @return Base note.
+     */
     protected static String keyBaseNote(String key) {
         if (isMinorKey(key)) return removeMinor(key);
         else return key;
     }
 
+    /**
+     * Is the musical key a minor key?
+     *
+     * @param key Key.
+     * @return True if the key is a minor key, otherwise false.
+     */
     protected static boolean isMinorKey(String key) {
         return key.endsWith("m");
     }
 
+    /**
+     * Take the minor part off of the musical key, if present.
+     *
+     * @param key Key.
+     * @return Key without the minor part.
+     */
     protected static String removeMinor(String key) {
         if (Transposition.isMinorKey(key)) return key.substring(0, key.length()-1);
         else return key;
     }
 
+    /**
+     * Given a base note (e.g. A#, Bb), find its index.
+     *
+     * @param baseNote Base note.
+     * @return Index.
+     * @throws TranspositionException
+     */
     protected static int baseNoteToIndex(String baseNote) throws TranspositionException {
         if (inNotes(baseNote)) return noteIndex(baseNote);
         else if (inEnharmonicNotes(baseNote)) return enharmonicNoteIndex(baseNote);
         else throw new TranspositionException("Base note is not valid: " + baseNote);
     }
 
+    /**
+     * Is the note in the list of notes?
+     *
+     * @param note Note.
+     * @return True if the note is contained in the list, otherwise false.
+     */
     private static boolean inNotes(String note) {
         return Arrays.asList(notes).contains(note);
     }
 
+    /**
+     * Is the note in the list of enharmonic notes?
+     *
+     * @param note Note.
+     * @return True if the note is contained in the list, otherwise false.
+     */
     private static boolean inEnharmonicNotes(String note) {
         return Arrays.asList(enharmonicNotes).contains(note);
     }
 
+    /**
+     * Get the index of a note.
+     *
+     * @param note
+     * @return
+     */
     private static int noteIndex(String note) {
         return Arrays.asList(notes).indexOf(note);
     }
 
+    /**
+     * Get the index of an (enharmonic) note.
+     *
+     * @param note Note.
+     * @return Index.
+     */
     private static int enharmonicNoteIndex(String note) {
         return Arrays.asList(enharmonicNotes).indexOf(note);
     }
 
+    /**
+     * Transpose a note given its index.
+     *
+     * @param noteIndex Note index.
+     * @param nSemitones Number of semitones to transpose the note.
+     * @return Transposed note index.
+     * @throws TranspositionException
+     */
     protected static int transposeNoteIndex(int noteIndex, int nSemitones) throws TranspositionException {
 
         // Check the note index is valid
