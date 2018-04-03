@@ -1,5 +1,9 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
+import com.github.cdclaxton.guitartabgenerator.tabparser.SheetMusicParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,6 +13,7 @@ public final class Transposition {
     private static String[] notes = {"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
     private static String[] enharmonicNotes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
     private static int numberNotes = 12;
+    private static Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
 
     public static class ChordParts {
         private String base;
@@ -44,6 +49,8 @@ public final class Transposition {
      * @throws TranspositionException
      */
     public static String transposeChord(String chord, String oldKey, String newKey) throws TranspositionException {
+
+        logger.debug("Transposing chord " + chord + " from key " + oldKey + " to key " + newKey);
 
         // Check the keys are valid
         if (!Key.isValid(oldKey)) throw new TranspositionException("Key " + oldKey + " is not valid");
