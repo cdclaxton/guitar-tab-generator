@@ -13,10 +13,12 @@ public final class Transposition {
     public static class ChordParts {
         private String base;
         private String rest;
+        private String bassNote;
 
-        public ChordParts(String base, String rest) {
+        public ChordParts(String base, String rest, String bassNote) {
             this.base = base;
             this.rest = rest;
+            this.bassNote = bassNote;
         }
 
         public String getBase() {
@@ -26,6 +28,10 @@ public final class Transposition {
         public String getRest() {
             return rest;
         }
+
+        public String getBassNote() {
+            return bassNote;
+        }
     }
 
     public static String transposeChord(String chord, String oldKey, String newKey) throws TranspositionException {
@@ -34,7 +40,7 @@ public final class Transposition {
         if (!Key.isValid(oldKey)) throw new TranspositionException("Key " + oldKey + " is not valid");
         if (!Key.isValid(newKey)) throw new TranspositionException("Key " + newKey + " is not valid");
 
-        // Check the keys are valid together
+        // Check the keys together are valid
         boolean oldKeyIsMajor = Key.isMajorKey(oldKey);
         boolean newKeyIsMajor = Key.isMajorKey(newKey);
         if ((oldKeyIsMajor & !newKeyIsMajor) || (!oldKeyIsMajor && newKeyIsMajor)) {
@@ -44,32 +50,44 @@ public final class Transposition {
         // Find the number of semitones difference between the keys
         int nSemitones = numSemitones(oldKey, newKey);
 
-        // Split the chord into two parts
+        // Split the chord into their parts
         ChordParts parts = splitChord(chord);
 
-        // Get the index of the base note
-        int noteIndex = baseNoteToIndex(parts.base);
+        // Transpose the base note
+        String transposedBaseNote = transposeNote(parts.base, nSemitones, newKey);
+
+        // Transpose the bass note if required
+        if (parts.bassNote.length() == 0) return transposedBaseNote + parts.rest;
+        else return transposedBaseNote + parts.rest + "/" + transposeNote(parts.bassNote, nSemitones, newKey);
+    }
+
+    protected static String transposeNote(String note, int nSemitones, String newKey) throws TranspositionException {
+
+        // Get the index of the note
+        int noteIndex = baseNoteToIndex(note);
 
         // Get the index of the transposed note
         int transposedIndex = transposeNoteIndex(noteIndex, nSemitones);
 
-        // Get the transposed base note
+        // Get the note letter (enharmonic where required)
         String transposedNote;
         if (inNotes(removeMinor(newKey))) transposedNote = notes[transposedIndex];
         else transposedNote = enharmonicNotes[transposedIndex];
 
-        // Rebuild the chord
-        return transposedNote + parts.rest;
+        return transposedNote;
     }
 
     protected static ChordParts splitChord(String chord) throws TranspositionException {
-        final String pattern = "([ABCDEFG](?:#|b)?)(.*)";
+        final String pattern = "([ABCDEFG](?:#|b)?)([A-Za-z0-9]*)(/[ABCDEFG](?:#|b)?)?";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(chord);
         if (matcher.find()) {
             String base = matcher.group(1);
             String rest = matcher.group(2);
-            return new ChordParts(base, rest);
+            String bassNote;
+            if (matcher.group(3) != null) bassNote = matcher.group(3).substring(1);
+            else bassNote = "";
+            return new ChordParts(base, rest, bassNote);
         } else {
             throw new TranspositionException("Can't split chord: " + chord);
         }

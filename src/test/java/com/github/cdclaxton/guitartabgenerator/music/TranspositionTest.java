@@ -83,7 +83,15 @@ class TranspositionTest {
         assertEquals("D", Transposition.transposeChord("D", "A", "A"));
 
         assertEquals("Bb", Transposition.transposeChord("A", "A", "Bb"));
-        assertEquals("Bb", Transposition.transposeChord("A", "A", "Bb"));
+        assertEquals("C", Transposition.transposeChord("A", "A", "C"));
+        assertEquals("G", Transposition.transposeChord("F", "C", "D"));
+        assertEquals("G#m", Transposition.transposeChord("F#m", "G", "A"));
+
+        assertEquals("A/C#", Transposition.transposeChord("A/C#", "A", "A"));
+        assertEquals("B/D#", Transposition.transposeChord("A/C#", "A", "B"));
+        assertEquals("C/E", Transposition.transposeChord("A/C#", "A", "C"));
+        assertEquals("B/D#", Transposition.transposeChord("A/C#", "D", "E"));
+        assertEquals("C#m/B", Transposition.transposeChord("Bm/A", "G", "A"));
     }
 
     @Test
