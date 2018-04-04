@@ -11,7 +11,7 @@
     <properties>
         <slf4jVersion>1.7.25</slf4jVersion>
         <mavenCompilerPlugin>3.7.0</mavenCompilerPlugin>
-        <mavenSurefirePlugin>2.21.0</mavenSurefirePlugin>
+        <mavenSurefirePlugin>2.19.1</mavenSurefirePlugin>
     </properties>
 
     <dependencies>
@@ -43,7 +43,8 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
+            <version>5.0.3</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -82,6 +83,22 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${mavenSurefirePlugin}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>1.0.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>5.0.3</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
