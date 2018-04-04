@@ -10,6 +10,8 @@
 
     <properties>
         <slf4jVersion>1.7.25</slf4jVersion>
+        <mavenCompilerPlugin>3.7.0</mavenCompilerPlugin>
+        <mavenSurefirePlugin>2.21.0</mavenSurefirePlugin>
     </properties>
 
     <dependencies>
@@ -53,9 +55,29 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${mavenCompilerPlugin}</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${mavenSurefirePlugin}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mavenCompilerPlugin}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
