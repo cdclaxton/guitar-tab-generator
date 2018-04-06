@@ -133,7 +133,7 @@ public final class ChordTransposition {
      * @return Number of semitones different.
      * @throws TranspositionException
      */
-    protected static int numSemitones(String oldKey, String newKey) throws TranspositionException {
+    public static int numSemitones(String oldKey, String newKey) throws TranspositionException {
         String oldKeyBaseNote = keyBaseNote(oldKey);
         String newKeyBaseNote = keyBaseNote(newKey);
 
@@ -141,6 +141,8 @@ public final class ChordTransposition {
 
         if (diff > numberNotes/2) {
             diff = diff - numberNotes;
+        } else if (diff < -numberNotes/2) {
+            diff = diff + numberNotes;
         }
 
         return diff;

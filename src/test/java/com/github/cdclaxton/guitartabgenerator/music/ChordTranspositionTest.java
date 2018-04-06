@@ -41,6 +41,8 @@ class ChordTranspositionTest {
 
         assertEquals(2, ChordTransposition.numSemitones("A", "B"));
         assertEquals(2, ChordTransposition.numSemitones("C#m", "D#m"));
+        assertEquals(2, ChordTransposition.numSemitones("F#", "G#"));
+        assertEquals(2, ChordTransposition.numSemitones("G", "A"));
 
         assertEquals(3, ChordTransposition.numSemitones("A", "C"));
         assertEquals(3, ChordTransposition.numSemitones("C#m", "Em"));
@@ -52,6 +54,7 @@ class ChordTranspositionTest {
         assertEquals(-2, ChordTransposition.numSemitones("A", "G"));
         assertEquals(-2, ChordTransposition.numSemitones("G", "F"));
         assertEquals(-2, ChordTransposition.numSemitones("F", "Eb"));
+        assertEquals(-2, ChordTransposition.numSemitones("Bb", "Ab"));
     }
 
     @Test
