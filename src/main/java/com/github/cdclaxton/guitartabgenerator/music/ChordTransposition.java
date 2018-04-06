@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class Transposition {
+public final class ChordTransposition {
 
     private static String[] notes = {"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
     private static String[] enharmonicNotes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
@@ -173,7 +173,7 @@ public final class Transposition {
      * @return Key without the minor part.
      */
     protected static String removeMinor(String key) {
-        if (Transposition.isMinorKey(key)) return key.substring(0, key.length()-1);
+        if (ChordTransposition.isMinorKey(key)) return key.substring(0, key.length()-1);
         else return key;
     }
 
