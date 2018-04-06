@@ -1,8 +1,18 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
-public class NoteTransposition {
+public final class NoteTransposition {
 
-
+    /**
+     * Transpose a note to a different string.
+     *
+     * Note that the resulting fret number may be negative.
+     *
+     * @param fret Fret number.
+     * @param stringNumber Current string number.
+     * @param newStringNumber New string number.
+     * @return Fret number on the required string.
+     * @throws TranspositionException
+     */
     public static int sameNoteDifferentString(int fret, int stringNumber, int newStringNumber)
             throws TranspositionException {
 
@@ -22,6 +32,15 @@ public class NoteTransposition {
         return newFret;
     }
 
+    /**
+     * Find the fret number for a note on a lower (thicker) string.
+     *
+     * @param fret Fret number.
+     * @param stringNumber Current string number.
+     * @param nStringsDown Number of strings down to find the note.
+     * @return Fret number nStringsDown strings down.
+     * @throws TranspositionException
+     */
     private static int sameNoteLowerStrings(int fret, int stringNumber, int nStringsDown)
             throws TranspositionException {
 
@@ -36,6 +55,16 @@ public class NoteTransposition {
         return newFret;
     }
 
+    /**
+     * Find the fret number for a note on a higher (thinner) string.
+     *
+     * @param fret Fret number.
+     * @param stringNumber Current string number.
+     * @param nStringsUp Number of strings up to find the note.
+     * @return Fret number nStringsDown strings down.
+     * @return Fret number nStringsUp strings down.
+     * @throws TranspositionException
+     */
     private static int sameNoteHigherStrings(int fret, int stringNumber, int nStringsUp)
             throws TranspositionException {
 
@@ -50,6 +79,14 @@ public class NoteTransposition {
         return newFret;
     }
 
+    /**
+     * Find the fret number of a note on the next lowest (thicker) string.
+     *
+     * @param fret Fret number.
+     * @param stringNumber Current string number.
+     * @return Fret number on the lower string.
+     * @throws TranspositionException
+     */
     protected static int sameNoteLowerString(int fret, int stringNumber) throws TranspositionException {
 
         if (!isStringNumberValid(stringNumber))
@@ -61,6 +98,14 @@ public class NoteTransposition {
         else return fret + 5;
     }
 
+    /**
+     * Find the fret number of a note on the next highest (thinner) string.
+     *
+     * @param fret Fret number.
+     * @param stringNumber Current string number.
+     * @return Fret number on the higher string.
+     * @throws TranspositionException
+     */
     protected static int sameNoteHigherString(int fret, int stringNumber) throws TranspositionException {
 
         if (!isStringNumberValid(stringNumber))

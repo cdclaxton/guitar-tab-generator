@@ -45,6 +45,10 @@ class NoteTranspositionTest {
         assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 3, 3));
         assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 2, 2));
         assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 1, 1));
+
+        // Negative frets
+        assertEquals(-1, NoteTransposition.sameNoteDifferentString(3, 3, 2));
+
     }
 
     @Test
