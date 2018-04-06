@@ -31,7 +31,7 @@ public class NoteTransposition {
         int newStringNumber = stringNumber;
         for (int i = 0; i < nStringsDown; i++) {
             newFret = sameNoteLowerString(newFret, newStringNumber);
-            newStringNumber -= 1;
+            newStringNumber += 1;
         }
         return newFret;
     }
