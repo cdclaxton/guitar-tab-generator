@@ -49,4 +49,9 @@ public class Fret {
     public static boolean isStringNumberValid(int stringNumber) {
         return (stringNumber >= 1) && (stringNumber <= 6);
     }
+
+    @Override
+    public String toString() {
+        return "Fret[string=" + this.getStringNumber() + ",fret=" + this.getFretNumber() + "]";
+    }
 }
