@@ -15,7 +15,7 @@ public final class NoteTransposition {
         private int stringNumber;
         private int fretNumber;
 
-        public TempFret(int stringNumber, int fretNumber) {
+        TempFret(int stringNumber, int fretNumber) {
             this.stringNumber = stringNumber;
             this.fretNumber = fretNumber;
         }
@@ -73,6 +73,14 @@ public final class NoteTransposition {
         return null;
     }
 
+    /**
+     * Convert a list of TempFret objects to a list of Fret objects.
+     *
+     * @param tempFrets List of TempFret objects.
+     * @return List of Fret objects.
+     * @throws InvalidStringException
+     * @throws InvalidFretNumberException
+     */
     static List<Fret> tempFretsToFrets(List<TempFret> tempFrets)
             throws InvalidStringException, InvalidFretNumberException {
 
@@ -85,8 +93,16 @@ public final class NoteTransposition {
         return frets;
     }
 
-    static Fret tempFretToFret(TempFret fret) throws InvalidStringException, InvalidFretNumberException {
-        return new Fret(fret.getStringNumber(), fret.getFretNumber());
+    /**
+     * Convert a TempFret object to a Fret object.
+     *
+     * @param tempFret TempFret object to convert.
+     * @return Fret object.
+     * @throws InvalidStringException
+     * @throws InvalidFretNumberException
+     */
+    static Fret tempFretToFret(TempFret tempFret) throws InvalidStringException, InvalidFretNumberException {
+        return new Fret(tempFret.getStringNumber(), tempFret.getFretNumber());
     }
 
     /**
