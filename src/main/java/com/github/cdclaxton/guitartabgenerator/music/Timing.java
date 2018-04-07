@@ -19,4 +19,8 @@ public class Timing {
         return sixteenthNumber;
     }
 
+    @Override
+    public String toString() {
+        return "Timing[" + this.getSixteenthNumber() + "]";
+    }
 }
