@@ -48,6 +48,30 @@ class NoteTranspositionTest {
 
     }
 
+    @Test
+    void testTransposeNotesTwoNotesFiveSemitones() throws InvalidStringException, InvalidFretNumberException,
+            InvalidTimingException, TranspositionException {
+
+        for (int stringNumber = 1; stringNumber <= 5; stringNumber++) {
+
+            int randomFret1 = RandomGenerators.randomFret(0, 17);
+            int randomFret2 = RandomGenerators.randomFret(0, 17);
+
+            List<Note> notes1 = new NotesBuilder()
+                    .addNote(stringNumber, randomFret1, 0)
+                    .addNote(stringNumber+1, randomFret2, 0)
+                    .build();
+
+            List<Note> expectedTransposed1 = new NotesBuilder()
+                    .addNote(stringNumber, randomFret1+5, 0)
+                    .addNote(stringNumber+1, randomFret2+5, 0)
+                    .build();
+
+            assertEquals(expectedTransposed1, NoteTransposition.transposeNotes(notes1, 5));
+        }
+
+    }
+
 
 
     @Test
