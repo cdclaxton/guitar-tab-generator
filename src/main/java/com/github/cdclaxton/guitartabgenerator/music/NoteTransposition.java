@@ -3,6 +3,7 @@ package com.github.cdclaxton.guitartabgenerator.music;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Note the reason this class doesn't use the Fret class to represent strings and fret numbers is that
@@ -49,18 +50,35 @@ public final class NoteTransposition {
         }
     }
 
-    public static List<Fret> transposeNotes(List<Fret> frets, int nSemitones) {
+    /**
+     * Transpose the list of notes by the required number of semitones.
+     *
+     * @param frets List of notes (strings and fret numbers).
+     * @param nSemitones Number of semitones to transpose the notes.
+     * @return List of transposed notes.
+     * @throws TranspositionException
+     */
+    public static List<Fret> transposeNotes(List<Fret> frets, int nSemitones) throws TranspositionException {
 
+        // Convert the list of frets to TempFret objects (that can have negative fret numbers)
+        List<TempFret> tempFrets = fretsToTempFrets(frets);
 
-
-        // Transpose each of the notes individually
-
+        // Transpose each of the notes individually (but keeping them on the same string)
+        tempFrets = differentNotesSameStrings(tempFrets, nSemitones);
 
         // Resolve any conflicts
 
         // Convert the temporary notes to Fret objects
+        List<Fret> transposedFrets;
+        try {
+            transposedFrets = tempFretsToFrets(tempFrets);
+        } catch (InvalidStringException e) {
+            throw new TranspositionException("Transposed notes ended up with invalid strings");
+        } catch (InvalidFretNumberException e) {
+            throw new TranspositionException("Transposed notes ended up with invalid fret numbers");
+        }
 
-        return null;
+        return transposedFrets;
     }
 
     static List<TempFret> resolveConflicts(List<TempFret> frets) {
@@ -71,6 +89,32 @@ public final class NoteTransposition {
     static TempFret makeNoteValid(TempFret fret) {
 
         return null;
+    }
+
+    /**
+     * Convert a list of Fret objects to a list of TempFret objects.
+     *
+     * @param frets List of Fret objects.
+     * @return List of TempFret objects.
+     */
+    static List<TempFret> fretsToTempFrets(List<Fret> frets) {
+        List<TempFret> tempFrets = new ArrayList<>(frets.size());
+
+        for (Fret f : frets) {
+            tempFrets.add(fretToTempFret(f));
+        }
+
+        return tempFrets;
+    }
+
+    /**
+     * Convert a Fret object to a TempFret object.
+     *
+     * @param fret Fret object.
+     * @return TempFret object.
+     */
+    static TempFret fretToTempFret(Fret fret) {
+        return new TempFret(fret.getStringNumber(), fret.getFretNumber());
     }
 
     /**
@@ -87,7 +131,7 @@ public final class NoteTransposition {
         List<Fret> frets = new ArrayList<>(tempFrets.size());
 
         for (TempFret tempFret : tempFrets) {
-            frets.add(new Fret(tempFret.getStringNumber(), tempFret.getFretNumber()));
+            frets.add(tempFretToFret(tempFret));
         }
 
         return frets;
@@ -103,6 +147,19 @@ public final class NoteTransposition {
      */
     static Fret tempFretToFret(TempFret tempFret) throws InvalidStringException, InvalidFretNumberException {
         return new Fret(tempFret.getStringNumber(), tempFret.getFretNumber());
+    }
+
+    /**
+     * Transpose a list of notes such that they stay on their original guitar string (may cause invalid values).
+     *
+     * @param tempFrets List of notes.
+     * @param nSemitones Number of semitones to transpose the notes.
+     * @return List of (potentially invalid) transposed notes.
+     */
+    static List<TempFret> differentNotesSameStrings(List<TempFret> tempFrets, int nSemitones) {
+        return tempFrets.stream()
+                .map(tf -> differentNoteSameString(tf, nSemitones))
+                .collect(Collectors.toList());
     }
 
     /**
