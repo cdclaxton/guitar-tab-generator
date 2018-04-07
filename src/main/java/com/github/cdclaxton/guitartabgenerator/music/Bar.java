@@ -1,6 +1,7 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Bar {
 
@@ -26,5 +27,21 @@ public class Bar {
 
     public List<TimedChord> getTimedChords() {
         return timedChords;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bar bar = (Bar) o;
+        return timeSignature == bar.timeSignature &&
+                Objects.equals(notes, bar.notes) &&
+                Objects.equals(timedChords, bar.timedChords);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(timeSignature, notes, timedChords);
     }
 }
