@@ -1,11 +1,14 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
+import java.util.Objects;
+
 public class Fret {
 
     private int stringNumber;
     private int fretNumber;
 
     /**
+
      * Fret number.
      *
      * @param stringNumber String (1 = high E).
@@ -53,5 +56,21 @@ public class Fret {
     @Override
     public String toString() {
         return "Fret[string=" + this.getStringNumber() + ",fret=" + this.getFretNumber() + "]";
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fret fret = (Fret) o;
+        return stringNumber == fret.stringNumber &&
+                fretNumber == fret.fretNumber;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(stringNumber, fretNumber);
     }
 }
