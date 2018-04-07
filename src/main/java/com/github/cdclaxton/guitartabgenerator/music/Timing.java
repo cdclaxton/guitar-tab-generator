@@ -1,5 +1,7 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
+import java.util.Objects;
+
 public class Timing {
 
     private int sixteenthNumber;
@@ -22,5 +24,19 @@ public class Timing {
     @Override
     public String toString() {
         return "Timing[" + this.getSixteenthNumber() + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Timing timing = (Timing) o;
+        return sixteenthNumber == timing.sixteenthNumber;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(sixteenthNumber);
     }
 }
