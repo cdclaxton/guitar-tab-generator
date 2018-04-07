@@ -24,7 +24,7 @@ public final class BarTransposition {
 
         // Transpose the notes
         int numSemitones = BarTransposition.numSemitonesDifferent(currentKey, newKey, up);
-        List<Note> notes = BarTransposition.transposeNotes(bar.getNotes(), numSemitones);
+        List<Note> notes = NoteTransposition.transposeNotes(bar.getNotes(), numSemitones);
 
         // Construct and return the new bar
         return new Bar(bar.getTimeSignature(), notes, timedChords);
@@ -50,28 +50,6 @@ public final class BarTransposition {
 
         return nSemitones;
     }
-
-    protected static List<Note> transposeNotes(List<Note> notes, int numSemitones) {
-
-        List<Note> transposedNotes = new ArrayList<>();
-
-        for (Note note : notes) {
-            transposedNotes.add(BarTransposition.transposeNote(note, numSemitones));
-        }
-
-        return transposedNotes;
-    }
-
-    protected static Note transposeNote(Note note, int numSemitones) {
-
-        // TODO -- transpose
-        Fret currentFret = note.getFret();
-
-
-        // Construct and return the transposed note
-        return new Note(currentFret, note.getTiming());
-    }
-
 
     /**
      * Transpose a list of timed chords from the current key to a new key.
