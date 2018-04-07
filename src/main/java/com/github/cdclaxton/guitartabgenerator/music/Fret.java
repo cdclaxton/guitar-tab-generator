@@ -46,7 +46,7 @@ public class Fret {
      * @param stringNumber String number.
      * @return True if valid, otherwise false.
      */
-    public boolean isStringNumberValid(int stringNumber) {
+    public static boolean isStringNumberValid(int stringNumber) {
         return (stringNumber >= 1) && (stringNumber <= 6);
     }
 }

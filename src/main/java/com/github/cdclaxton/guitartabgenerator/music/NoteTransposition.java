@@ -1,32 +1,127 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Note the reason this class doesn't use the Fret class to represent strings and fret numbers is that
+ * that class is designed for storing valid combinations. Due to the way the transposition is performed
+ * iteratively, there may be negative frets in the intermediate stages.
+ */
 public final class NoteTransposition {
+
+    static class TempFret {
+        private int stringNumber;
+        private int fretNumber;
+
+        public TempFret(int stringNumber, int fretNumber) {
+            this.stringNumber = stringNumber;
+            this.fretNumber = fretNumber;
+        }
+
+        int getStringNumber() {
+            return this.stringNumber;
+        }
+
+        int getFretNumber() {
+            return this.fretNumber;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TempFret tempFret = (TempFret) o;
+            return stringNumber == tempFret.stringNumber &&
+                    fretNumber == tempFret.fretNumber;
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(stringNumber, fretNumber);
+        }
+
+        @Override
+        public String toString() {
+            return "TempFret[String: " + this.getStringNumber() + ", fret: " + this.getFretNumber() + "]";
+        }
+    }
+
+    public static List<Fret> transposeNotes(List<Fret> frets, int nSemitones) {
+
+
+
+        // Transpose each of the notes individually
+
+
+        // Resolve any conflicts
+
+        // Convert the temporary notes to Fret objects
+
+        return null;
+    }
+
+    static List<TempFret> resolveConflicts(List<TempFret> frets) {
+
+        return null;
+    }
+
+    static TempFret makeNoteValid(TempFret fret) {
+
+        return null;
+    }
+
+    static List<Fret> tempFretsToFrets(List<TempFret> tempFrets)
+            throws InvalidStringException, InvalidFretNumberException {
+
+        List<Fret> frets = new ArrayList<>(tempFrets.size());
+
+        for (TempFret tempFret : tempFrets) {
+            frets.add(new Fret(tempFret.getStringNumber(), tempFret.getFretNumber()));
+        }
+
+        return frets;
+    }
+
+    static Fret tempFretToFret(TempFret fret) throws InvalidStringException, InvalidFretNumberException {
+        return new Fret(fret.getStringNumber(), fret.getFretNumber());
+    }
+
+    /**
+     * Transpose a note such that the new note is on the same string.
+     *
+     * @param tempFret Note to transpose.
+     * @param nSemitones Number of semitones to transpose (-ve means down).
+     * @return Transposed note.
+     */
+    static TempFret differentNoteSameString(TempFret tempFret, int nSemitones) {
+        return new TempFret(tempFret.getStringNumber(), tempFret.getFretNumber() + nSemitones);
+    }
 
     /**
      * Transpose a note to a different string.
      *
-     * Note that the resulting fret number may be negative.
+     * Note that the resulting tempFret number may be negative.
      *
-     * @param fret Fret number.
-     * @param stringNumber Current string number.
+     * @param tempFret Fret number.
      * @param newStringNumber New string number.
      * @return Fret number on the required string.
      * @throws TranspositionException
      */
-    public static int sameNoteDifferentString(int fret, int stringNumber, int newStringNumber)
+    static TempFret sameNoteDifferentString(TempFret tempFret, int newStringNumber)
             throws TranspositionException {
 
-        if (!isStringNumberValid(stringNumber)) {
-            throw new TranspositionException("Current string number isn't valid: " + stringNumber);
-        } else if (!isStringNumberValid(newStringNumber)) {
+        if (!isStringNumberValid(newStringNumber)) {
             throw new TranspositionException("New string number isn't valid: " + newStringNumber);
         }
 
-        int newFret = fret;
-        if (newStringNumber < stringNumber) {
-            newFret = sameNoteHigherStrings(fret, stringNumber, stringNumber - newStringNumber);
-        } else if (newStringNumber > stringNumber) {
-            newFret = sameNoteLowerStrings(fret, stringNumber, newStringNumber - stringNumber);
+        TempFret newFret = tempFret;
+        if (newStringNumber < tempFret.getStringNumber()) {
+            newFret = sameNoteHigherStrings(newFret, tempFret.getStringNumber() - newStringNumber);
+        } else if (newStringNumber > tempFret.getStringNumber()) {
+            newFret = sameNoteLowerStrings(newFret, newStringNumber - tempFret.getStringNumber());
         }
 
         return newFret;
@@ -35,86 +130,84 @@ public final class NoteTransposition {
     /**
      * Find the fret number for a note on a lower (thicker) string.
      *
-     * @param fret Fret number.
-     * @param stringNumber Current string number.
+     * @param tempFret Fret number.
      * @param nStringsDown Number of strings down to find the note.
      * @return Fret number nStringsDown strings down.
      * @throws TranspositionException
      */
-    private static int sameNoteLowerStrings(int fret, int stringNumber, int nStringsDown)
+    static TempFret sameNoteLowerStrings(TempFret tempFret, int nStringsDown)
             throws TranspositionException {
 
         if (nStringsDown < 0) throw new TranspositionException("Number of strings down is negative");
 
-        int newFret = fret;
-        int newStringNumber = stringNumber;
+        TempFret newFret = tempFret;
         for (int i = 0; i < nStringsDown; i++) {
-            newFret = sameNoteLowerString(newFret, newStringNumber);
-            newStringNumber += 1;
+            newFret = sameNoteLowerString(newFret);
         }
+
         return newFret;
     }
 
     /**
      * Find the fret number for a note on a higher (thinner) string.
      *
-     * @param fret Fret number.
-     * @param stringNumber Current string number.
+     * @param tempFret Fret number.
      * @param nStringsUp Number of strings up to find the note.
      * @return Fret number nStringsDown strings down.
      * @return Fret number nStringsUp strings down.
      * @throws TranspositionException
      */
-    private static int sameNoteHigherStrings(int fret, int stringNumber, int nStringsUp)
+    static TempFret sameNoteHigherStrings(TempFret tempFret, int nStringsUp)
             throws TranspositionException {
 
         if (nStringsUp < 0) throw new TranspositionException("Number of strings up is negative");
 
-        int newFret = fret;
-        int newStringNumber = stringNumber;
+        TempFret newFret = tempFret;
         for (int i = 0; i < nStringsUp; i++) {
-            newFret = sameNoteHigherString(newFret, newStringNumber);
-            newStringNumber -= 1;
+            newFret = sameNoteHigherString(newFret);
         }
+
         return newFret;
     }
 
     /**
      * Find the fret number of a note on the next lowest (thicker) string.
      *
-     * @param fret Fret number.
-     * @param stringNumber Current string number.
+     * @param tempFret Fret number.
      * @return Fret number on the lower string.
      * @throws TranspositionException
      */
-    protected static int sameNoteLowerString(int fret, int stringNumber) throws TranspositionException {
+    static TempFret sameNoteLowerString(TempFret tempFret) throws TranspositionException {
 
-        if (!isStringNumberValid(stringNumber))
-            throw new TranspositionException("Invalid string number: " + stringNumber);
-        else if (stringNumber == 6)
+        if (tempFret.getStringNumber() == 6) {
             throw new TranspositionException("No string below 6");
+        }
 
-        if (stringNumber == 2) return fret + 4;
-        else return fret + 5;
+        if (tempFret.getStringNumber() == 2) {
+            return new TempFret(tempFret.getStringNumber() + 1, tempFret.getFretNumber() + 4);
+        } else {
+            return new TempFret(tempFret.getStringNumber() + 1, tempFret.getFretNumber() + 5);
+        }
     }
 
     /**
      * Find the fret number of a note on the next highest (thinner) string.
      *
-     * @param fret Fret number.
-     * @param stringNumber Current string number.
+     * @param tempFret Fret number.
      * @return Fret number on the higher string.
      * @throws TranspositionException
      */
-    protected static int sameNoteHigherString(int fret, int stringNumber) throws TranspositionException {
+    static TempFret sameNoteHigherString(TempFret tempFret) throws TranspositionException {
 
-        if (!isStringNumberValid(stringNumber))
-            throw new TranspositionException("Invalid string number: " + stringNumber);
-        else if (stringNumber == 1)
+        if (tempFret.getFretNumber() == 1) {
             throw new TranspositionException("No string above 1");
+        }
 
-        if (stringNumber == 3) return fret - 4;
-        else return fret - 5;
+        if (tempFret.getStringNumber() == 3) {
+            return new TempFret(tempFret.getStringNumber()-1, tempFret.getFretNumber() - 4);
+        } else {
+            return new TempFret(tempFret.getStringNumber()-1, tempFret.getFretNumber() - 5);
+        }
     }
 
     /**

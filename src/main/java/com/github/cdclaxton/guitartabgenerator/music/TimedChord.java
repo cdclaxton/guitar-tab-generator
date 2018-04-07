@@ -19,6 +19,10 @@ public class TimedChord {
         this.chord = chord;
     }
 
+    public TimedChord(Timing timing) {
+
+    }
+
     private boolean isValid(String chord) {
         return chord.length() > 0 && this.pattern.matcher(chord).find();
     }

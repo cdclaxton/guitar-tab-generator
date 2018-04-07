@@ -11,61 +11,113 @@ class NoteTranspositionTest {
     @Test
     void sameNoteDifferentString() throws TranspositionException {
 
-        // Open strings - down
-        assertEquals(5, NoteTransposition.sameNoteDifferentString(0, 1, 2));
-        assertEquals(4, NoteTransposition.sameNoteDifferentString(0, 2, 3));
-        assertEquals(5, NoteTransposition.sameNoteDifferentString(0, 3, 4));
-        assertEquals(5, NoteTransposition.sameNoteDifferentString(0, 4, 5));
-        assertEquals(5, NoteTransposition.sameNoteDifferentString(0, 5, 6));
+        // Open strings -- down
+        assertEquals(new NoteTransposition.TempFret(2, 5),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(1, 0), 2));
 
-        // Open strings - up
-        assertEquals(0, NoteTransposition.sameNoteDifferentString(5, 6, 5));
-        assertEquals(0, NoteTransposition.sameNoteDifferentString(5, 5, 4));
-        assertEquals(0, NoteTransposition.sameNoteDifferentString(5, 4, 3));
-        assertEquals(0, NoteTransposition.sameNoteDifferentString(4, 3, 2));
-        assertEquals(0, NoteTransposition.sameNoteDifferentString(5, 2, 1));
+        assertEquals(new NoteTransposition.TempFret(3, 4),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(2, 0), 3));
+
+        assertEquals(new NoteTransposition.TempFret(4, 5),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(3, 0), 4));
+
+        assertEquals(new NoteTransposition.TempFret(5, 5),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(4, 0), 5));
+
+        assertEquals(new NoteTransposition.TempFret(6, 5),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(5, 0), 6));
+
+        // Open strings -- up
+        assertEquals(new NoteTransposition.TempFret(5, 0),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(6, 5), 5));
+
+        assertEquals(new NoteTransposition.TempFret(4, 0),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(5, 5), 4));
+
+        assertEquals(new NoteTransposition.TempFret(3, 0),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(4, 5), 3));
+
+        assertEquals(new NoteTransposition.TempFret(2, 0),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(3, 4), 2));
+
+        assertEquals(new NoteTransposition.TempFret(1, 0),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(2, 5), 1));
 
         // Non-open strings - down
-        assertEquals(12, NoteTransposition.sameNoteDifferentString(7, 1, 2));
-        assertEquals(16, NoteTransposition.sameNoteDifferentString(7, 1, 3));
-        assertEquals(11, NoteTransposition.sameNoteDifferentString(7, 2, 3));
-        assertEquals(16, NoteTransposition.sameNoteDifferentString(7, 1, 3));
-        assertEquals(10, NoteTransposition.sameNoteDifferentString(1, 2, 4));
+        assertEquals(new NoteTransposition.TempFret(2, 12),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(1, 7), 2));
 
-        // Non-open strings - up
-        assertEquals(0, NoteTransposition.sameNoteDifferentString(5, 6, 5));
-        assertEquals(10, NoteTransposition.sameNoteDifferentString(1, 2, 4));
+        assertEquals(new NoteTransposition.TempFret(3, 16),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(1, 7), 3));
+
+        assertEquals(new NoteTransposition.TempFret(3, 11),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(2, 7), 3));
+
+        assertEquals(new NoteTransposition.TempFret(3, 16),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(1, 7), 3));
+
+        assertEquals(new NoteTransposition.TempFret(4, 10),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(2, 1), 4));
+
+        // Non-open strings -- up
+        assertEquals(new NoteTransposition.TempFret(5, 0),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(6, 5), 5));
+
+        assertEquals(new NoteTransposition.TempFret(4, 0),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(6, 10), 4));
+
 
         // No change in string number
         Random random = new Random();
         int randomFret = random.nextInt(22 + 1);
-        assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 6, 6));
-        assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 5, 5));
-        assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 4, 4));
-        assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 3, 3));
-        assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 2, 2));
-        assertEquals(randomFret, NoteTransposition.sameNoteDifferentString(randomFret, 1, 1));
+
+        for (int stringNumber = 1; stringNumber <= 6; stringNumber++) {
+            assertEquals(new NoteTransposition.TempFret(stringNumber, randomFret),
+                    NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(stringNumber, randomFret), stringNumber));
+
+
+        }
 
         // Negative frets
-        assertEquals(-1, NoteTransposition.sameNoteDifferentString(3, 3, 2));
+        assertEquals(new NoteTransposition.TempFret(2, -1),
+                NoteTransposition.sameNoteDifferentString(new NoteTransposition.TempFret(3, 3), 2));
 
     }
 
     @Test
     void sameNoteLowerString() throws TranspositionException {
-        assertEquals(5, NoteTransposition.sameNoteLowerString(0, 1));
-        assertEquals(4, NoteTransposition.sameNoteLowerString(0, 2));
-        assertEquals(5, NoteTransposition.sameNoteLowerString(0, 3));
-        assertEquals(5, NoteTransposition.sameNoteLowerString(0, 4));
-        assertEquals(5, NoteTransposition.sameNoteLowerString(0, 5));
+
+        assertEquals(new NoteTransposition.TempFret(2, 5),
+                NoteTransposition.sameNoteLowerString(new NoteTransposition.TempFret(1, 0)));
+
+        assertEquals(new NoteTransposition.TempFret(3, 4),
+                NoteTransposition.sameNoteLowerString(new NoteTransposition.TempFret(2, 0)));
+
+        assertEquals(new NoteTransposition.TempFret(4, 5),
+                NoteTransposition.sameNoteLowerString(new NoteTransposition.TempFret(3, 0)));
+
+        assertEquals(new NoteTransposition.TempFret(5, 5),
+                NoteTransposition.sameNoteLowerString(new NoteTransposition.TempFret(4, 0)));
+
+        assertEquals(new NoteTransposition.TempFret(6, 5),
+                NoteTransposition.sameNoteLowerString(new NoteTransposition.TempFret(5, 0)));
     }
 
     @Test
     void sameNoteHigherString() throws TranspositionException {
-        assertEquals(0, NoteTransposition.sameNoteHigherString(5, 6));
-        assertEquals(0, NoteTransposition.sameNoteHigherString(5, 5));
-        assertEquals(0, NoteTransposition.sameNoteHigherString(5, 4));
-        assertEquals(0, NoteTransposition.sameNoteHigherString(4, 3));
-        assertEquals(0, NoteTransposition.sameNoteHigherString(5, 2));
+        assertEquals(new NoteTransposition.TempFret(5, 0),
+                NoteTransposition.sameNoteHigherString(new NoteTransposition.TempFret(6, 5)));
+
+        assertEquals(new NoteTransposition.TempFret(4, 0),
+                NoteTransposition.sameNoteHigherString(new NoteTransposition.TempFret(5, 5)));
+
+        assertEquals(new NoteTransposition.TempFret(3, 0),
+                NoteTransposition.sameNoteHigherString(new NoteTransposition.TempFret(4, 5)));
+
+        assertEquals(new NoteTransposition.TempFret(2, 0),
+                NoteTransposition.sameNoteHigherString(new NoteTransposition.TempFret(3, 4)));
+
+        assertEquals(new NoteTransposition.TempFret(1, 0),
+                NoteTransposition.sameNoteHigherString(new NoteTransposition.TempFret(2, 5)));
     }
 }
