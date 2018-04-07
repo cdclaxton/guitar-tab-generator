@@ -51,6 +51,33 @@ public final class NoteTransposition {
     }
 
     /**
+     * Transpose a list of notes by the required number of semitones.
+     *
+     * @param notes List of notes.
+     * @param nSemitones Number of semitones to transpose the notes.
+     * @return List of transposed notes.
+     * @throws TranspositionException
+     */
+    public static List<Note> transposeNotes(List<Note> notes, int nSemitones) throws TranspositionException {
+
+        // Make a list of frets
+        List<Fret> frets = notes.stream().map(n -> n.getFret()).collect(Collectors.toList());
+
+        // Transpose the frets
+        List<Fret> transposedFrets = transposeFrets(frets, nSemitones);
+        assert transposedFrets.size() == notes.size();
+
+        // Create a list of transposed notes
+        List<Note> transposedNotes = new ArrayList<>(frets.size());
+        for (int i = 0; i < transposedNotes.size(); i++) {
+            Timing timing = notes.get(i).getTiming();
+            transposedNotes.add(new Note(transposedFrets.get(i), timing));
+        }
+
+        return transposedNotes;
+    }
+
+    /**
      * Transpose the list of notes by the required number of semitones.
      *
      * @param frets List of notes (strings and fret numbers).
@@ -58,7 +85,7 @@ public final class NoteTransposition {
      * @return List of transposed notes.
      * @throws TranspositionException
      */
-    public static List<Fret> transposeNotes(List<Fret> frets, int nSemitones) throws TranspositionException {
+    public static List<Fret> transposeFrets(List<Fret> frets, int nSemitones) throws TranspositionException {
 
         // Convert the list of frets to TempFret objects (that can have negative fret numbers)
         List<TempFret> tempFrets = fretsToTempFrets(frets);
