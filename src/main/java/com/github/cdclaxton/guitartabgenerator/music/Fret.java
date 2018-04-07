@@ -13,7 +13,7 @@ public class Fret {
      */
     public Fret(int stringNumber, int fretNumber) throws InvalidFretNumberException, InvalidStringException {
         // Check the stringNumber is valid for a standard guitar
-        if ((stringNumber < 1) || (stringNumber > 6)) {
+        if (!isStringNumberValid(stringNumber)) {
             throw new InvalidStringException("Invalid guitar stringNumber");
         }
 
@@ -38,5 +38,15 @@ public class Fret {
 
     public int getStringNumber() {
         return stringNumber;
+    }
+
+    /**
+     * Is the guitar string number valid?
+     *
+     * @param stringNumber String number.
+     * @return True if valid, otherwise false.
+     */
+    public static boolean isStringNumberValid(int stringNumber) {
+        return (stringNumber >= 1) && (stringNumber <= 6);
     }
 }
