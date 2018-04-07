@@ -2,43 +2,9 @@ package com.github.cdclaxton.guitartabgenerator.music;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BarTranspositionTest {
-
-    /**
-     * Generate a random integer in the interval [min, max].
-     *
-     * @param min Minimum value.
-     * @param max Maximum value.
-     * @return Random integer in the range [min, max].
-     */
-    private int randomInteger(int min, int max) {
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
-
-    /**
-     * Generate a random timing value in the interval [0,15].
-     *
-     * @return Random timing.
-     */
-    private int randomTiming() {
-        return randomInteger(0, 15);
-    }
-
-    /**
-     * Generate a random fret number in the range [minFret, maxFret].
-     *
-     * @param minFret Minimum fret number.
-     * @param maxFret Maximum fret number.
-     * @return Random fret.
-     */
-    private int randomFret(int minFret, int maxFret) {
-        return randomInteger(minFret, maxFret);
-    }
 
     @Test
     void testTransposeBarSingleNote() throws InvalidTimingException, InvalidChordException,
@@ -47,9 +13,9 @@ class BarTranspositionTest {
         // Single note - same string before and after transposition
         for (int stringNumber = 1; stringNumber <= 6; stringNumber++) {
 
-            int chordTiming = randomTiming();
-            int noteTiming = randomTiming();
-            int initialFret = randomFret(1,22);
+            int chordTiming = RandomGenerators.randomTiming();
+            int noteTiming = RandomGenerators.randomTiming();
+            int initialFret = RandomGenerators.randomFret(1,22);
 
             Bar bar = new BarBuilder(Bar.TimeSignature.Four4)
                     .addTimedChord(chordTiming, "C")
@@ -74,8 +40,8 @@ class BarTranspositionTest {
         for (int lowerString = 6; lowerString > 1; lowerString--) {
 
             int upperString = lowerString - 1;
-            int chordTiming = randomTiming();
-            int noteTiming = randomTiming();
+            int chordTiming = RandomGenerators.randomTiming();
+            int noteTiming = RandomGenerators.randomTiming();
 
             Bar bar = new BarBuilder(Bar.TimeSignature.Four4)
                     .addTimedChord(chordTiming, "C")

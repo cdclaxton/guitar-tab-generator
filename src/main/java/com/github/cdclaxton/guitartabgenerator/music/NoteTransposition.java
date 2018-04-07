@@ -69,7 +69,7 @@ public final class NoteTransposition {
 
         // Create a list of transposed notes
         List<Note> transposedNotes = new ArrayList<>(frets.size());
-        for (int i = 0; i < transposedNotes.size(); i++) {
+        for (int i = 0; i < notes.size(); i++) {
             Timing timing = notes.get(i).getTiming();
             transposedNotes.add(new Note(transposedFrets.get(i), timing));
         }
@@ -85,7 +85,7 @@ public final class NoteTransposition {
      * @return List of transposed notes.
      * @throws TranspositionException
      */
-    public static List<Fret> transposeFrets(List<Fret> frets, int nSemitones) throws TranspositionException {
+    static List<Fret> transposeFrets(List<Fret> frets, int nSemitones) throws TranspositionException {
 
         // Convert the list of frets to TempFret objects (that can have negative fret numbers)
         List<TempFret> tempFrets = fretsToTempFrets(frets);

@@ -2,11 +2,53 @@ package com.github.cdclaxton.guitartabgenerator.music;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class NoteTranspositionTest {
+
+    class NotesBuilder {
+        private List<Note> notes = new ArrayList<>();
+
+        public NotesBuilder() {}
+
+        public NotesBuilder addNote(int stringNumber, int fret, int timing)
+                throws InvalidStringException, InvalidFretNumberException, InvalidTimingException {
+
+            notes.add(new Note(new Fret(stringNumber, fret), new Timing(timing)));
+            return this;
+        }
+
+        public List<Note> build() {
+            return this.notes;
+        }
+    }
+
+    @Test
+    void testTransposeNotesSingleNoteOneSemitone() throws InvalidStringException, InvalidFretNumberException,
+            InvalidTimingException, TranspositionException {
+
+        for (int stringNumber = 1; stringNumber <= 6; stringNumber++) {
+
+            int randomFret = RandomGenerators.randomFret(0, 21);
+
+            List<Note> notes1 = new NotesBuilder()
+                    .addNote(stringNumber, randomFret, 0)
+                    .build();
+
+            List<Note> expectedTransposed1 = new NotesBuilder()
+                    .addNote(stringNumber, randomFret+1, 0)
+                    .build();
+
+            assertEquals(expectedTransposed1, NoteTransposition.transposeNotes(notes1, 1));
+        }
+
+    }
+
+
 
     @Test
     void sameNoteDifferentString() throws TranspositionException {
