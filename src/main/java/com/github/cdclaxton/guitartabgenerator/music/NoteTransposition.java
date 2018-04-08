@@ -56,16 +56,18 @@ public final class NoteTransposition {
      *
      * @param notes List of notes.
      * @param nSemitones Number of semitones to transpose the notes.
+     * @param maxFretNumber Maximum fret number.
      * @return List of transposed notes.
      * @throws TranspositionException
      */
-    public static List<Note> transposeNotes(final List<Note> notes, final int nSemitones) throws TranspositionException {
+    public static List<Note> transposeNotes(final List<Note> notes, final int nSemitones, final int maxFretNumber)
+            throws TranspositionException {
 
         // Make a list of frets
         List<Fret> frets = notes.stream().map(n -> n.getFret()).collect(Collectors.toList());
 
         // Transpose the frets
-        List<Fret> transposedFrets = transposeFrets(frets, nSemitones);
+        List<Fret> transposedFrets = transposeFrets(frets, nSemitones, maxFretNumber);
         assert transposedFrets.size() == notes.size();
 
         // Create a list of transposed notes
@@ -86,7 +88,8 @@ public final class NoteTransposition {
      * @return List of transposed notes.
      * @throws TranspositionException
      */
-    private static List<Fret> transposeFrets(final List<Fret> frets, final int nSemitones) throws TranspositionException {
+    private static List<Fret> transposeFrets(final List<Fret> frets, final int nSemitones, final int maxFretNumber)
+            throws TranspositionException {
 
         // Convert the list of frets to TempFret objects (that can have negative fret numbers)
         List<TempFret> tempFrets = fretsToTempFrets(frets);
@@ -95,7 +98,7 @@ public final class NoteTransposition {
         tempFrets = differentNotesSameStrings(tempFrets, nSemitones);
 
         // Resolve any conflicts
-        //tempFrets = resolveConflicts(tempFrets, nSemitones > 0);
+        tempFrets = resolveConflicts(tempFrets, nSemitones > 0, maxFretNumber);
 
         // Convert the temporary notes to Fret objects
         List<Fret> transposedFrets;
@@ -110,14 +113,30 @@ public final class NoteTransposition {
         return transposedFrets;
     }
 
-    static List<TempFret> resolveConflicts(List<TempFret> frets, boolean up) {
+    /**
+     * Resolve fret conflicts, e.g. negative frets, frets too high.
+     *
+     * @param tempFrets List of frets.
+     * @param up Transposed up?
+     * @param maxFretNumber Maximum fret number.
+     * @return List of (potentially) resolved notes.
+     * @throws TranspositionException
+     */
+    static List<TempFret> resolveConflicts(List<TempFret> tempFrets, final boolean up, final int maxFretNumber)
+            throws TranspositionException {
 
-        return null;
-    }
+        if (up) {
+            // Transposed up, therefore the notes could be difficult or impossible to play
+            if (minimumStringNumber(tempFrets) > 1) {
+                tempFrets = moveToHigherStrings(tempFrets, maxFretNumber);
+            }
 
-    static boolean areNotesValid(List<TempFret> tempFrets) {
+        } else {
+            // Could be negative frets, so move to lower strings if that's the case
+            tempFrets = moveToLowerStrings(tempFrets);
+        }
 
-        return true;
+        return tempFrets;
     }
 
     /**
@@ -190,6 +209,20 @@ public final class NoteTransposition {
     }
 
     /**
+     * Find the minimum string number.
+     *
+     * @param tempFrets List of temp fret objects.
+     * @return
+     */
+    private static int minimumStringNumber(final List<TempFret> tempFrets) {
+
+        // Precondition
+        assert tempFrets.size() > 0;
+
+        return tempFrets.stream().mapToInt(tf -> tf.getStringNumber()).min().getAsInt();
+    }
+
+    /**
      * Find the minimum fret number.
      *
      * @param tempFrets List of temp fret objects.
@@ -200,7 +233,7 @@ public final class NoteTransposition {
         // Precondition
         assert tempFrets.size() > 0;
 
-        return tempFrets.stream().map(tf -> tf.getFretNumber()).mapToInt(i -> i).min().getAsInt();
+        return tempFrets.stream().mapToInt(tf -> tf.getFretNumber()).min().getAsInt();
     }
 
     /**
@@ -214,7 +247,7 @@ public final class NoteTransposition {
         // Precondition
         assert tempFrets.size() > 0;
 
-        return tempFrets.stream().map(tf -> tf.getFretNumber()).mapToInt(i -> i).max().getAsInt();
+        return tempFrets.stream().mapToInt(tf -> tf.getFretNumber()).max().getAsInt();
     }
 
     /**
