@@ -12,11 +12,13 @@ public final class BarTransposition {
      * @param currentKey Current musical key.
      * @param newKey New musical key.
      * @param up Transpose notes up?
+     * @param maxFretNumber Maximum fret number.
      * @return Transposed bar.
      * @throws TranspositionException
      * @throws InvalidChordException
      */
-    public static Bar transposeBar(Bar bar, String currentKey, String newKey, boolean up)
+    public static Bar transposeBar(final Bar bar, final String currentKey, final String newKey,
+                                   final boolean up, final int maxFretNumber)
             throws TranspositionException, InvalidChordException {
 
         // Transpose the chords
@@ -24,7 +26,7 @@ public final class BarTransposition {
 
         // Transpose the notes
         int numSemitones = BarTransposition.numSemitonesDifferent(currentKey, newKey, up);
-        List<Note> notes = NoteTransposition.transposeNotes(bar.getNotes(), numSemitones);
+        List<Note> notes = NoteTransposition.transposeNotes(bar.getNotes(), numSemitones, maxFretNumber);
 
         // Construct and return the new bar
         return new Bar(bar.getTimeSignature(), notes, timedChords);

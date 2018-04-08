@@ -60,7 +60,7 @@ class NoteTranspositionTest {
                     .addNote(stringNumber, randomFret+1, 0)
                     .build();
 
-            assertEquals(expectedTransposed1, NoteTransposition.transposeNotes(notes1, 1));
+            assertEquals(expectedTransposed1, NoteTransposition.transposeNotes(notes1, 1, 22));
         }
 
     }
@@ -84,7 +84,7 @@ class NoteTranspositionTest {
                     .addNote(stringNumber+1, randomFret2+5, 0)
                     .build();
 
-            assertEquals(expectedTransposed1, NoteTransposition.transposeNotes(notes1, 5));
+            assertEquals(expectedTransposed1, NoteTransposition.transposeNotes(notes1, 5, 22));
         }
 
     }

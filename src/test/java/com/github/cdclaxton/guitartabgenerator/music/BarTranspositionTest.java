@@ -27,7 +27,7 @@ class BarTranspositionTest {
                     .addNote(1,initialFret-1, noteTiming)
                     .build();
 
-            Bar barTransposed = BarTransposition.transposeBar(bar, "C", "B", false);
+            Bar barTransposed = BarTransposition.transposeBar(bar, "C", "B", false, 22);
             assertEquals(barExpected, barTransposed);
         }
 
@@ -51,11 +51,11 @@ class BarTranspositionTest {
 
             Bar barExpected = new BarBuilder(Bar.TimeSignature.Four4)
                     .addTimedChord(chordTiming, "D")
-                    .addNote(upperString, 4, noteTiming)
+                    .addNote(lowerString, 4, noteTiming)
                     .addNote(upperString, 4, noteTiming)
                     .build();
 
-            Bar barTransposed = BarTransposition.transposeBar(bar, "C", "D", false);
+            Bar barTransposed = BarTransposition.transposeBar(bar, "C", "D", true, 22);
             assertEquals(barExpected, barTransposed);
         }
 
@@ -94,9 +94,9 @@ class BarTranspositionTest {
         Bar bar1Expected = new BarBuilder(Bar.TimeSignature.Four4)
                 .addTimedChord(0, "Bb")
                 .addNote(2,4,0)
-                .addNote(4,6,4)
+                .addNote(3,5,4)
                 .build();
-        Bar bar1Transposed = BarTransposition.transposeBar(bar1, "C", "Bb", false);
+        Bar bar1Transposed = BarTransposition.transposeBar(bar1, "C", "Bb", false, 22);
         assertEquals(bar1Expected, bar1Transposed);
     }
 

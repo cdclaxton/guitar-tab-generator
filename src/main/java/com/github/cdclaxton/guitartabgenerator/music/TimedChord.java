@@ -1,5 +1,6 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class TimedChord {
@@ -19,10 +20,6 @@ public class TimedChord {
         this.chord = chord;
     }
 
-    public TimedChord(Timing timing) {
-
-    }
-
     private boolean isValid(String chord) {
         return chord.length() > 0 && this.pattern.matcher(chord).find();
     }
@@ -33,5 +30,25 @@ public class TimedChord {
 
     public Timing getTiming() {
         return timing;
+    }
+
+    @Override
+    public String toString() {
+        return "TimedChord[chord=" + this.getChord() + ",timing=" + this.getTiming() + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimedChord that = (TimedChord) o;
+        return Objects.equals(timing, that.timing) &&
+                Objects.equals(chord, that.chord);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(timing, chord);
     }
 }
