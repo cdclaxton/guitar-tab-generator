@@ -131,12 +131,29 @@ public final class NoteTransposition {
                 tempFrets = moveToHigherStrings(tempFrets, maxFretNumber);
             }
 
+            // Move down the octave if the maximum fret number is too high
+            if (maximumFretNumber(tempFrets) > maxFretNumber) {
+                tempFrets = dropDownAnOctave(tempFrets);
+            }
+
         } else {
             // Could be negative frets, so move to lower strings if that's the case
             tempFrets = moveToLowerStrings(tempFrets);
         }
 
         return tempFrets;
+    }
+
+    /**
+     * Drop all notes down one octave.
+     *
+     * @param tempFrets List of notes to transpose.
+     * @return Transposed notes.
+     */
+    private static List<TempFret> dropDownAnOctave(final List<TempFret> tempFrets) {
+        return tempFrets.stream()
+                .map(tf -> new TempFret(tf.getStringNumber(), tf.getFretNumber()-12))
+                .collect(Collectors.toList());
     }
 
     /**
