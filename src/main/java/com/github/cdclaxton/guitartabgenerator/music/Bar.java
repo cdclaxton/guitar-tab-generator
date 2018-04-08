@@ -44,4 +44,9 @@ public class Bar {
 
         return Objects.hash(timeSignature, notes, timedChords);
     }
+
+    @Override
+    public String toString() {
+        return "Bar[" + this.timeSignature + ",timedChords=" + this.timedChords + ",notes=" + this.notes + "]";
+    }
 }
