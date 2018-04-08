@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NoteTranspositionTest {
 
+    private final  int NUM_RANDOM_TESTS = 100;
+
     class NotesBuilder {
         private List<Note> notes = new ArrayList<>();
 
@@ -24,6 +26,21 @@ class NoteTranspositionTest {
 
         public List<Note> build() {
             return this.notes;
+        }
+    }
+
+    class TempFretBuilder {
+        private List<NoteTransposition.TempFret> tempFrets = new ArrayList<>();
+
+        public TempFretBuilder() {}
+
+        public TempFretBuilder addTempFret(int stringNumber, int fret) {
+            tempFrets.add(new NoteTransposition.TempFret(stringNumber, fret));
+            return this;
+        }
+
+        public List<NoteTransposition.TempFret> build() {
+            return this.tempFrets;
         }
     }
 
@@ -71,8 +88,6 @@ class NoteTranspositionTest {
         }
 
     }
-
-
 
     @Test
     void sameNoteDifferentString() throws TranspositionException {
@@ -186,4 +201,54 @@ class NoteTranspositionTest {
         assertEquals(new NoteTransposition.TempFret(1, 0),
                 NoteTransposition.sameNoteHigherString(new NoteTransposition.TempFret(2, 5)));
     }
+
+    @Test
+    void makeNoteNegativeFretValid() throws TranspositionException {
+
+        // Note that doesn't need changing
+        for (int i = 0; i < NUM_RANDOM_TESTS; i++) {
+            int stringNumber = RandomGenerators.randomStringNumber();
+            int fretNumber = RandomGenerators.randomFret(0,16);
+            NoteTransposition.TempFret tempFret = new NoteTransposition.TempFret(stringNumber, fretNumber);
+            assertEquals(tempFret, NoteTransposition.makeNoteNegativeFretValid(tempFret));
+        }
+
+        // Notes that need to go one string down (thicker string)
+        assertEquals(new NoteTransposition.TempFret(2, 4),
+                NoteTransposition.makeNoteNegativeFretValid(new NoteTransposition.TempFret(1, -1)));
+        assertEquals(new NoteTransposition.TempFret(3, 3),
+                NoteTransposition.makeNoteNegativeFretValid(new NoteTransposition.TempFret(2, -1)));
+        assertEquals(new NoteTransposition.TempFret(4, 4),
+                NoteTransposition.makeNoteNegativeFretValid(new NoteTransposition.TempFret(3, -1)));
+        assertEquals(new NoteTransposition.TempFret(5, 4),
+                NoteTransposition.makeNoteNegativeFretValid(new NoteTransposition.TempFret(4, -1)));
+        assertEquals(new NoteTransposition.TempFret(6, 4),
+                NoteTransposition.makeNoteNegativeFretValid(new NoteTransposition.TempFret(5, -1)));
+    }
+
+    @Test
+    void moveToLowerStrings() throws TranspositionException {
+        List<NoteTransposition.TempFret> tempFrets = new TempFretBuilder()
+                .addTempFret(5, -1)
+                .addTempFret(4, 1)
+                .addTempFret(2, 1)
+                .build();
+
+        List<NoteTransposition.TempFret> expected = new TempFretBuilder()
+                .addTempFret(6, 4)
+                .addTempFret(5, 6)
+                .addTempFret(3,5)
+                .build();
+
+        assertEquals(expected, NoteTransposition.moveToLowerStrings(tempFrets));
+    }
+
+    @Test
+    void changeToNonConflictingStrings() {
+
+        // One note
+
+
+    }
+
 }

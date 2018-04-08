@@ -3,6 +3,7 @@ package com.github.cdclaxton.guitartabgenerator.music;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +59,7 @@ public final class NoteTransposition {
      * @return List of transposed notes.
      * @throws TranspositionException
      */
-    public static List<Note> transposeNotes(List<Note> notes, int nSemitones) throws TranspositionException {
+    public static List<Note> transposeNotes(final List<Note> notes, final int nSemitones) throws TranspositionException {
 
         // Make a list of frets
         List<Fret> frets = notes.stream().map(n -> n.getFret()).collect(Collectors.toList());
@@ -85,7 +86,7 @@ public final class NoteTransposition {
      * @return List of transposed notes.
      * @throws TranspositionException
      */
-    static List<Fret> transposeFrets(List<Fret> frets, int nSemitones) throws TranspositionException {
+    private static List<Fret> transposeFrets(final List<Fret> frets, final int nSemitones) throws TranspositionException {
 
         // Convert the list of frets to TempFret objects (that can have negative fret numbers)
         List<TempFret> tempFrets = fretsToTempFrets(frets);
@@ -94,6 +95,7 @@ public final class NoteTransposition {
         tempFrets = differentNotesSameStrings(tempFrets, nSemitones);
 
         // Resolve any conflicts
+        //tempFrets = resolveConflicts(tempFrets, nSemitones > 0);
 
         // Convert the temporary notes to Fret objects
         List<Fret> transposedFrets;
@@ -108,14 +110,79 @@ public final class NoteTransposition {
         return transposedFrets;
     }
 
-    static List<TempFret> resolveConflicts(List<TempFret> frets) {
+    static List<TempFret> resolveConflicts(List<TempFret> frets, boolean up) {
 
         return null;
     }
 
-    static TempFret makeNoteValid(TempFret fret) {
+    static boolean areNotesValid(List<TempFret> tempFrets) {
+
+        return true;
+    }
+
+    /**
+     * Make a note with a negative fret number valid by changing strings.
+     *
+     * @param fret (Potentially) invalid fret.
+     * @return Valid fret.
+     * @throws TranspositionException
+     */
+    static TempFret makeNoteNegativeFretValid(TempFret fret) throws TranspositionException {
+
+        if (fret.getFretNumber() < 0) {
+            while (fret.getStringNumber() < 6 && fret.getFretNumber() < 0) {
+                fret = NoteTransposition.sameNoteLowerString(fret);
+            }
+        }
+
+        // Check that the above logic was able to make the note valid
+        if (fret.getFretNumber() < 0) {
+            throw new TranspositionException("Can't make note valid: " + fret);
+        }
+
+        return fret;
+    }
+
+    static List<TempFret> changeToNonConflictingStrings(final List<TempFret> tempFrets) {
 
         return null;
+
+    }
+
+    /**
+     * Move the notes to lower (thicker) strings.
+     *
+     * @param tempFrets List of notes to move.
+     * @return Moved notes.
+     * @throws TranspositionException
+     */
+    static List<TempFret> moveToLowerStrings(List<TempFret> tempFrets) throws TranspositionException {
+
+        // Don't continue if the list is empty
+        if (tempFrets.size() == 0) return tempFrets;
+
+        // While there are invalid fret numbers present, move the notes to lower (thicker) strings
+        while (minimumFretNumber(tempFrets) < 0) {
+            for (int i = 0; i < tempFrets.size(); i++) {
+                tempFrets.set(i, sameNoteLowerString(tempFrets.get(i)));
+            }
+        }
+
+        return tempFrets;
+    }
+
+    /**
+     * Find the minimum fret number.
+     *
+     * @param tempFrets List of temp fret objects.
+     * @return Minimum fret number.
+     */
+    private static int minimumFretNumber(List<TempFret> tempFrets) {
+
+        // Precondition
+        assert tempFrets.size() > 0;
+
+        return tempFrets.stream().map(tf -> tf.getFretNumber()).mapToInt(i -> i).min().getAsInt();
     }
 
     /**
@@ -124,7 +191,7 @@ public final class NoteTransposition {
      * @param frets List of Fret objects.
      * @return List of TempFret objects.
      */
-    static List<TempFret> fretsToTempFrets(List<Fret> frets) {
+    private static List<TempFret> fretsToTempFrets(List<Fret> frets) {
         List<TempFret> tempFrets = new ArrayList<>(frets.size());
 
         for (Fret f : frets) {
@@ -140,7 +207,7 @@ public final class NoteTransposition {
      * @param fret Fret object.
      * @return TempFret object.
      */
-    static TempFret fretToTempFret(Fret fret) {
+    private static TempFret fretToTempFret(Fret fret) {
         return new TempFret(fret.getStringNumber(), fret.getFretNumber());
     }
 
@@ -152,7 +219,7 @@ public final class NoteTransposition {
      * @throws InvalidStringException
      * @throws InvalidFretNumberException
      */
-    static List<Fret> tempFretsToFrets(List<TempFret> tempFrets)
+    private static List<Fret> tempFretsToFrets(List<TempFret> tempFrets)
             throws InvalidStringException, InvalidFretNumberException {
 
         List<Fret> frets = new ArrayList<>(tempFrets.size());
@@ -172,7 +239,7 @@ public final class NoteTransposition {
      * @throws InvalidStringException
      * @throws InvalidFretNumberException
      */
-    static Fret tempFretToFret(TempFret tempFret) throws InvalidStringException, InvalidFretNumberException {
+    private static Fret tempFretToFret(TempFret tempFret) throws InvalidStringException, InvalidFretNumberException {
         return new Fret(tempFret.getStringNumber(), tempFret.getFretNumber());
     }
 
@@ -183,7 +250,7 @@ public final class NoteTransposition {
      * @param nSemitones Number of semitones to transpose the notes.
      * @return List of (potentially invalid) transposed notes.
      */
-    static List<TempFret> differentNotesSameStrings(List<TempFret> tempFrets, int nSemitones) {
+    private static List<TempFret> differentNotesSameStrings(List<TempFret> tempFrets, int nSemitones) {
         return tempFrets.stream()
                 .map(tf -> differentNoteSameString(tf, nSemitones))
                 .collect(Collectors.toList());
@@ -196,7 +263,7 @@ public final class NoteTransposition {
      * @param nSemitones Number of semitones to transpose (-ve means down).
      * @return Transposed note.
      */
-    static TempFret differentNoteSameString(TempFret tempFret, int nSemitones) {
+    private static TempFret differentNoteSameString(TempFret tempFret, int nSemitones) {
         return new TempFret(tempFret.getStringNumber(), tempFret.getFretNumber() + nSemitones);
     }
 
@@ -210,7 +277,7 @@ public final class NoteTransposition {
      * @return Fret number on the required string.
      * @throws TranspositionException
      */
-    static TempFret sameNoteDifferentString(TempFret tempFret, int newStringNumber)
+    static TempFret sameNoteDifferentString(final TempFret tempFret, final int newStringNumber)
             throws TranspositionException {
 
         if (!isStringNumberValid(newStringNumber)) {
@@ -235,7 +302,7 @@ public final class NoteTransposition {
      * @return Fret number nStringsDown strings down.
      * @throws TranspositionException
      */
-    static TempFret sameNoteLowerStrings(TempFret tempFret, int nStringsDown)
+    private static TempFret sameNoteLowerStrings(final TempFret tempFret, final int nStringsDown)
             throws TranspositionException {
 
         if (nStringsDown < 0) throw new TranspositionException("Number of strings down is negative");
@@ -257,7 +324,7 @@ public final class NoteTransposition {
      * @return Fret number nStringsUp strings down.
      * @throws TranspositionException
      */
-    static TempFret sameNoteHigherStrings(TempFret tempFret, int nStringsUp)
+    private static TempFret sameNoteHigherStrings(final TempFret tempFret, final int nStringsUp)
             throws TranspositionException {
 
         if (nStringsUp < 0) throw new TranspositionException("Number of strings up is negative");
@@ -277,7 +344,7 @@ public final class NoteTransposition {
      * @return Fret number on the lower string.
      * @throws TranspositionException
      */
-    static TempFret sameNoteLowerString(TempFret tempFret) throws TranspositionException {
+    static TempFret sameNoteLowerString(final TempFret tempFret) throws TranspositionException {
 
         if (tempFret.getStringNumber() == 6) {
             throw new TranspositionException("No string below 6");
@@ -297,7 +364,7 @@ public final class NoteTransposition {
      * @return Fret number on the higher string.
      * @throws TranspositionException
      */
-    static TempFret sameNoteHigherString(TempFret tempFret) throws TranspositionException {
+    static TempFret sameNoteHigherString(final TempFret tempFret) throws TranspositionException {
 
         if (tempFret.getFretNumber() == 1) {
             throw new TranspositionException("No string above 1");
@@ -316,7 +383,7 @@ public final class NoteTransposition {
      * @param stringNumber String number to check.
      * @return Returns true if the string number is valid, otherwise false.
      */
-    private static boolean isStringNumberValid(int stringNumber) {
+    private static boolean isStringNumberValid(final int stringNumber) {
         return (stringNumber >= 1) && (stringNumber <= 6);
     }
 
