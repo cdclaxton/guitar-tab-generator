@@ -244,11 +244,20 @@ class NoteTranspositionTest {
     }
 
     @Test
-    void changeToNonConflictingStrings() {
+    void moveToHigherStrings() throws TranspositionException {
+        List<NoteTransposition.TempFret> tempFrets = new TempFretBuilder()
+                .addTempFret(3, 9)
+                .addTempFret(3, 11)
+                .addTempFret(2, 9)
+                .build();
 
-        // One note
+        List<NoteTransposition.TempFret> expected = new TempFretBuilder()
+                .addTempFret(2, 5)
+                .addTempFret(2, 7)
+                .addTempFret(1, 4)
+                .build();
 
-
+        assertEquals(expected, NoteTransposition.moveToHigherStrings(tempFrets, 8));
     }
 
 }

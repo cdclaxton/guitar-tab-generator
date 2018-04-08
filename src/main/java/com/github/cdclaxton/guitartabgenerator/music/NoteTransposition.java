@@ -143,14 +143,32 @@ public final class NoteTransposition {
         return fret;
     }
 
-    static List<TempFret> changeToNonConflictingStrings(final List<TempFret> tempFrets) {
+    /**
+     * Move the notes to higher (thinner) strings such that the maximum fret number <= maxFretNumber.
+     *
+     * @param tempFrets List of notes to move.
+     * @param maxFretNumber Maximum fret number.
+     * @return Moved notes.
+     * @throws TranspositionException
+     */
+    static List<TempFret> moveToHigherStrings(List<TempFret> tempFrets, final int maxFretNumber)
+            throws TranspositionException {
 
-        return null;
+        // Don't continue if the list is empty
+        if (tempFrets.size() == 0) return tempFrets;
 
+        // While there are frets above the maximum number, move the notes to higher (thinner) strings
+        while (maximumFretNumber(tempFrets) > maxFretNumber) {
+            for (int i = 0; i < tempFrets.size(); i++) {
+                tempFrets.set(i, sameNoteHigherString(tempFrets.get(i)));
+            }
+        }
+
+        return tempFrets;
     }
 
     /**
-     * Move the notes to lower (thicker) strings.
+     * Move the notes to lower (thicker) strings such that the minimum fret number >= 0.
      *
      * @param tempFrets List of notes to move.
      * @return Moved notes.
@@ -177,12 +195,26 @@ public final class NoteTransposition {
      * @param tempFrets List of temp fret objects.
      * @return Minimum fret number.
      */
-    private static int minimumFretNumber(List<TempFret> tempFrets) {
+    private static int minimumFretNumber(final List<TempFret> tempFrets) {
 
         // Precondition
         assert tempFrets.size() > 0;
 
         return tempFrets.stream().map(tf -> tf.getFretNumber()).mapToInt(i -> i).min().getAsInt();
+    }
+
+    /**
+     * Find the maximum fret number.
+     *
+     * @param tempFrets List of temp fret objects.
+     * @return Maximum fret number.
+     */
+    private static int maximumFretNumber(final List<TempFret> tempFrets) {
+
+        // Precondition
+        assert tempFrets.size() > 0;
+
+        return tempFrets.stream().map(tf -> tf.getFretNumber()).mapToInt(i -> i).max().getAsInt();
     }
 
     /**
