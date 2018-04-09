@@ -8,10 +8,18 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabSheetMusicBuilder {
+public final class TabSheetMusicBuilder {
 
     private TabSheetMusicBuilder() {}
 
+    /**
+     * Build the text lines for a sheet of tab music.
+     *
+     * @param sheetMusic Sheet music.
+     * @param pageWidth Number of characters width of the page.
+     * @return Sheet music lines.
+     * @throws TabBuildingException
+     */
     public static List<String> buildTabSheetMusic(SheetMusic sheetMusic, int pageWidth) throws TabBuildingException {
 
         // List to hold each of the lines of sheet music
@@ -31,7 +39,15 @@ public class TabSheetMusicBuilder {
         return sheetMusicLines;
     }
 
-    protected static List<String> buildSection(Section section, int pageWidth) throws TabBuildingException {
+    /**
+     * Build the text lines for a single section for a sheet of tab.
+     *
+     * @param section Section to build.
+     * @param pageWidth
+     * @return
+     * @throws TabBuildingException
+     */
+    static List<String> buildSection(Section section, int pageWidth) throws TabBuildingException {
         List<String> lines = new ArrayList<>();
 
         if (section.getName() != null) {
@@ -49,13 +65,13 @@ public class TabSheetMusicBuilder {
     }
 
     /**
-     * Build the header text.
+     * Build the header text for a sheet of tab.
      *
      * @param header Header.
      * @param pageWidth Width of the page in characters.
-     * @return Header.
+     * @return List of text lines representing the header.
      */
-    protected static List<String> buildHeader(Header header, int pageWidth) {
+    static List<String> buildHeader(Header header, int pageWidth) {
         List<String> headerLines = new ArrayList<>();
 
         // Add the song title
