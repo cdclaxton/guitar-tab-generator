@@ -20,7 +20,6 @@ There is a simple command line interface (CLI) to:
 
 The config.properties file contains configuration parameters that need to be set:
 
-- chrome=<path to Chrome browser>
 - page.width=<number of characters>
 
 ### Usage examples
