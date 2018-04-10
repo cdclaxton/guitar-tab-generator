@@ -12,7 +12,7 @@ useful for quicker generating memory-jogging tabs and for transposing to differe
 
 There is a simple command line interface (CLI) to:
 
-- Build a text file containing the guitar tab from a specification file.
+- Build a text file containing the guitar tab from a specification file
 - Transpose the music
 - Open a web browser on a video in a given musical key
 
