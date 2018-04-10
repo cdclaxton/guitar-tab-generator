@@ -12,6 +12,11 @@ public final class GuitarTabGenerator {
 
     private static Logger logger = LoggerFactory.getLogger(GuitarTabGenerator.class);
 
+    /**
+     * Main function for the guitar tab generator app.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
 
         // Parse the command line arguments
