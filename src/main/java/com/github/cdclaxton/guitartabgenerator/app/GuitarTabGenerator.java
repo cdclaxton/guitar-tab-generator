@@ -134,6 +134,7 @@ public final class GuitarTabGenerator {
         // Just show the help?
         if (cmdLine.showHelp()) showHelpAndExit();
 
+        // Generate guitar tab?
         if (cmdLine.generateTab()) {
             if (cmdLine.transposeKey.isPresent()) {
                 // Generate transposed tab
@@ -142,6 +143,7 @@ public final class GuitarTabGenerator {
             }
         }
 
+        // Show a video?
         if (cmdLine.showVideo()) {
             if (cmdLine.transposeKey.isPresent()) {
                 // Show video in required key
