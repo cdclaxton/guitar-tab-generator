@@ -42,37 +42,48 @@ public final class GuitarTabGenerator {
     private static Options buildOptions() {
         Options options = new Options();
 
-        // Specification file
-        Option specification = Option.builder()
-                .argName("spec")
+        // Specification (input) file
+        Option spec = Option.builder("i")
+                .longOpt("input")
                 .hasArg()
-                .desc("tab specification file")
-                .required()
+                .argName("file")
+                .desc("input (specification) file")
                 .build();
-        options.addOption(specification);
+        options.addOption(spec);
 
         // Tab (output) file
-        Option tab = Option.builder()
-                .argName("tab")
+        Option tab = Option.builder("o")
+                .longOpt("output")
                 .hasArg()
-                .desc("tab (output) file")
+                .argName("folder")
+                .desc("folder where the tab will be written to")
                 .build();
         options.addOption(tab);
 
         // Transpose
-        Option transpose = Option.builder()
-                .argName("transpose")
+        Option transpose = Option.builder("t")
+                .longOpt("transpose")
                 .hasArg()
+                .argName("key")
                 .desc("transpose music to a different key")
                 .build();
         options.addOption(transpose);
 
         // Open video
-        Option video = new Option("video", "open video in web browser");
+        Option video = Option.builder("v")
+                .longOpt("video")
+                .hasArg()
+                .argName("url")
+                .desc("open video in the associated key in a web browser (if available)")
+                .build();
         options.addOption(video);
 
         // Help
-        Option help = new Option("help", "print this message");
+        Option help = Option.builder("h")
+                .desc("print this message")
+                .longOpt("help")
+                .hasArg(false)
+                .build();
         options.addOption(help);
 
         return options;
