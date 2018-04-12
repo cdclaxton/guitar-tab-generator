@@ -1,14 +1,21 @@
 package com.github.cdclaxton.guitartabgenerator.app;
 
+import com.github.cdclaxton.guitartabgenerator.music.*;
+import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusic;
+import com.github.cdclaxton.guitartabgenerator.tabparser.ExtractionException;
+import com.github.cdclaxton.guitartabgenerator.tabparser.SheetMusicParser;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 public final class GuitarTabGenerator {
 
-    private static final Options options = buildOptions();
+    static final Options options = buildOptions();
     private static final CommandLineParser parser = new DefaultParser();
     private static final String cmdLineName = "guitartabgenerator";
 
@@ -17,20 +24,49 @@ public final class GuitarTabGenerator {
     static class ParsedCmdArgs {
 
         private boolean help;
-        private String inputFile;
+        private Optional<String> inputFile;
         private Optional<String> outputFolder = Optional.empty();
         private boolean video;
         private Optional<String> transposeKey;
         private Optional<Boolean> transposeUp;
 
-        ParsedCmdArgs(CommandLine cmd) {
+        /**
+         * Construct a ParsedCmdArgs object.
+         *
+         * @param help Show help?
+         * @param inputFile Input (specification) file.
+         * @param outputFolder Output folder (where the tab will be written).
+         * @param video Show a video?
+         * @param transposeKey Transpose to musical key.
+         * @param transposeUp Transpose up?
+         */
+        ParsedCmdArgs(boolean help, Optional<String> inputFile, Optional<String> outputFolder, boolean video,
+                      Optional<String> transposeKey, Optional<Boolean> transposeUp) {
+            this.help = help;
+            this.inputFile = inputFile;
+            this.outputFolder = outputFolder;
+            this.video = video;
+            this.transposeKey = transposeKey;
+            this.transposeUp = transposeUp;
+        }
+
+        /**
+         * Construct a ParsedCmdArgs from command line arguments.
+         *
+         * @param args Command line arguments.
+         * @throws ParseException
+         */
+        ParsedCmdArgs(String[] args) throws ParseException {
+
+            // Parse the command line arguments
+            CommandLine cmd = parser.parse(options, args);
 
             // Help
             this.help = cmd.hasOption("help");
 
             // Input (specification) file -- required if help is not requested
             if (!cmd.hasOption("input") && !this.help) throw new IllegalArgumentException("Input file required");
-            this.inputFile = cmd.getOptionValue("input");
+            if (cmd.hasOption("input")) this.inputFile = Optional.of(cmd.getOptionValue("input"));
 
             // Output folder
             if (cmd.hasOption("output")) this.outputFolder = Optional.of(cmd.getOptionValue("output"));
@@ -45,6 +81,9 @@ public final class GuitarTabGenerator {
             } else if (cmd.hasOption("down")) {
                 this.transposeKey = Optional.of(cmd.getOptionValue("down"));
                 this.transposeUp = Optional.of(false);
+            } else {
+                this.transposeKey = Optional.empty();
+                this.transposeUp = Optional.empty();
             }
 
             // Video
@@ -84,7 +123,7 @@ public final class GuitarTabGenerator {
          *
          * @return Specification file path.
          */
-        public String getInputFile() { return inputFile; }
+        public Optional<String> getInputFile() { return inputFile; }
 
         /**
          * Get the location where the tab should be written to.
@@ -100,6 +139,13 @@ public final class GuitarTabGenerator {
          */
         public Optional<String> getTransposeKey() { return this.transposeKey; }
 
+        /**
+         * Transpose up?
+         *
+         * @return True if the tab should be transposed up.
+         */
+        public Optional<Boolean> getTransposeUp() { return this.transposeUp; }
+
         @Override
         public String toString() {
             return "ParsedCmdArgs[" +
@@ -108,6 +154,24 @@ public final class GuitarTabGenerator {
                     "output=" + this.outputFolder + "," +
                     "transpose=" + this.transposeKey + "," +
                     "video=" + this.video + "]";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ParsedCmdArgs that = (ParsedCmdArgs) o;
+            return help == that.help &&
+                    video == that.video &&
+                    Objects.equals(inputFile, that.inputFile) &&
+                    Objects.equals(outputFolder, that.outputFolder) &&
+                    Objects.equals(transposeKey, that.transposeKey) &&
+                    Objects.equals(transposeUp, that.transposeUp);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(help, inputFile, outputFolder, video, transposeKey, transposeUp);
         }
     }
 
@@ -119,27 +183,34 @@ public final class GuitarTabGenerator {
     public static void main(String[] args) {
 
         // Parse the command line arguments
-        CommandLine cmd = null;
+        ParsedCmdArgs cmdLine = null;
         try {
-            cmd = parser.parse(options, args);
+            cmdLine = new ParsedCmdArgs(args);
         } catch (ParseException e) {
-            logger.error("Can't parse command line arguments");
+            logger.error("Failed to parse command line arguments");
             e.printStackTrace();
+            System.exit(0);
         }
-
-        // Secondary parsing stage of the command line arguments
-        ParsedCmdArgs cmdLine = new ParsedCmdArgs(cmd);
-        System.out.printf(cmdLine.toString());
 
         // Just show the help?
         if (cmdLine.showHelp()) showHelpAndExit();
+
+        // Read the sheet music
+        logger.info("Reading specification from file: " + cmdLine.inputFile.get());
+        Optional<SheetMusic> sheetMusic = parseSheetMusic(cmdLine.inputFile.get());
+        if (!sheetMusic.isPresent()) {
+            logger.error("Aborting due to input specification failure");
+            System.exit(-1);
+        }
 
         // Generate guitar tab?
         if (cmdLine.generateTab()) {
             if (cmdLine.transposeKey.isPresent()) {
                 // Generate transposed tab
+                logger.info("Transposing to key: " + cmdLine.transposeKey.get());
             } else {
                 // Generate tab in the same key as the specification file
+                logger.info("No transposition");
             }
         }
 
@@ -147,19 +218,38 @@ public final class GuitarTabGenerator {
         if (cmdLine.showVideo()) {
             if (cmdLine.transposeKey.isPresent()) {
                 // Show video in required key
+                logger.info("Show video in key: " + cmdLine.transposeKey.get());
             } else {
                 // Show video in usual key
+                logger.info("Show video in normal key");
             }
         }
 
     }
 
-    /**
-     * Show the help (for the options) and exit.
-     */
-    private static void showHelpAndExit() {
-        showHelp();
-        System.exit(0);
+    static Optional<SheetMusic> parseSheetMusic(String filePath) {
+        File inputFile = new File(filePath);
+
+        SheetMusic sheetMusic = null;
+        try {
+            sheetMusic = SheetMusicParser.parseSheetMusic(inputFile);
+        } catch (IOException e) {
+            logger.error("Can't read specification file: " + inputFile);
+        } catch (ExtractionException e) {
+            logger.error("Extraction exception: " + e.getMessage());
+        } catch (InvalidKeyException e) {
+            logger.error("Invalid key: " + e.getMessage());
+        } catch (InvalidStringException e) {
+            logger.error("Invalid string: " + e.getMessage());
+        } catch (InvalidFretNumberException e) {
+            logger.error("Invalid fret number: " + e.getMessage());
+        } catch (InvalidTimingException e) {
+            logger.error("Invalid timing: " + e.getMessage());
+        } catch (InvalidChordException e) {
+            logger.error("Invalid chord: " + e.getMessage());
+        }
+
+        return sheetMusic != null ? Optional.of(sheetMusic) : Optional.empty();
     }
 
     /**
@@ -224,26 +314,19 @@ public final class GuitarTabGenerator {
     }
 
     /**
+     * Show the help (for the options) and exit.
+     */
+    private static void showHelpAndExit() {
+        showHelp();
+        System.exit(0);
+    }
+
+    /**
      * Show the command line help.
      */
     private static void showHelp() {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp(cmdLineName, options);
-    }
-
-    public static void generateTab(String inputFile) {
-
-    }
-
-    public static void generateTab(String inputFile, String transposeKey, boolean transposeUp) {
-
-        // Read the input file (if it exists)
-
-
-        // Transpose the music
-
-        // Write the tab to a file
-
     }
 
 }
