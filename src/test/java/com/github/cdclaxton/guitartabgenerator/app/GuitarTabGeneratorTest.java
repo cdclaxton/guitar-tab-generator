@@ -1,11 +1,14 @@
 package com.github.cdclaxton.guitartabgenerator.app;
 
+import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusic;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GuitarTabGeneratorTest {
 
@@ -86,4 +89,17 @@ class GuitarTabGeneratorTest {
         assertEquals(expected, parsed);
     }
 
+    @Test
+    void testParseSheetMusicValidFile() {
+        String path = this.getClass().getResource("/SheetMusic/How_great_is_our_God.txt").getFile();
+        Optional<SheetMusic> sheetMusic = GuitarTabGenerator.parseSheetMusic(path);
+        assertTrue(sheetMusic.isPresent());
+    }
+
+    @Test
+    void testParseSheetMusicInvalidFile() {
+        String path = this.getClass().getResource("/SheetMusic/Invalid_example.txt").getFile();
+        Optional<SheetMusic> sheetMusic = GuitarTabGenerator.parseSheetMusic(path);
+        assertFalse(sheetMusic.isPresent());
+    }
 }

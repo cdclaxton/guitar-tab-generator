@@ -227,6 +227,12 @@ public final class GuitarTabGenerator {
 
     }
 
+    /**
+     * Parse the sheet music (if possible).
+     *
+     * @param filePath Path of the tab specification file.
+     * @return Sheet music (if parsable), otherwise empty.
+     */
     static Optional<SheetMusic> parseSheetMusic(String filePath) {
         File inputFile = new File(filePath);
 
