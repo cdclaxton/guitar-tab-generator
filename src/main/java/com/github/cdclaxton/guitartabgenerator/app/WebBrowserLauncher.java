@@ -15,6 +15,7 @@ public class WebBrowserLauncher {
      * @param url URL to open in web browser.
      */
     public static void launch(String url) {
+        logger.info("Opening URL: " + url);
         Runtime rt = Runtime.getRuntime();
         try {
             rt.exec( "rundll32 url.dll,FileProtocolHandler " + url);
