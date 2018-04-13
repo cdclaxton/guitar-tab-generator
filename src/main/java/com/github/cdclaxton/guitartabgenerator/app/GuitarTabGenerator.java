@@ -189,7 +189,18 @@ public final class GuitarTabGenerator {
         } catch (ParseException e) {
             logger.error("Failed to parse command line arguments");
             e.printStackTrace();
-            System.exit(0);
+            System.exit(-1);
+        }
+
+        // Read the config.properties file
+        Config config;
+        try {
+            config = new Config("config.properties");
+            logger.info("Config.properties read - " + config.toString());
+        } catch (IOException e) {
+            logger.error("Invalid config.properties file");
+            logger.error(e.getMessage());
+            System.exit(-1);
         }
 
         // Just show the help?
@@ -202,6 +213,9 @@ public final class GuitarTabGenerator {
             logger.error("Aborting due to input specification failure");
             System.exit(-1);
         }
+        logger.info("Sheet music read: " + sheetMusic.get().getHeader().getTitle() +
+                " - " + sheetMusic.get().getHeader().getArtist() +
+                        " [" + sheetMusic.get().getHeader().getKey().getKey() + "]");
 
         // Generate guitar tab?
         if (cmdLine.generateTab()) {
