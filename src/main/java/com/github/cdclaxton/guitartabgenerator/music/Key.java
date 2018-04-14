@@ -24,6 +24,20 @@ public final class Key {
     }
 
     /**
+     * Construct a new instance of the key.
+     *
+     * @param key Key to copy.
+     * @return New key.
+     */
+    public static Key newInstance(final Key key) {
+        try {
+            return new Key(key.getKey());
+        } catch (InvalidKeyException e) {
+            throw new IllegalStateException("Key is now invalid!");
+        }
+    }
+
+    /**
      * Is the string representation of the key valid?
      *
      * @param key Key to check.
