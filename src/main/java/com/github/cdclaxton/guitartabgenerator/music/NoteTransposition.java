@@ -124,6 +124,9 @@ public final class NoteTransposition {
     static List<TempFret> resolveConflicts(List<TempFret> tempFrets, final boolean up, final int maxFretNumber)
             throws TranspositionException {
 
+        // If there are no frets, there are no conflicts to resolve
+        if (tempFrets.size() == 0) return tempFrets;
+
         if (up) {
             // Transposed up, therefore the notes could be difficult or impossible to play
             if (minimumStringNumber(tempFrets) > 1) {
