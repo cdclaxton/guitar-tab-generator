@@ -5,14 +5,12 @@ import com.github.cdclaxton.guitartabgenerator.music.Key;
 
 import java.util.Objects;
 
-public class Header {
+public final class Header {
 
-    private String title;
-    private String artist;
-    private Key key;
-    private Bar.TimeSignature timeSignature;
-
-    public Header() {}
+    private final String title;
+    private final String artist;
+    private final Key key;
+    private final Bar.TimeSignature timeSignature;
 
     /**
      * Instantiate the header section of a piece of sheet music.
@@ -22,43 +20,47 @@ public class Header {
      * @param key Key the song is in.
      * @param timeSignature Time signature of the music.
      */
-    public Header(String title, String artist, Key key, Bar.TimeSignature timeSignature) {
+    public Header(final String title, final String artist, final Key key, final Bar.TimeSignature timeSignature) {
         this.title = title;
         this.artist = artist;
-        this.key = key;
+        this.key = Key.newInstance(key);
         this.timeSignature = timeSignature;
     }
 
+    /**
+     * Get the title.
+     *
+     * @return Title.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Get the artist.
+     *
+     * @return Artist.
+     */
     public String getArtist() {
         return artist;
     }
 
+    /**
+     * Get the musical key.
+     *
+     * @return Musical key.
+     */
     public Key getKey() {
         return key;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
+    /**
+     * Get the time signature.
+     *
+     * @return Time signature.
+     */
     public Bar.TimeSignature getTimeSignature() {
         return timeSignature;
-    }
-
-    public void setTimeSignature(Bar.TimeSignature timeSignature) {
-        this.timeSignature = timeSignature;
     }
 
     @Override
