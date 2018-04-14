@@ -67,7 +67,7 @@ public class SingleBarTablatureBuilder {
         for (Note n : notes) {
             if (n.getFret().getStringNumber() == stringNumber) {
                 int position = SingleBarTablatureBuilder.getPosition(n.getTiming().getSixteenthNumber(), markings, spacing);
-                String marking = n.getFret().getFretMarking();
+                String marking = n.getFret().fretMarking();
                 pos.put(position, marking);
             }
         }

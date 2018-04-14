@@ -2,22 +2,48 @@ package com.github.cdclaxton.guitartabgenerator.music;
 
 import java.util.Objects;
 
-public class Note {
+public final class Note {
 
-    private Fret fret;
-    private Timing timing;
+    private final Fret fret;
+    private final Timing timing;
 
+    /**
+     * Construct a representation of a note with time and position.
+     *
+     * @param fret Fret and string representation.
+     * @param timing Timing of the note or chord.
+     */
     public Note(Fret fret, Timing timing) {
-        this.fret = fret;
-        this.timing = timing;
+        this.fret = Fret.newInstance(fret);
+        this.timing = Timing.newInstance(timing);
     }
 
+    /**
+     * Get a new instance of the Note object.
+     *
+     * @param note Note.
+     * @return New instance.
+     */
+    public static Note newInstance(Note note) {
+        return new Note(Fret.newInstance(note.fret), Timing.newInstance(note.timing));
+    }
+
+    /**
+     * Get the representation of the string and fret number.
+     *
+     * @return String and fret number.
+     */
     public Fret getFret() {
-        return fret;
+        return Fret.newInstance(fret);
     }
 
+    /**
+     * Get the timing of the note or chord.
+     *
+     * @return Timing.
+     */
     public Timing getTiming() {
-        return timing;
+        return Timing.newInstance(timing);
     }
 
     @Override
@@ -36,7 +62,6 @@ public class Note {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(fret, timing);
     }
 }

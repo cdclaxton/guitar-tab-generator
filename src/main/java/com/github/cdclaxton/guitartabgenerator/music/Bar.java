@@ -2,31 +2,58 @@ package com.github.cdclaxton.guitartabgenerator.music;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class Bar {
+public final class Bar {
 
-    private TimeSignature timeSignature;
-    private List<Note> notes;
-    private List<TimedChord> timedChords;
+    private final TimeSignature timeSignature;
+    private final List<Note> notes;
+    private final List<TimedChord> timedChords;
 
     public enum TimeSignature { Four4, Six8 }
 
-    public Bar(TimeSignature timeSignature, List<Note> notes, List<TimedChord> timedChords) {
+    /**
+     * Instantiate a bar.
+     *
+     * @param timeSignature Time signature of the bar.
+     * @param notes Notes in the bar.
+     * @param timedChords Chords in the bar.
+     */
+    public Bar(final TimeSignature timeSignature, final List<Note> notes, final List<TimedChord> timedChords) {
         this.timeSignature = timeSignature;
-        this.notes = notes;
-        this.timedChords = timedChords;
+
+        // Make a deep copy of the notes
+        this.notes = notes.stream().map(Note::newInstance).collect(Collectors.toList());
+
+        // Make a deep copy of the timed chords
+        this.timedChords = timedChords.stream().map(TimedChord::newInstance).collect(Collectors.toList());
     }
 
+    /**
+     * Get the time signature of the bar.
+     *
+     * @return Time signature.
+     */
     public TimeSignature getTimeSignature() {
         return timeSignature;
     }
 
+    /**
+     * Get the list of notes in the bar.
+     *
+     * @return List of notes.
+     */
     public List<Note> getNotes() {
-        return notes;
+        return notes.stream().map(Note::newInstance).collect(Collectors.toList());
     }
 
+    /**
+     * Get the list of timed chords for the bar.
+     *
+     * @return Timed chords.
+     */
     public List<TimedChord> getTimedChords() {
-        return timedChords;
+        return timedChords.stream().map(TimedChord::newInstance).collect(Collectors.toList());
     }
 
     @Override
@@ -41,7 +68,6 @@ public class Bar {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(timeSignature, notes, timedChords);
     }
 

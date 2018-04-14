@@ -14,19 +14,19 @@ public final class BarTransposition {
      * @param up Transpose notes up?
      * @param maxFretNumber Maximum fret number.
      * @return Transposed bar.
-     * @throws TranspositionException
-     * @throws InvalidChordException
+     * @throws TranspositionException Unable to transpose the bar.
+     * @throws InvalidChordException One or more chords in the bar are invalid.
      */
     public static Bar transposeBar(final Bar bar, final String currentKey, final String newKey,
                                    final boolean up, final int maxFretNumber)
             throws TranspositionException, InvalidChordException {
 
         // Transpose the chords
-        List<TimedChord> timedChords = BarTransposition.transposeChords(bar.getTimedChords(), currentKey, newKey);
+        final List<TimedChord> timedChords = BarTransposition.transposeChords(bar.getTimedChords(), currentKey, newKey);
 
         // Transpose the notes
-        int numSemitones = BarTransposition.numSemitonesDifferent(currentKey, newKey, up);
-        List<Note> notes = NoteTransposition.transposeNotes(bar.getNotes(), numSemitones, maxFretNumber);
+        final int numSemitones = BarTransposition.numSemitonesDifferent(currentKey, newKey, up);
+        final List<Note> notes = NoteTransposition.transposeNotes(bar.getNotes(), numSemitones, maxFretNumber);
 
         // Construct and return the new bar
         return new Bar(bar.getTimeSignature(), notes, timedChords);
@@ -39,9 +39,9 @@ public final class BarTransposition {
      * @param newKey New musical key.
      * @param up Transpose up?
      * @return Number of semitones different between the keys.
-     * @throws TranspositionException
+     * @throws TranspositionException Invalid keys.
      */
-    protected static int numSemitonesDifferent(String currentKey, String newKey, boolean up)
+    static int numSemitonesDifferent(final String currentKey, final String newKey, final boolean up)
             throws TranspositionException {
 
         // Always returns a number between -6 and 6
@@ -60,10 +60,11 @@ public final class BarTransposition {
      * @param currentKey Current musical key.
      * @param newKey New musical key.
      * @return List of transposed timed chords.
-     * @throws InvalidChordException
-     * @throws TranspositionException
+     * @throws InvalidChordException One or more chords are invalid.
+     * @throws TranspositionException Unable to transpose chords.
      */
-    protected static List<TimedChord> transposeChords(List<TimedChord> timedChords, String currentKey, String newKey)
+    private static List<TimedChord> transposeChords(final List<TimedChord> timedChords, final String currentKey,
+                                                    final String newKey)
             throws InvalidChordException, TranspositionException {
 
         List<TimedChord> transposedTimedChords = new ArrayList<>();
@@ -80,10 +81,11 @@ public final class BarTransposition {
      * @param currentKey Current musical key.
      * @param newKey New musical key.
      * @return Transposed timed chord.
-     * @throws TranspositionException
-     * @throws InvalidChordException
+     * @throws TranspositionException  Unable to transpose chord.
+     * @throws InvalidChordException Invalid chord.
      */
-    protected static TimedChord transposeChord(TimedChord timedChord, String currentKey, String newKey)
+    private static TimedChord transposeChord(final TimedChord timedChord, final String currentKey,
+                                             final String newKey)
             throws TranspositionException, InvalidChordException {
 
         return new TimedChord(timedChord.getTiming(),

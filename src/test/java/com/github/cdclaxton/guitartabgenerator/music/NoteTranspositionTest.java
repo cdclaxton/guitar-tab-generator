@@ -12,23 +12,6 @@ class NoteTranspositionTest {
 
     private final  int NUM_RANDOM_TESTS = 100;
 
-    class NotesBuilder {
-        private List<Note> notes = new ArrayList<>();
-
-        public NotesBuilder() {}
-
-        public NotesBuilder addNote(int stringNumber, int fret, int timing)
-                throws InvalidStringException, InvalidFretNumberException, InvalidTimingException {
-
-            notes.add(new Note(new Fret(stringNumber, fret), new Timing(timing)));
-            return this;
-        }
-
-        public List<Note> build() {
-            return this.notes;
-        }
-    }
-
     class TempFretBuilder {
         private List<NoteTransposition.TempFret> tempFrets = new ArrayList<>();
 

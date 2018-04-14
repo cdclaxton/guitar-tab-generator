@@ -2,19 +2,19 @@ package com.github.cdclaxton.guitartabgenerator.music;
 
 import java.util.Objects;
 
-public class Fret {
+public final class Fret {
 
-    private int stringNumber;
-    private int fretNumber;
+    private final int stringNumber;
+    private final int fretNumber;
 
     /**
-
-     * Fret number.
+     * Representation of a string and fret position.
      *
      * @param stringNumber String (1 = high E).
-     * @param fretNumber Fret number (0 = no fretNumber).
+     * @param fretNumber Fret number (0 = open string).
      */
     public Fret(int stringNumber, int fretNumber) throws InvalidFretNumberException, InvalidStringException {
+
         // Check the stringNumber is valid for a standard guitar
         if (!isStringNumberValid(stringNumber)) {
             throw new InvalidStringException("Invalid guitar stringNumber");
@@ -31,14 +31,45 @@ public class Fret {
         this.fretNumber = fretNumber;
     }
 
-    public String getFretMarking() {
+    /**
+     * Create a new instance.
+     *
+     * @param fret Fret object to copy.
+     * @return New Fret object.
+     */
+    public static Fret newInstance(Fret fret) {
+        try {
+            return new Fret(fret.getStringNumber(), fret.getFretNumber());
+        } catch (InvalidFretNumberException e) {
+            throw new IllegalStateException("Fret number is now invalid!");
+        } catch (InvalidStringException e) {
+            throw new IllegalStateException("String number is now invalid!");
+        }
+    }
+
+    /**
+     * Get the string representation of the fret marking (typically a fret number).
+     *
+     * @return Fret marking.
+     */
+    public String fretMarking() {
         return String.valueOf(this.fretNumber);
     }
 
+    /**
+     * Get the fret number.
+     *
+     * @return Fret number.
+     */
     public int getFretNumber() {
         return fretNumber;
     }
 
+    /**
+     * Get the string number (1 = high E string).
+     *
+     * @return String number.
+     */
     public int getStringNumber() {
         return stringNumber;
     }
@@ -49,7 +80,7 @@ public class Fret {
      * @param stringNumber String number.
      * @return True if valid, otherwise false.
      */
-    public static boolean isStringNumberValid(int stringNumber) {
+    private static boolean isStringNumberValid(int stringNumber) {
         return (stringNumber >= 1) && (stringNumber <= 6);
     }
 
@@ -57,7 +88,6 @@ public class Fret {
     public String toString() {
         return "Fret[string=" + this.getStringNumber() + ",fret=" + this.getFretNumber() + "]";
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -70,7 +100,6 @@ public class Fret {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(stringNumber, fretNumber);
     }
 }

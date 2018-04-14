@@ -3,9 +3,9 @@ package com.github.cdclaxton.guitartabgenerator.music;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class Key {
+public final class Key {
 
-    private String key;
+    private final String key;
     private static final String validMajorKeys = "Ab|A|A#|Bb|B|C|C#|Db|D|D#|Eb|E|F|F#|Gb|G|G#";
     private static final String validMinorKeys = "Abm|Am|A#m|Bbm|Bm|Cm|C#m|Dbm|Dm|D#m|Ebm|Em|Fm|F#m|Gbm|Gm|G#m";
 
@@ -13,7 +13,7 @@ public class Key {
      * Instantiate a key from its string representation.
      *
      * @param key Key.
-     * @throws InvalidKeyException
+     * @throws InvalidKeyException Musical key is invalid.
      */
     public Key(String key) throws InvalidKeyException {
         if (isValid(key)) {
@@ -29,7 +29,7 @@ public class Key {
      * @param key Key to check.
      * @return True if the key is valid.
      */
-    public static boolean isValid(String key) {
+    static boolean isValid(String key) {
         return isMajorKey(key) || isMinorKey(key);
     }
 
@@ -39,9 +39,9 @@ public class Key {
      * @param key Key.
      * @return Major key?
      */
-    public static boolean isMajorKey(String key) {
+    static boolean isMajorKey(String key) {
         String[] majorKeys = Key.validMajorKeys.split("\\|");
-        HashSet<String> setMajorKeys = new HashSet<String>(Arrays.asList(majorKeys));
+        HashSet<String> setMajorKeys = new HashSet<>(Arrays.asList(majorKeys));
         return setMajorKeys.contains(key);
     }
 
@@ -51,12 +51,16 @@ public class Key {
      * @param key Key.
      * @return Minor key?
      */
-    public static boolean isMinorKey(String key) {
+    private static boolean isMinorKey(String key) {
         String[] minorKeys = Key.validMinorKeys.split("\\|");
-        HashSet<String> setMinorKeys = new HashSet<String>(Arrays.asList(minorKeys));
+        HashSet<String> setMinorKeys = new HashSet<>(Arrays.asList(minorKeys));
         return setMinorKeys.contains(key);
     }
 
+    /**
+     * Get the musical key.
+     * @return Key.
+     */
     public String getKey() {
         return key;
     }

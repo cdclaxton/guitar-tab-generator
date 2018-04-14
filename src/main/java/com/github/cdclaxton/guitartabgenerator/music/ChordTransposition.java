@@ -8,33 +8,42 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class ChordTransposition {
+final class ChordTransposition {
 
-    private static String[] notes = {"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
-    private static String[] enharmonicNotes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
-    private static int numberNotes = 12;
-    private static Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
+    private static final String[] notes = {"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
+    private static final String[] enharmonicNotes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
+    private static final int numberNotes = 12;
+    private static final Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
 
     public static class ChordParts {
         private String base;
         private String rest;
         private String bassNote;
 
-        public ChordParts(String base, String rest, String bassNote) {
+        /**
+         * Construct an object to represent the parts of a chord.
+         *
+         * For example, the chord C#m7/E has base=C#, rest=m7, bassNote=E.
+         *
+         * @param base Base to the note, e.g. C#.
+         * @param rest Rest of the chord, e.g. m7.
+         * @param bassNote Bass note, e.g. E.
+         */
+        ChordParts(String base, String rest, String bassNote) {
             this.base = base;
             this.rest = rest;
             this.bassNote = bassNote;
         }
 
-        public String getBase() {
+        String getBase() {
             return base;
         }
 
-        public String getRest() {
+        String getRest() {
             return rest;
         }
 
-        public String getBassNote() {
+        String getBassNote() {
             return bassNote;
         }
     }
@@ -46,9 +55,9 @@ public final class ChordTransposition {
      * @param oldKey Old musical key.
      * @param newKey New musical key.
      * @return Transposed chord.
-     * @throws TranspositionException
+     * @throws TranspositionException Can't transpose the chord (invalid key or change from major to minor).
      */
-    public static String transposeChord(String chord, String oldKey, String newKey) throws TranspositionException {
+    static String transposeChord(final String chord, final String oldKey, final String newKey) throws TranspositionException {
 
         logger.debug("Transposing chord " + chord + " from key " + oldKey + " to key " + newKey);
 
@@ -57,24 +66,24 @@ public final class ChordTransposition {
         if (!Key.isValid(newKey)) throw new TranspositionException("Key " + newKey + " is not valid");
 
         // Check the keys together are valid
-        boolean oldKeyIsMajor = Key.isMajorKey(oldKey);
-        boolean newKeyIsMajor = Key.isMajorKey(newKey);
+        final boolean oldKeyIsMajor = Key.isMajorKey(oldKey);
+        final boolean newKeyIsMajor = Key.isMajorKey(newKey);
         if ((oldKeyIsMajor & !newKeyIsMajor) || (!oldKeyIsMajor && newKeyIsMajor)) {
             throw new TranspositionException("Can't transpose from major to minor keys and vice versa");
         }
 
         // Find the number of semitones difference between the keys
-        int nSemitones = numSemitones(oldKey, newKey);
+        final int nSemitones = numSemitones(oldKey, newKey);
 
         // Split the chord into their parts
-        ChordParts parts = splitChord(chord);
+        final ChordParts parts = splitChord(chord);
 
         // Transpose the base note
-        String transposedBaseNote = transposeNote(parts.base, nSemitones, newKey);
+        final String transposedBaseNote = transposeNote(parts.base, nSemitones, newKey);
 
         // Transpose the bass note if required
-        if (parts.bassNote.length() == 0) return transposedBaseNote + parts.rest;
-        else return transposedBaseNote + parts.rest + "/" + transposeNote(parts.bassNote, nSemitones, newKey);
+        if (parts.getBassNote().length() == 0) return transposedBaseNote + parts.getRest();
+        else return transposedBaseNote + parts.getRest() + "/" + transposeNote(parts.getBassNote(), nSemitones, newKey);
     }
 
     /**
@@ -84,15 +93,16 @@ public final class ChordTransposition {
      * @param nSemitones Number of semitones to transpose the note.
      * @param newKey New musical key (after transposition).
      * @return Transposed note.
-     * @throws TranspositionException
+     * @throws TranspositionException Note transposition failed.
      */
-    protected static String transposeNote(String note, int nSemitones, String newKey) throws TranspositionException {
+    private static String transposeNote(final String note, final int nSemitones, final String newKey)
+            throws TranspositionException {
 
         // Get the index of the note
-        int noteIndex = baseNoteToIndex(note);
+        final int noteIndex = baseNoteToIndex(note);
 
         // Get the index of the transposed note
-        int transposedIndex = transposeNoteIndex(noteIndex, nSemitones);
+        final int transposedIndex = transposeNoteIndex(noteIndex, nSemitones);
 
         // Get the note letter (enharmonic where required)
         String transposedNote;
@@ -107,16 +117,16 @@ public final class ChordTransposition {
      *
      * @param chord Chord to split.
      * @return Chord parts.
-     * @throws TranspositionException
+     * @throws TranspositionException Couldn't transpose the chord.
      */
-    protected static ChordParts splitChord(String chord) throws TranspositionException {
-        final String pattern = "([ABCDEFG](?:#|b)?)([A-Za-z0-9]*)(/[ABCDEFG](?:#|b)?)?";
+    static ChordParts splitChord(final String chord) throws TranspositionException {
+        final String pattern = "([ABCDEFG][#b]?)([A-Za-z0-9]*)(/[ABCDEFG][#b]?)?";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(chord);
         if (matcher.find()) {
-            String base = matcher.group(1);
-            String rest = matcher.group(2);
-            String bassNote;
+            final String base = matcher.group(1);
+            final String rest = matcher.group(2);
+            final String bassNote;
             if (matcher.group(3) != null) bassNote = matcher.group(3).substring(1);
             else bassNote = "";
             return new ChordParts(base, rest, bassNote);
@@ -131,11 +141,11 @@ public final class ChordTransposition {
      * @param oldKey Old musical key.
      * @param newKey New musical key.
      * @return Number of semitones different.
-     * @throws TranspositionException
+     * @throws TranspositionException Base not can't be found in the list of valid notes.
      */
-    public static int numSemitones(String oldKey, String newKey) throws TranspositionException {
-        String oldKeyBaseNote = keyBaseNote(oldKey);
-        String newKeyBaseNote = keyBaseNote(newKey);
+    static int numSemitones(final String oldKey, final String newKey) throws TranspositionException {
+        final String oldKeyBaseNote = keyBaseNote(oldKey);
+        final String newKeyBaseNote = keyBaseNote(newKey);
 
         int diff = baseNoteToIndex(newKeyBaseNote) - baseNoteToIndex(oldKeyBaseNote);
 
@@ -150,10 +160,11 @@ public final class ChordTransposition {
 
     /**
      * Get the base note from a musical key, e.g. A# from A#m.
+     *
      * @param key Musical key.
      * @return Base note.
      */
-    protected static String keyBaseNote(String key) {
+    private static String keyBaseNote(final String key) {
         if (isMinorKey(key)) return removeMinor(key);
         else return key;
     }
@@ -164,7 +175,7 @@ public final class ChordTransposition {
      * @param key Key.
      * @return True if the key is a minor key, otherwise false.
      */
-    protected static boolean isMinorKey(String key) {
+    static boolean isMinorKey(final String key) {
         return key.endsWith("m");
     }
 
@@ -174,7 +185,7 @@ public final class ChordTransposition {
      * @param key Key.
      * @return Key without the minor part.
      */
-    protected static String removeMinor(String key) {
+    static String removeMinor(final String key) {
         if (ChordTransposition.isMinorKey(key)) return key.substring(0, key.length()-1);
         else return key;
     }
@@ -184,9 +195,9 @@ public final class ChordTransposition {
      *
      * @param baseNote Base note.
      * @return Index.
-     * @throws TranspositionException
+     * @throws TranspositionException Invalid base note.
      */
-    protected static int baseNoteToIndex(String baseNote) throws TranspositionException {
+    static int baseNoteToIndex(final String baseNote) throws TranspositionException {
         if (inNotes(baseNote)) return noteIndex(baseNote);
         else if (inEnharmonicNotes(baseNote)) return enharmonicNoteIndex(baseNote);
         else throw new TranspositionException("Base note is not valid: " + baseNote);
@@ -198,7 +209,7 @@ public final class ChordTransposition {
      * @param note Note.
      * @return True if the note is contained in the list, otherwise false.
      */
-    private static boolean inNotes(String note) {
+    private static boolean inNotes(final String note) {
         return Arrays.asList(notes).contains(note);
     }
 
@@ -208,17 +219,17 @@ public final class ChordTransposition {
      * @param note Note.
      * @return True if the note is contained in the list, otherwise false.
      */
-    private static boolean inEnharmonicNotes(String note) {
+    private static boolean inEnharmonicNotes(final String note) {
         return Arrays.asList(enharmonicNotes).contains(note);
     }
 
     /**
      * Get the index of a note.
      *
-     * @param note
-     * @return
+     * @param note Note.
+     * @return Index of the note.
      */
-    private static int noteIndex(String note) {
+    private static int noteIndex(final String note) {
         return Arrays.asList(notes).indexOf(note);
     }
 
@@ -228,7 +239,7 @@ public final class ChordTransposition {
      * @param note Note.
      * @return Index.
      */
-    private static int enharmonicNoteIndex(String note) {
+    private static int enharmonicNoteIndex(final String note) {
         return Arrays.asList(enharmonicNotes).indexOf(note);
     }
 
@@ -238,9 +249,9 @@ public final class ChordTransposition {
      * @param noteIndex Note index.
      * @param nSemitones Number of semitones to transpose the note.
      * @return Transposed note index.
-     * @throws TranspositionException
+     * @throws TranspositionException Invalid note index.
      */
-    protected static int transposeNoteIndex(int noteIndex, int nSemitones) throws TranspositionException {
+    static int transposeNoteIndex(final int noteIndex, final int nSemitones) throws TranspositionException {
 
         // Check the note index is valid
         if (noteIndex < 0 || noteIndex >= numberNotes) {

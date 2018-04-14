@@ -3,18 +3,21 @@ package com.github.cdclaxton.guitartabgenerator.music;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper class for constructing a Bar.
+ */
 public final class BarBuilder {
 
-    private Bar.TimeSignature timeSignature;
-    private List<TimedChord> timedChords = new ArrayList<>();
-    private List<Note> notes = new ArrayList<>();
+    private final Bar.TimeSignature timeSignature;
+    private final List<TimedChord> timedChords = new ArrayList<>();
+    private final List<Note> notes = new ArrayList<>();
 
     /**
      * Instantiate building a bar.
      *
      * @param timeSignature Time signature of the bar.
      */
-    public BarBuilder(Bar.TimeSignature timeSignature) {
+    BarBuilder(final Bar.TimeSignature timeSignature) {
         this.timeSignature = timeSignature;
     }
 
@@ -24,10 +27,10 @@ public final class BarBuilder {
      * @param sixteenthTiming Timing of the chord (in sixteenth notes).
      * @param chord Chord.
      * @return BarBuilder.
-     * @throws InvalidTimingException
-     * @throws InvalidChordException
+     * @throws InvalidTimingException Sixteenth note timing is invalid.
+     * @throws InvalidChordException Chord is invalid.
      */
-    public BarBuilder addTimedChord(int sixteenthTiming, String chord)
+    BarBuilder addTimedChord(int sixteenthTiming, String chord)
             throws InvalidTimingException, InvalidChordException {
 
         this.timedChords.add(new TimedChord(new Timing(sixteenthTiming), chord));
@@ -41,11 +44,11 @@ public final class BarBuilder {
      * @param fret Fret number.
      * @param sixteenthTiming Timing (in sixteenth notes).
      * @return BarBuilder.
-     * @throws InvalidStringException
-     * @throws InvalidFretNumberException
-     * @throws InvalidTimingException
+     * @throws InvalidStringException String number is invalid.
+     * @throws InvalidFretNumberException Fret number is invalid.
+     * @throws InvalidTimingException Timing is invalid.
      */
-    public BarBuilder addNote(int stringNumber, int fret, int sixteenthTiming)
+    BarBuilder addNote(int stringNumber, int fret, int sixteenthTiming)
             throws InvalidStringException, InvalidFretNumberException, InvalidTimingException {
 
         this.notes.add(new Note(new Fret(stringNumber, fret), new Timing(sixteenthTiming)));
