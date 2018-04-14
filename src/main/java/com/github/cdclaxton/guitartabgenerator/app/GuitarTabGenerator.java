@@ -249,8 +249,9 @@ public final class GuitarTabGenerator {
      */
     static Optional<SheetMusic> parseSheetMusic(String filePath) {
         File inputFile = new File(filePath);
-
         SheetMusic sheetMusic = null;
+
+        // Try to parse the sheet music from the file
         try {
             sheetMusic = SheetMusicParser.parseSheetMusic(inputFile);
         } catch (IOException e) {
@@ -269,6 +270,7 @@ public final class GuitarTabGenerator {
             logger.error("Invalid chord: " + e.getMessage());
         }
 
+        // Return the parsed sheet music
         return sheetMusic != null ? Optional.of(sheetMusic) : Optional.empty();
     }
 
@@ -277,7 +279,7 @@ public final class GuitarTabGenerator {
      *
      * @return CLI options.
      */
-    static Options buildOptions() {
+    private static Options buildOptions() {
         Options options = new Options();
 
         // Specification (input) file
