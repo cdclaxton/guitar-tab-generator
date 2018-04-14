@@ -11,7 +11,12 @@ public class Section {
     private List<String> text = new ArrayList<>();
     private List<Bar> bars = new ArrayList<>();
 
-    public Section() {
+    public Section() { }
+
+    public Section(String name, List<String> text, List<Bar> bars) {
+        this.name = name;
+        this.text = text;
+        this.bars = bars;
     }
 
     public String getName() {
