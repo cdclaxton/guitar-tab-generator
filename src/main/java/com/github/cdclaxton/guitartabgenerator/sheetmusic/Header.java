@@ -20,11 +20,13 @@ public class Header {
      * @param title Song title.
      * @param artist Artist or composer.
      * @param key Key the song is in.
+     * @param timeSignature Time signature of the music.
      */
-    public Header(String title, String artist, Key key) {
+    public Header(String title, String artist, Key key, Bar.TimeSignature timeSignature) {
         this.title = title;
         this.artist = artist;
         this.key = key;
+        this.timeSignature = timeSignature;
     }
 
     public String getTitle() {
@@ -72,7 +74,6 @@ public class Header {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(title, artist, key, timeSignature);
     }
 
