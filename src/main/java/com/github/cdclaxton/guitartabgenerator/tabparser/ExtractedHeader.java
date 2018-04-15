@@ -50,4 +50,9 @@ public final class ExtractedHeader implements ExtractedComponent {
     public int hashCode() {
         return Objects.hash(key, value);
     }
+
+    @Override
+    public String toString() {
+        return "ExtractedHeader[key=" + key + ",value=" + value + "]";
+    }
 }
