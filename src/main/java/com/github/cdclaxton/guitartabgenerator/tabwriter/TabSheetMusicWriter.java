@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-class TabSheetMusicWriter {
+public class TabSheetMusicWriter {
 
     private static final Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
 
@@ -20,7 +20,7 @@ class TabSheetMusicWriter {
      * @param filepath Path of the file to write.
      * @throws IOException Unable to write to file.
      */
-    static void writeLines(final List<String> lines,
+    public static void writeLines(final List<String> lines,
                            final String filepath) throws IOException {
 
         logger.info("Writing tab to: " + filepath);

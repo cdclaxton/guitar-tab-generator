@@ -102,4 +102,15 @@ class GuitarTabGeneratorTest {
         Optional<SheetMusic> sheetMusic = GuitarTabGenerator.parseSheetMusic(path);
         assertFalse(sheetMusic.isPresent());
     }
+
+    @Test
+    void testBuildTabFilename() {
+        String title = "How great is our God";
+        String artist = "Chris Tomlin";
+        String key = "Db";
+        String folder = "./tab/";
+
+        assertEquals("./tab/How great is our God (Chris Tomlin) - Db.txt",
+                GuitarTabGenerator.buildTabFilename(title, artist, key, folder));
+    }
 }

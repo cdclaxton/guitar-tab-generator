@@ -2,14 +2,19 @@ package com.github.cdclaxton.guitartabgenerator.app;
 
 import com.github.cdclaxton.guitartabgenerator.music.*;
 import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusic;
+import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusicTransposition;
 import com.github.cdclaxton.guitartabgenerator.tabparser.ExtractionException;
 import com.github.cdclaxton.guitartabgenerator.tabparser.SheetMusicParser;
+import com.github.cdclaxton.guitartabgenerator.tabwriter.TabBuildingException;
+import com.github.cdclaxton.guitartabgenerator.tabwriter.TabSheetMusicBuilder;
+import com.github.cdclaxton.guitartabgenerator.tabwriter.TabSheetMusicWriter;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -197,7 +202,7 @@ public final class GuitarTabGenerator {
         }
 
         // Read the config.properties file
-        Config config;
+        Config config = null;
         try {
             config = new Config("config.properties");
             logger.info("Config.properties read - " + config.toString());
@@ -212,7 +217,7 @@ public final class GuitarTabGenerator {
 
         // Read the sheet music
         logger.info("Reading specification from file: " + cmdLine.inputFile.get());
-        Optional<SheetMusic> sheetMusic = parseSheetMusic(cmdLine.inputFile.get());
+        final Optional<SheetMusic> sheetMusic = parseSheetMusic(cmdLine.inputFile.get());
         if (!sheetMusic.isPresent()) {
             logger.error("Aborting due to input specification failure");
             System.exit(-1);
@@ -222,13 +227,49 @@ public final class GuitarTabGenerator {
                         " [" + sheetMusic.get().getHeader().getKey().getKey() + "]");
 
         // Generate guitar tab?
+        SheetMusic sheetMusicInRequiredKey = null;
         if (cmdLine.generateTab()) {
             if (cmdLine.transposeKey.isPresent()) {
                 // Generate transposed tab
                 logger.info("Transposing to key: " + cmdLine.transposeKey.get());
+                try {
+                    sheetMusicInRequiredKey = SheetMusicTransposition.transpose(sheetMusic.get(),
+                            cmdLine.getTransposeKey().get(), cmdLine.getTransposeUp().get(), config.getMaxFret());
+                } catch (InvalidKeyException e) {
+                    logger.error("Invalid key: " + e.getMessage());
+                } catch (InvalidChordException e) {
+                    logger.error("Invalid chord: " + e.getMessage());
+                } catch (TranspositionException e) {
+                    logger.error("Unable to transpose: " + e.getMessage());
+                }
             } else {
                 // Generate tab in the same key as the specification file
                 logger.info("No transposition");
+                sheetMusicInRequiredKey = sheetMusic.get();
+            }
+
+            // Build the sheet music
+            List<String> tab = null;
+            try {
+                tab = TabSheetMusicBuilder.buildTabSheetMusic(sheetMusicInRequiredKey, config.getPageWidth());
+            } catch (TabBuildingException e) {
+                logger.error("Unable to build guitar tab: " + e.getMessage());
+                System.exit(-1);
+            }
+
+            // Build the filename for the tab
+            String filePath = buildTabFilename(sheetMusicInRequiredKey.getHeader().getTitle(),
+                    sheetMusicInRequiredKey.getHeader().getArtist(),
+                    sheetMusicInRequiredKey.getHeader().getKey().getKey(),
+                    cmdLine.outputFolder.get());
+            logger.info("Writing tab to: " + filePath);
+
+            // Write the tab
+            try {
+                TabSheetMusicWriter.writeLines(tab, filePath);
+            } catch (IOException e) {
+                logger.error("Can't write file to: " + filePath);
+                logger.error(e.getMessage());
             }
         }
 
@@ -243,6 +284,26 @@ public final class GuitarTabGenerator {
             }
         }
 
+    }
+
+    /**
+     * Build the filename and path.
+     *
+     * @param title Song title.
+     * @param artist Song artist.
+     * @param key Musical key.
+     * @param folder Folder where the tab will be stored.
+     * @return Filename with path.
+     */
+    static String buildTabFilename(final String title,
+                                   final String artist,
+                                   final String key,
+                                   final String folder) {
+
+        String fullFolder = folder;
+        if (!folder.endsWith("/"))  fullFolder = fullFolder + "/";
+
+        return fullFolder + title + " (" + artist + ") - " + key + ".txt";
     }
 
     /**
