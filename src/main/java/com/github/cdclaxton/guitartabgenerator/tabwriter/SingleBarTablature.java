@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SingleBarTablature {
+/**
+ * Note that this class is mutable.
+ */
+final class SingleBarTablature {
 
     private String ruler;
     private String chordLine;
@@ -14,18 +17,6 @@ public class SingleBarTablature {
     private boolean hasBarStartLines = false;
     private boolean hasBarEndLines = false;
 
-    public boolean isHasStringLetters() {
-        return hasStringLetters;
-    }
-
-    public boolean isHasBarStartLines() {
-        return hasBarStartLines;
-    }
-
-    public boolean isHasBarEndLines() {
-        return hasBarEndLines;
-    }
-
     public enum BarLineType { single }
 
     /**
@@ -33,7 +24,7 @@ public class SingleBarTablature {
      *
      * @return Line width.
      */
-    public int getLineWidth() {
+    int getLineWidth() {
         return this.ruler.length();
     }
 
@@ -43,9 +34,9 @@ public class SingleBarTablature {
      * @param ruler Ruler showing timings.
      * @param chordLine Single line of chords.
      * @param lines Varargs list of tab lines.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Inconsistency present.
      */
-    public SingleBarTablature(String ruler, String chordLine, String... lines) throws TabBuildingException {
+    SingleBarTablature(final String ruler, final String chordLine, final String... lines) throws TabBuildingException {
         this(ruler, chordLine,  Arrays.asList(lines));
     }
 
@@ -57,9 +48,9 @@ public class SingleBarTablature {
      * @param ruler Ruler showing timings.
      * @param chordLine Single line of chords.
      * @param tabLines Tab lines.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Inconsistency present.
      */
-    public SingleBarTablature(String ruler, String chordLine, List<String> tabLines) throws TabBuildingException {
+    SingleBarTablature(String ruler, String chordLine, List<String> tabLines) throws TabBuildingException {
 
         // Preconditions
         if (ruler.length() != chordLine.length()) {
@@ -93,7 +84,7 @@ public class SingleBarTablature {
     /**
      * Add a space (or '-') to the start of each line of the bar.
      */
-    public void addLeadingSpace() {
+    void addLeadingSpace() {
 
         // Pad the ruler with a space
         this.ruler = TabLineUtils.padLeft(this.ruler, 1, ' ');
@@ -110,7 +101,7 @@ public class SingleBarTablature {
     /**
      * Add a space (or '-') to the end of each line of the bar.
      */
-    public void addTrailingSpace() {
+    void addTrailingSpace() {
 
         // Pad the ruler with a space
         this.ruler = TabLineUtils.padRight(this.ruler, 1, ' ');
@@ -127,7 +118,7 @@ public class SingleBarTablature {
     /**
      * Add the guitar string letters to the tab (standard tuning).
      */
-    public void addStringLetters() throws TabBuildingException {
+    void addStringLetters() throws TabBuildingException {
 
         if (this.hasStringLetters) {
             throw new TabBuildingException("Bar already has string letters");
@@ -155,7 +146,7 @@ public class SingleBarTablature {
      *
      * @param barLineType Type of bar line to add.
      */
-    public void addBarStartLines(BarLineType barLineType) throws TabBuildingException {
+    void addBarStartLines(final BarLineType barLineType) throws TabBuildingException {
 
         if (this.hasBarStartLines) {
             throw new TabBuildingException("Bar already has start lines");
@@ -181,7 +172,7 @@ public class SingleBarTablature {
      *
      * @param barLineType Type of bar line to add.
      */
-    public void addBarEndLines(BarLineType barLineType) throws TabBuildingException {
+    void addBarEndLines(final BarLineType barLineType) throws TabBuildingException {
 
         if (this.hasBarEndLines) {
             throw new TabBuildingException("Bar already has end lines");
@@ -208,7 +199,7 @@ public class SingleBarTablature {
      * @param barLineType Type of bar line.
      * @return Number of characters.
      */
-    private static int getWidthOfBarSeparator(BarLineType barLineType) {
+    private static int getWidthOfBarSeparator(final BarLineType barLineType) {
         if (barLineType == BarLineType.single) {
             return 1;
         }
@@ -222,7 +213,7 @@ public class SingleBarTablature {
      * @param barLineType Type of bar line.
      * @return Separator.
      */
-    private static String getBarSeparator(BarLineType barLineType) {
+    private static String getBarSeparator(final BarLineType barLineType) {
         if (barLineType == BarLineType.single) {
             return "|";
         }
@@ -231,15 +222,15 @@ public class SingleBarTablature {
         throw new IllegalStateException("Shouldn't reach here.");
     }
 
-    public String getRuler() {
+    String getRuler() {
         return ruler;
     }
 
-    public String getChordLine() {
+    String getChordLine() {
         return chordLine;
     }
 
-    public List<String> getTabLines() {
+    List<String> getTabLines() {
         return tabLines;
     }
 
@@ -248,7 +239,7 @@ public class SingleBarTablature {
      *
      * @return List of strings representing the bar.
      */
-    public List<String> getFullBar() {
+    List<String> getFullBar() {
         List<String> lines = new ArrayList<>();
 
         if (ruler != null) {
