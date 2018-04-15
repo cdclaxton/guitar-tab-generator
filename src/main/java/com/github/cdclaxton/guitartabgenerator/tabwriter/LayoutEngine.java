@@ -6,19 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LayoutEngine {
+class LayoutEngine {
 
-    protected static class Block {
-        List<String> lines;
+    /**
+     * Inner class to represent a block of text.
+     */
+    static class Block {
 
-        public Block(List<String> lines) throws TabBuildingException {
+        final List<String> lines;
+
+        /**
+         * Instantiate a block of text.
+         *
+         * @param lines Lines of text.
+         * @throws TabBuildingException Lines are null or have differing lengths.
+         */
+        Block(final List<String> lines) throws TabBuildingException {
 
             if (lines == null) {
                 throw new TabBuildingException("Lines cannot be null");
             }
 
-            // Check of the lines have the same length
-            int width = lines.get(0).length();
+            // Check the lines have the same length
+            final int width = lines.get(0).length();
             for (int i=1; i<lines.size(); i++) {
                 if (lines.get(i).length() != width) {
                     throw new TabBuildingException("Lines in block have differing lengths");
@@ -28,7 +38,13 @@ public class LayoutEngine {
             this.lines = lines;
         }
 
-        public void horizontalLayout(Block block) throws TabBuildingException {
+        /**
+         * Modify the block by laying the input block to the right of this block.
+         *
+         * @param block Block to layout to the right.
+         * @throws TabBuildingException Blocks have differing numbers of rows.
+         */
+        void horizontalLayout(final Block block) throws TabBuildingException {
 
             // Check the blocks have the same number of rows
             if (this.lines.size() != block.lines.size()) {
@@ -41,26 +57,42 @@ public class LayoutEngine {
             }
         }
 
-        public int getWidth() {
+        /**
+         * Get the width of the block (in characters).
+         *
+         * @return Block width.
+         */
+        int getWidth() {
             return this.lines.get(0).length();
         }
     }
 
-    public static List<String> layoutBars(List<Bar> bars, int pageWidth, int verticalSpacing) throws TabBuildingException {
+    /**
+     * Layout the bars (to generate a list of lines).
+     *
+     * @param bars Bars of music.
+     * @param pageWidth Page width (in characters).
+     * @param verticalSpacing Vertical spacing between bars.
+     * @return Lines representing the bars.
+     * @throws TabBuildingException
+     */
+    static List<String> layoutBars(final List<Bar> bars,
+                                   final int pageWidth,
+                                   final int verticalSpacing) throws TabBuildingException {
 
         // Determine the most compact layout for each bar
-        List<SingleBarTablatureBuilder.Markings> markings = bars.stream()
+        final List<SingleBarTablatureBuilder.Markings> markings = bars.stream()
                 .map(bar -> LayoutEngine.compactLayout(bar))
                 .collect(Collectors.toList());
 
         // Build the tab, one bar at a time
-        List<Block> verticalBlocks = new ArrayList<>();
+        final List<Block> verticalBlocks = new ArrayList<>();
         Block currentBlock = null;
 
         for (int i = 0; i < bars.size(); i++) {
 
             // Create the string representation of the bar
-            SingleBarTablature tabBar = SingleBarTablatureBuilder.buildTabFromBar(bars.get(i), markings.get(i));
+            final SingleBarTablature tabBar = SingleBarTablatureBuilder.buildTabFromBar(bars.get(i), markings.get(i));
             tabBar.addLeadingSpace();
             tabBar.addTrailingSpace();
             tabBar.addBarEndLines(SingleBarTablature.BarLineType.single);
@@ -93,9 +125,17 @@ public class LayoutEngine {
         return LayoutEngine.verticallyLayoutBlocks(verticalBlocks, verticalSpacing);
     }
 
-    protected static List<String> verticallyLayoutBlocks(List<Block> blocks, int spacing) {
+    /**
+     * Layout blocks vertically.
+     *
+     * @param blocks Blocks to lay out.
+     * @param spacing Spacing between blocks.
+     * @return Lines of text generated from the blocks.
+     */
+    private static List<String> verticallyLayoutBlocks(final List<Block> blocks,
+                                                       final int spacing) {
 
-        List<String> lines = new ArrayList<>();
+        final List<String> lines = new ArrayList<>();
 
         for (Block b : blocks) {
             lines.addAll(b.lines);
@@ -113,20 +153,20 @@ public class LayoutEngine {
      * @param bar Bar of music.
      * @return Most compact timing layout.
      */
-    public static SingleBarTablatureBuilder.Markings compactLayout(Bar bar) {
+    static SingleBarTablatureBuilder.Markings compactLayout(final Bar bar) {
 
         // Get a list of all the note times
-        List<Integer> noteTimes = bar.getNotes().stream()
+        final List<Integer> noteTimes = bar.getNotes().stream()
                 .map(note -> note.getTiming().getSixteenthNumber())
                 .collect(Collectors.toList());
 
         // Get a list of all the chord times
-        List<Integer> chordTimes = bar.getTimedChords().stream()
+        final List<Integer> chordTimes = bar.getTimedChords().stream()
                 .map(timedChord -> timedChord.getTiming().getSixteenthNumber())
                 .collect(Collectors.toList());
 
         // Create a list of all timings (notes and chords)
-        List<Integer> timings = new ArrayList<>(noteTimes);
+        final List<Integer> timings = new ArrayList<>(noteTimes);
         timings.addAll(chordTimes);
 
         // Find the most compact form
@@ -150,7 +190,8 @@ public class LayoutEngine {
      * @param divisor Divisor.
      * @return True if all values are divisible.s
      */
-    protected static boolean allDivisible(List<Integer> values, int divisor) {
+    static boolean allDivisible(List<Integer> values,
+                                int divisor) {
         return values.stream().map(v -> v % divisor).allMatch(v -> v == 0);
     }
 
