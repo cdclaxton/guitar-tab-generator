@@ -16,7 +16,10 @@ public final class SheetMusic {
      * @param metadata Metadata.
      * @param sections Sections (each with title, text and musical bars).
      */
-    public SheetMusic(final Header header, final Metadata metadata, final List<Section> sections) {
+    public SheetMusic(final Header header,
+                      final Metadata metadata,
+                      final List<Section> sections) {
+
         this.header = header;
         this.metadata = metadata;
         this.sections = sections;

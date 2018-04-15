@@ -19,7 +19,10 @@ public final class Bar {
      * @param notes Notes in the bar.
      * @param timedChords Chords in the bar.
      */
-    public Bar(final TimeSignature timeSignature, final List<Note> notes, final List<TimedChord> timedChords) {
+    public Bar(final TimeSignature timeSignature,
+               final List<Note> notes,
+               final List<TimedChord> timedChords) {
+
         this.timeSignature = timeSignature;
 
         // Make a deep copy of the notes

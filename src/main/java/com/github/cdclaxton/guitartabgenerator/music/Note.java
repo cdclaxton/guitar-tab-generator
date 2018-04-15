@@ -13,7 +13,8 @@ public final class Note {
      * @param fret Fret and string representation.
      * @param timing Timing of the note or chord.
      */
-    public Note(Fret fret, Timing timing) {
+    public Note(final Fret fret,
+                final Timing timing) {
         this.fret = Fret.newInstance(fret);
         this.timing = Timing.newInstance(timing);
     }
@@ -24,7 +25,7 @@ public final class Note {
      * @param note Note.
      * @return New instance.
      */
-    public static Note newInstance(Note note) {
+    public static Note newInstance(final Note note) {
         return new Note(Fret.newInstance(note.fret), Timing.newInstance(note.timing));
     }
 

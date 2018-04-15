@@ -20,7 +20,11 @@ public final class Header {
      * @param key Key the song is in.
      * @param timeSignature Time signature of the music.
      */
-    public Header(final String title, final String artist, final Key key, final Bar.TimeSignature timeSignature) {
+    public Header(final String title,
+                  final String artist,
+                  final Key key,
+                  final Bar.TimeSignature timeSignature) {
+
         this.title = title;
         this.artist = artist;
         this.key = Key.newInstance(key);

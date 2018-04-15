@@ -29,7 +29,10 @@ final class ChordTransposition {
          * @param rest Rest of the chord, e.g. m7.
          * @param bassNote Bass note, e.g. E.
          */
-        ChordParts(String base, String rest, String bassNote) {
+        ChordParts(String base,
+                   String rest,
+                   String bassNote) {
+
             this.base = base;
             this.rest = rest;
             this.bassNote = bassNote;
@@ -57,7 +60,9 @@ final class ChordTransposition {
      * @return Transposed chord.
      * @throws TranspositionException Can't transpose the chord (invalid key or change from major to minor).
      */
-    static String transposeChord(final String chord, final String oldKey, final String newKey) throws TranspositionException {
+    static String transposeChord(final String chord,
+                                 final String oldKey,
+                                 final String newKey) throws TranspositionException {
 
         logger.debug("Transposing chord " + chord + " from key " + oldKey + " to key " + newKey);
 
@@ -95,8 +100,9 @@ final class ChordTransposition {
      * @return Transposed note.
      * @throws TranspositionException Note transposition failed.
      */
-    private static String transposeNote(final String note, final int nSemitones, final String newKey)
-            throws TranspositionException {
+    private static String transposeNote(final String note,
+                                        final int nSemitones,
+                                        final String newKey) throws TranspositionException {
 
         // Get the index of the note
         final int noteIndex = baseNoteToIndex(note);
@@ -143,7 +149,8 @@ final class ChordTransposition {
      * @return Number of semitones different.
      * @throws TranspositionException Base not can't be found in the list of valid notes.
      */
-    static int numSemitones(final String oldKey, final String newKey) throws TranspositionException {
+    static int numSemitones(final String oldKey,
+                            final String newKey) throws TranspositionException {
         final String oldKeyBaseNote = keyBaseNote(oldKey);
         final String newKeyBaseNote = keyBaseNote(newKey);
 
@@ -251,7 +258,8 @@ final class ChordTransposition {
      * @return Transposed note index.
      * @throws TranspositionException Invalid note index.
      */
-    static int transposeNoteIndex(final int noteIndex, final int nSemitones) throws TranspositionException {
+    static int transposeNoteIndex(final int noteIndex,
+                                  final int nSemitones) throws TranspositionException {
 
         // Check the note index is valid
         if (noteIndex < 0 || noteIndex >= numberNotes) {

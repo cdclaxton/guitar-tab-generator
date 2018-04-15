@@ -20,7 +20,10 @@ public class Section {
      * @param text Lines of text.
      * @param bars Bars in the section.
      */
-    public Section(final String name, final List<String> text, final List<Bar> bars) {
+    public Section(final String name,
+                   final List<String> text,
+                   final List<Bar> bars) {
+
         this.name = name;
 
         // Make a deep copy of the text

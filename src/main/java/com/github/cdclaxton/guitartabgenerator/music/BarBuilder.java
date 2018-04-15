@@ -30,8 +30,8 @@ public final class BarBuilder {
      * @throws InvalidTimingException Sixteenth note timing is invalid.
      * @throws InvalidChordException Chord is invalid.
      */
-    public BarBuilder addTimedChord(int sixteenthTiming, String chord)
-            throws InvalidTimingException, InvalidChordException {
+    public BarBuilder addTimedChord(final int sixteenthTiming,
+                                    final String chord) throws InvalidTimingException, InvalidChordException {
 
         this.timedChords.add(new TimedChord(new Timing(sixteenthTiming), chord));
         return this;
@@ -48,7 +48,9 @@ public final class BarBuilder {
      * @throws InvalidFretNumberException Fret number is invalid.
      * @throws InvalidTimingException Timing is invalid.
      */
-    public BarBuilder addNote(int stringNumber, int fret, int sixteenthTiming)
+    public BarBuilder addNote(final int stringNumber,
+                              final int fret,
+                              final int sixteenthTiming)
             throws InvalidStringException, InvalidFretNumberException, InvalidTimingException {
 
         this.notes.add(new Note(new Fret(stringNumber, fret), new Timing(sixteenthTiming)));

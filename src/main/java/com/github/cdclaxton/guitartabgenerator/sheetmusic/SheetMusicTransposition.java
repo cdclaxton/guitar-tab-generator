@@ -19,8 +19,10 @@ public final class SheetMusicTransposition {
      * @throws InvalidChordException Invalid chord.
      * @throws TranspositionException Unable to transpose the music.
      */
-    public static SheetMusic transpose(final SheetMusic sheetMusic, final String newKey,
-                                       final boolean up, final int maxFretNumber)
+    public static SheetMusic transpose(final SheetMusic sheetMusic,
+                                       final String newKey,
+                                       final boolean up,
+                                       final int maxFretNumber)
             throws InvalidKeyException, InvalidChordException, TranspositionException {
 
         // Create a new header (just the key changes)
@@ -52,8 +54,11 @@ public final class SheetMusicTransposition {
      * @throws InvalidChordException Invalid chord.
      * @throws TranspositionException Unable to transpose section.
      */
-    private static Section transposeSection(final Section section, final String currentKey, final String newKey,
-                                            final boolean up, final int maxFretNumber)
+    private static Section transposeSection(final Section section,
+                                            final String currentKey,
+                                            final String newKey,
+                                            final boolean up,
+                                            final int maxFretNumber)
             throws InvalidChordException, TranspositionException {
 
         // Transpose each of the bars to the new key

@@ -17,9 +17,11 @@ public final class BarTransposition {
      * @throws TranspositionException Unable to transpose the bar.
      * @throws InvalidChordException One or more chords in the bar are invalid.
      */
-    public static Bar transposeBar(final Bar bar, final String currentKey, final String newKey,
-                                   final boolean up, final int maxFretNumber)
-            throws TranspositionException, InvalidChordException {
+    public static Bar transposeBar(final Bar bar,
+                                   final String currentKey,
+                                   final String newKey,
+                                   final boolean up,
+                                   final int maxFretNumber) throws TranspositionException, InvalidChordException {
 
         // Transpose the chords
         final List<TimedChord> timedChords = BarTransposition.transposeChords(bar.getTimedChords(), currentKey, newKey);
@@ -41,8 +43,9 @@ public final class BarTransposition {
      * @return Number of semitones different between the keys.
      * @throws TranspositionException Invalid keys.
      */
-    static int numSemitonesDifferent(final String currentKey, final String newKey, final boolean up)
-            throws TranspositionException {
+    static int numSemitonesDifferent(final String currentKey,
+                                     final String newKey,
+                                     final boolean up) throws TranspositionException {
 
         // Always returns a number between -6 and 6
         int nSemitones = ChordTransposition.numSemitones(currentKey, newKey);
@@ -63,7 +66,8 @@ public final class BarTransposition {
      * @throws InvalidChordException One or more chords are invalid.
      * @throws TranspositionException Unable to transpose chords.
      */
-    private static List<TimedChord> transposeChords(final List<TimedChord> timedChords, final String currentKey,
+    private static List<TimedChord> transposeChords(final List<TimedChord> timedChords,
+                                                    final String currentKey,
                                                     final String newKey)
             throws InvalidChordException, TranspositionException {
 
@@ -84,7 +88,8 @@ public final class BarTransposition {
      * @throws TranspositionException  Unable to transpose chord.
      * @throws InvalidChordException Invalid chord.
      */
-    private static TimedChord transposeChord(final TimedChord timedChord, final String currentKey,
+    private static TimedChord transposeChord(final TimedChord timedChord,
+                                             final String currentKey,
                                              final String newKey)
             throws TranspositionException, InvalidChordException {
 

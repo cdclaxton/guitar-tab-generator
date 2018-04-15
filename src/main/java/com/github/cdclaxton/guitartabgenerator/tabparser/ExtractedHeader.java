@@ -13,7 +13,8 @@ public final class ExtractedHeader implements ExtractedComponent {
      * @param key Key (e.g. artist).
      * @param value Value associated with the key.
      */
-    ExtractedHeader(final String key, final String value) {
+    ExtractedHeader(final String key,
+                    final String value) {
         this.key = key;
         this.value = value;
     }

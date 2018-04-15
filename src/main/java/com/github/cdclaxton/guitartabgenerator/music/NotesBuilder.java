@@ -20,7 +20,9 @@ public final class NotesBuilder {
      * @throws InvalidFretNumberException
      * @throws InvalidTimingException
      */
-    NotesBuilder addNote(int stringNumber, int fret, int timing)
+    NotesBuilder addNote(final int stringNumber,
+                         final int fret,
+                         final int timing)
             throws InvalidStringException, InvalidFretNumberException, InvalidTimingException {
 
         notes.add(new Note(new Fret(stringNumber, fret), new Timing(timing)));

@@ -20,7 +20,8 @@ class TabSheetMusicWriter {
      * @param filepath Path of the file to write.
      * @throws IOException Unable to write to file.
      */
-    static void writeLines(final List<String> lines, final String filepath) throws IOException {
+    static void writeLines(final List<String> lines,
+                           final String filepath) throws IOException {
 
         logger.info("Writing tab to: " + filepath);
 

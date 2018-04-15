@@ -36,7 +36,9 @@ final class SingleBarTablature {
      * @param lines Varargs list of tab lines.
      * @throws TabBuildingException Inconsistency present.
      */
-    SingleBarTablature(final String ruler, final String chordLine, final String... lines) throws TabBuildingException {
+    SingleBarTablature(final String ruler,
+                       final String chordLine,
+                       final String... lines) throws TabBuildingException {
         this(ruler, chordLine,  Arrays.asList(lines));
     }
 
@@ -50,7 +52,9 @@ final class SingleBarTablature {
      * @param tabLines Tab lines.
      * @throws TabBuildingException Inconsistency present.
      */
-    SingleBarTablature(String ruler, String chordLine, List<String> tabLines) throws TabBuildingException {
+    SingleBarTablature(String ruler,
+                       String chordLine,
+                       List<String> tabLines) throws TabBuildingException {
 
         // Preconditions
         if (ruler.length() != chordLine.length()) {

@@ -13,7 +13,8 @@ public final class Fret {
      * @param stringNumber String (1 = high E).
      * @param fretNumber Fret number (0 = open string).
      */
-    public Fret(int stringNumber, int fretNumber) throws InvalidFretNumberException, InvalidStringException {
+    public Fret(final int stringNumber,
+                final int fretNumber) throws InvalidFretNumberException, InvalidStringException {
 
         // Check the stringNumber is valid for a standard guitar
         if (!isStringNumberValid(stringNumber)) {

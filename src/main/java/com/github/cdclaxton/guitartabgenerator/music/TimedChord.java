@@ -19,7 +19,9 @@ public final class TimedChord {
      * @param chord Chord.
      * @throws InvalidChordException Invalid chord.
      */
-    public TimedChord(Timing timing, String chord) throws InvalidChordException {
+    public TimedChord(final Timing timing,
+                      final String chord) throws InvalidChordException {
+
         if (!isValid(chord)) {
             throw new InvalidChordException("Chord (" + chord + ") is not valid");
         }

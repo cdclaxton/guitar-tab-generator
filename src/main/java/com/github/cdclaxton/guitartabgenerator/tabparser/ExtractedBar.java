@@ -24,7 +24,8 @@ public final class ExtractedBar implements ExtractedComponent {
      * @param timedChords Chords.
      * @param notes Notes.
      */
-    ExtractedBar(final String timedChords, final String notes) {
+    ExtractedBar(final String timedChords,
+                 final String notes) {
         this.timedChords = timedChords;
         this.notes = notes;
     }

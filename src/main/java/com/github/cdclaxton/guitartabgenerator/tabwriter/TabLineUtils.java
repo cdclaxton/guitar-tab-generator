@@ -12,7 +12,10 @@ final class TabLineUtils {
      * @param paddingChar Character to ue to pad.
      * @return Padded line.
      */
-    static String padLeft(final String line, final int padding, final char paddingChar) {
+    static String padLeft(final String line,
+                          final int padding,
+                          final char paddingChar) {
+
         if (line == null) {
             throw new IllegalArgumentException("Can't pad a null string");
         }
@@ -28,7 +31,10 @@ final class TabLineUtils {
      * @param paddingChar Character to ue to pad.
      * @return Padded line.
      */
-    static String padRight(final String line, final int padding, final char paddingChar) {
+    static String padRight(final String line,
+                           final int padding,
+                           final char paddingChar) {
+
         if (line == null) {
             throw new IllegalArgumentException("Can't pad a null string");
         }
