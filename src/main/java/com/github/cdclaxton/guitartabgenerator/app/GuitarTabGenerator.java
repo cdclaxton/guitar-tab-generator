@@ -153,7 +153,7 @@ public final class GuitarTabGenerator {
          *
          * @return True if the tab should be transposed up.
          */
-        public Optional<Boolean> getTransposeUp() { return this.transposeUp; }
+        Optional<Boolean> getTransposeUp() { return this.transposeUp; }
 
         @Override
         public String toString() {
