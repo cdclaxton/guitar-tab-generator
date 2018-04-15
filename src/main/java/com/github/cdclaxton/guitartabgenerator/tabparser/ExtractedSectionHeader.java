@@ -2,15 +2,25 @@ package com.github.cdclaxton.guitartabgenerator.tabparser;
 
 import java.util.Objects;
 
-public class ExtractedSectionHeader implements ExtractedComponent {
+public final class ExtractedSectionHeader implements ExtractedComponent {
 
-    private String name;
+    private final String name;
 
-    public ExtractedSectionHeader(String name) {
+    /**
+     * Instantiate an object to represent a musical section's header.
+     *
+     * @param name Name or title of the section.
+     */
+    ExtractedSectionHeader(String name) {
         this.name = name;
     }
 
-    public String getName() {
+    /**
+     * Get the section name.
+     *
+     * @return Name.
+     */
+    String getName() {
         return name;
     }
 
@@ -24,7 +34,6 @@ public class ExtractedSectionHeader implements ExtractedComponent {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(name);
     }
 }
