@@ -2,16 +2,25 @@ package com.github.cdclaxton.guitartabgenerator.tabparser;
 
 import java.util.Objects;
 
-public class ExtractedText implements ExtractedComponent {
+public final class ExtractedText implements ExtractedComponent {
 
-    private String text;
+    private final String text;
 
-    public ExtractedText(String text) {
+    /**
+     * Instantiate an object to represent a line of text in the sheet music.
+     *
+     * @param text Line of text.
+     */
+    ExtractedText(final String text) {
         this.text = text;
     }
 
-
-    public String getText() {
+    /**
+     * Get the text.
+     *
+     * @return Text.
+     */
+    String getText() {
         return text;
     }
 
@@ -25,7 +34,6 @@ public class ExtractedText implements ExtractedComponent {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(text);
     }
 }

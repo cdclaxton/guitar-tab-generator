@@ -12,23 +12,39 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class ExtractedBar implements ExtractedComponent {
+public final class ExtractedBar implements ExtractedComponent {
 
-    private String chords;
-    private String timedNotes;
-    private static Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
+    private final String timedChords;
+    private final String notes;
+    private final static Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
 
-    public ExtractedBar(String chords, String timedNotes) {
-        this.chords = chords;
-        this.timedNotes = timedNotes;
+    /**
+     * Instantiate an immutable object that represents a bar.
+     *
+     * @param timedChords Chords.
+     * @param notes Notes.
+     */
+    ExtractedBar(final String timedChords, final String notes) {
+        this.timedChords = timedChords;
+        this.notes = notes;
     }
 
-    public String getChords() {
-        return chords;
+    /**
+     * Get the timed chords.
+     *
+     * @return Timed chords.
+     */
+    String getTimedChords() {
+        return timedChords;
     }
 
-    public String getTimedNotes() {
-        return timedNotes;
+    /**
+     * Get the notes.
+     *
+     * @return Notes.
+     */
+    public String getNotes() {
+        return notes;
     }
 
     @Override
@@ -36,14 +52,13 @@ public class ExtractedBar implements ExtractedComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExtractedBar that = (ExtractedBar) o;
-        return Objects.equals(chords, that.chords) &&
-                Objects.equals(timedNotes, that.timedNotes);
+        return Objects.equals(timedChords, that.timedChords) &&
+                Objects.equals(notes, that.notes);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(chords, timedNotes);
+        return Objects.hash(timedChords, notes);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -55,46 +70,46 @@ public class ExtractedBar implements ExtractedComponent {
      *
      * @param timeSignature Time signature of the bar.
      * @return Bar.
-     * @throws ExtractionException
-     * @throws InvalidStringException
-     * @throws InvalidFretNumberException
-     * @throws InvalidTimingException
-     * @throws InvalidChordException
+     * @throws ExtractionException Unable to parse notes or chords.
+     * @throws InvalidStringException Invalid string number.
+     * @throws InvalidFretNumberException Invalid fret number.
+     * @throws InvalidTimingException Invalid timing.
+     * @throws InvalidChordException Invalid chord.
      */
-    public Bar toBar(Bar.TimeSignature timeSignature)
+    Bar toBar(final Bar.TimeSignature timeSignature)
             throws ExtractionException, InvalidStringException, InvalidFretNumberException,
             InvalidTimingException, InvalidChordException {
 
         // Parse the notes
-        logger.debug("Parsing notes: " + this.timedNotes);
-        List<Note> notes = ExtractedBar.parseNotes(this.timedNotes);
+        logger.debug("Parsing notes: " + this.notes);
+        List<Note> notes = ExtractedBar.parseNotes(this.notes);
 
-        // Parse the chords
-        logger.debug("Parsing chords: " + this.chords);
-        List<TimedChord> chords = ExtractedBar.parseChords(this.chords);
+        // Parse the timed chords
+        logger.debug("Parsing timed chords: " + this.timedChords);
+        List<TimedChord> chords = ExtractedBar.parseChords(this.timedChords);
 
         return new Bar(timeSignature, notes, chords);
     }
 
     /**
-     * Parse a list of chords, e.g. 1/Db 2+/F.
+     * Parse a list of timed chords, e.g. 1/Db 2+/F.
      *
-     * @param chords List of chords.
-     * @return List of timed chords.
-     * @throws ExtractionException
-     * @throws InvalidTimingException
-     * @throws InvalidChordException
+     * @param chords List of timedChords.
+     * @return List of timed timedChords.
+     * @throws ExtractionException Unable to extract chord and timing.
+     * @throws InvalidTimingException Invalid timing.
+     * @throws InvalidChordException Invalid chord.
      */
-    protected static List<TimedChord> parseChords(String chords)
+    static List<TimedChord> parseChords(final String chords)
             throws ExtractionException, InvalidTimingException, InvalidChordException {
 
-        // Separate chords into individual elements
+        // Separate timed chords into individual elements
         List<String> separateChordsStrings = ExtractedBar.separateChords(chords.trim());
 
         // Remove any white space
         List<String> chordStrings = separateChordsStrings.stream().filter(s -> s.length() > 0).collect(Collectors.toList());
 
-        // Parse each of the string representation of the chords
+        // Parse each of the string representation of the timedChords
         List<TimedChord> timedChords = new ArrayList<>();
         for (String c : chordStrings) {
             logger.debug("About to parse chord: " + c);
@@ -105,12 +120,12 @@ public class ExtractedBar implements ExtractedComponent {
     }
 
     /**
-     * Separate a list of chords, e.g. 1/Db 2+/F into [1/Db, 2+/F].
+     * Separate a list of timed chords, e.g. 1/Db 2+/F into [1/Db, 2+/F].
      *
      * @param chords Chords to separate.
-     * @return Separate chords.
+     * @return Separate timedChords.
      */
-    protected static List<String> separateChords(String chords) {
+    static List<String> separateChords(final String chords) {
         String[] individualChords = chords.trim().split(" ");
         return Arrays.asList(individualChords);
     }
@@ -120,15 +135,16 @@ public class ExtractedBar implements ExtractedComponent {
      *
      * @param chord Timed chord to parse.
      * @return Timed chord.
-     * @throws ExtractionException
-     * @throws InvalidStringException
+     * @throws ExtractionException Unable to extract chord or timing.
+     * @throws InvalidTimingException Invalid timing.
+     * @throws InvalidChordException Invalid chord.
      */
-    protected static TimedChord notationToChord(String chord)
+    static TimedChord notationToChord(final String chord)
             throws ExtractionException, InvalidTimingException, InvalidChordException {
 
         logger.debug("Parsing timed chord: " + chord);
 
-        final String pattern = "([1-6][\\+ea]?)/([A-G](b|#)?)";
+        final String pattern = "([1-6][+ea]?)/([A-G][b#]?)";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(chord);
         if (matcher.find()) {
@@ -152,22 +168,20 @@ public class ExtractedBar implements ExtractedComponent {
      *
      * @param listNotes String representation of a list of notes.
      * @return List of notes.
-     * @throws InvalidStringException
-     * @throws InvalidFretNumberException
-     * @throws InvalidTimingException
-     * @throws ExtractionException
+     * @throws InvalidStringException Invalid string number.
+     * @throws InvalidFretNumberException Invalid fret number.
+     * @throws InvalidTimingException Invalid timing.
+     * @throws ExtractionException Unable to parse note.
      */
-    protected static List<Note> parseNotes(String listNotes)
+    static List<Note> parseNotes(final String listNotes)
             throws InvalidStringException, InvalidFretNumberException, InvalidTimingException, ExtractionException {
 
         // Perform an initial separation
         // e.g. 2+/g6 3/<g7, b8> -> [2+/g6, 3/<g7, b8>]
-        List<String> parts = ExtractedBar.splitNotesByTime(listNotes);
+        final List<String> parts = ExtractedBar.splitNotesByTime(listNotes);
 
         // Walk through the string representation of the notes and convert to Notes
-        String timing;
-        String singleNote;
-        List<Note> notes = new ArrayList<>();
+        final List<Note> notes = new ArrayList<>();
 
         for (String n : parts) {
             if (n.contains("<")) {
@@ -188,14 +202,14 @@ public class ExtractedBar implements ExtractedComponent {
      *
      * @param notes Notes to split.
      * @return Separate notes.
-     * @throws ExtractionException
+     * @throws ExtractionException Unable to parse simultaneous notes.
      */
-    protected static List<String> parseSimultaneousNotes(String notes) throws ExtractionException {
+    static List<String> parseSimultaneousNotes(final String notes) throws ExtractionException {
 
         logger.debug("Extracting simultaneous notes from: " + notes);
 
         // Extract the time
-        final String timePattern = "([1-6][\\+ae]?)/.*";
+        final String timePattern = "([1-6][+ae]?)/.*";
         final Pattern compiledTimePattern = Pattern.compile(timePattern);
         final Matcher timeMatcher = compiledTimePattern.matcher(notes);
         String time;
@@ -207,7 +221,7 @@ public class ExtractedBar implements ExtractedComponent {
         }
 
         // Extract each of the separate notes
-        List<String> simultaneousNotes = new ArrayList<>();
+        final List<String> simultaneousNotes = new ArrayList<>();
 
         final String notePattern = "([A-Za-z][0-9]{1,2})";
         final Pattern compiledNotePattern = Pattern.compile(notePattern);
@@ -231,8 +245,8 @@ public class ExtractedBar implements ExtractedComponent {
      * @param listNotes List of notes.
      * @return Time-separated notes.
      */
-    protected static List<String> splitNotesByTime(String listNotes) {
-        final String pattern = "([1-6][\\+ae]?/(<([A-Za-z][0-9]{1,2}\\s*)+>|[A-Za-z][0-9]{1,2}\\s*))";
+    static List<String> splitNotesByTime(final String listNotes) {
+        final String pattern = "([1-6][+ae]?/(<([A-Za-z][0-9]{1,2}\\s*)+>|[A-Za-z][0-9]{1,2}\\s*))";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(listNotes);
         List<String> parts = new ArrayList<>();
@@ -247,27 +261,27 @@ public class ExtractedBar implements ExtractedComponent {
      *
      * @param notation String representation of the note.
      * @return Note.
-     * @throws InvalidStringException
-     * @throws ExtractionException
-     * @throws InvalidFretNumberException
-     * @throws InvalidTimingException
+     * @throws InvalidStringException String letter is invalid.
+     * @throws ExtractionException Unable to extract note.
+     * @throws InvalidFretNumberException Fret number is invalid.
+     * @throws InvalidTimingException Timing is invalid.
      */
-    protected static Note notationToNote(String notation)
+    static Note notationToNote(final String notation)
             throws InvalidStringException, ExtractionException, InvalidFretNumberException, InvalidTimingException {
 
-        final String pattern = "([1-6][\\+ea]?)/([A-Za-z])([0-9]{1,2})";
+        final String pattern = "([1-6][+ea]?)/([A-Za-z])([0-9]{1,2})";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(notation);
         if (matcher.find()) {
 
             // Extract the timing of the note
-            String timingString = matcher.group(1);
-            Timing timing = new Timing(ExtractedBar.timingNotationToSixteenth(timingString));
+            final String timingString = matcher.group(1);
+            final Timing timing = new Timing(ExtractedBar.timingNotationToSixteenth(timingString));
 
             // Extract the note
-            int stringNumber = ExtractedBar.stringLetterToNumber(matcher.group(2));
-            int fretNumber = Integer.valueOf(matcher.group(3));
-            Fret fret = new Fret(stringNumber, fretNumber);
+            final int stringNumber = ExtractedBar.stringLetterToNumber(matcher.group(2));
+            final int fretNumber = Integer.valueOf(matcher.group(3));
+            final Fret fret = new Fret(stringNumber, fretNumber);
 
             // Build and return the note
             return new Note(fret, timing);
@@ -281,10 +295,10 @@ public class ExtractedBar implements ExtractedComponent {
      *
      * @param timingNotation String representation of the time to convert.
      * @return Sixteenth note time.
-     * @throws ExtractionException
+     * @throws ExtractionException Unable to extract timing.
      */
-    protected static int timingNotationToSixteenth(String timingNotation) throws ExtractionException {
-        final String pattern = "([1-6])([\\+ea]?)";
+    static int timingNotationToSixteenth(final String timingNotation) throws ExtractionException {
+        final String pattern = "([1-6])([+ea]?)";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(timingNotation);
         if (matcher.find()) {
@@ -313,9 +327,9 @@ public class ExtractedBar implements ExtractedComponent {
      *
      * @param letter String letter.
      * @return String number.
-     * @throws InvalidStringException
+     * @throws InvalidStringException Invalid string letter.
      */
-    protected static int stringLetterToNumber(String letter) throws InvalidStringException {
+    static int stringLetterToNumber(String letter) throws InvalidStringException {
         switch (letter) {
             case "E":
                 return 6;

@@ -76,18 +76,18 @@ class SheetMusicParserTest {
     void testExtractBar() throws ExtractionException {
         String barWithChords = "(1/Db) 1/<a4 d6 g6>";
         ExtractedBar extractedBar = SheetMusicParser.extractBar(barWithChords);
-        assertEquals("1/Db", extractedBar.getChords());
-        assertEquals("1/<a4 d6 g6>", extractedBar.getTimedNotes());
+        assertEquals("1/Db", extractedBar.getTimedChords());
+        assertEquals("1/<a4 d6 g6>", extractedBar.getNotes());
 
         String barNoChords = "() 1/g6 1+/g6 ";
         ExtractedBar extractedBar2 = SheetMusicParser.extractBar(barNoChords);
-        assertEquals("", extractedBar2.getChords());
-        assertEquals("1/g6 1+/g6", extractedBar2.getTimedNotes());
+        assertEquals("", extractedBar2.getTimedChords());
+        assertEquals("1/g6 1+/g6", extractedBar2.getNotes());
 
         String chordsNoTab = "(1/Db)";
         ExtractedBar extractedBar3 = SheetMusicParser.extractBar(chordsNoTab);
-        assertEquals("1/Db", extractedBar3.getChords());
-        assertEquals("", extractedBar3.getTimedNotes());
+        assertEquals("1/Db", extractedBar3.getTimedChords());
+        assertEquals("", extractedBar3.getNotes());
     }
 
     @Test
@@ -102,8 +102,8 @@ class SheetMusicParserTest {
         ExtractedComponent component2 = SheetMusicParser.parseLine("(1/Db) 1/<a4 d6 g6>");
         assertTrue(component2 instanceof ExtractedBar);
         ExtractedBar bar = (ExtractedBar) component2;
-        assertEquals("1/Db", bar.getChords());
-        assertEquals("1/<a4 d6 g6>", bar.getTimedNotes());
+        assertEquals("1/Db", bar.getTimedChords());
+        assertEquals("1/<a4 d6 g6>", bar.getNotes());
 
         // Header
         ExtractedComponent component3 = SheetMusicParser.parseLine("title = My Song");
