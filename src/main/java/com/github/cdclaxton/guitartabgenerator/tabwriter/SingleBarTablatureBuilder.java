@@ -6,7 +6,7 @@ import com.github.cdclaxton.guitartabgenerator.music.TimedChord;
 
 import java.util.*;
 
-public class SingleBarTablatureBuilder {
+class SingleBarTablatureBuilder {
 
     private static final char lineCharacter = '-';
 
@@ -23,9 +23,11 @@ public class SingleBarTablatureBuilder {
      * @param bar Bar.
      * @param markings Time markings to show.
      * @return Tab.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Unable to build tab for the bar.
      */
-    public static SingleBarTablature buildTabFromBar(Bar bar, Markings markings) throws TabBuildingException {
+    static SingleBarTablature buildTabFromBar(Bar bar,
+                                              Markings markings) throws TabBuildingException {
+
         if (bar.getTimeSignature() == Bar.TimeSignature.Four4) {
             return buildTabIn44FromBar(bar, markings);
         } else {
@@ -33,22 +35,31 @@ public class SingleBarTablatureBuilder {
         }
     }
 
-    private static SingleBarTablature buildTabIn44FromBar(Bar bar, Markings markings) throws TabBuildingException {
+    /**
+     * Build tab in 4/4 timing.
+     *
+     * @param bar Bar.
+     * @param markings Markings to show.
+     * @return Tablature for the bar.
+     * @throws TabBuildingException Unable to build tab.
+     */
+    private static SingleBarTablature buildTabIn44FromBar(final Bar bar,
+                                                          final Markings markings) throws TabBuildingException {
 
-        int spacing = 3;
+        final int spacing = 3;
 
         // Build the ruler
-        String ruler = SingleBarTablatureBuilder.buildRuler(markings, 4, spacing);
+        final String ruler = SingleBarTablatureBuilder.buildRuler(markings, 4, spacing);
 
-        int nElements = ruler.length();
+        final int nElements = ruler.length();
 
         // Build the chord line
-        Map<Integer, String> chordPosToMarking =
+        final Map<Integer, String> chordPosToMarking =
                 SingleBarTablatureBuilder.buildPositionToMarking(bar.getTimedChords(), markings, spacing);
-        String chordLine = SingleBarTablatureBuilder.buildChordLine(nElements, chordPosToMarking);
+        final String chordLine = SingleBarTablatureBuilder.buildChordLine(nElements, chordPosToMarking);
 
         // Build a tab line for each guitar string
-        List<String> tabLines = new ArrayList<>();
+        final List<String> tabLines = new ArrayList<>();
         for (int guitarString = 1; guitarString <= 6; guitarString++) {
             Map<Integer, String> tabPosToMarking =
                     SingleBarTablatureBuilder.buildPositionToMarking(bar.getNotes(), markings, spacing, guitarString);
@@ -60,9 +71,22 @@ public class SingleBarTablatureBuilder {
         return new SingleBarTablature(ruler, chordLine, tabLines);
     }
 
-    private static Map<Integer, String> buildPositionToMarking(List<Note> notes, Markings markings,
-                                                                 int spacing, int stringNumber) throws TabBuildingException {
-        Map<Integer, String> pos = new HashMap<>();
+    /**
+     * Build a map of the character position and marking for a single string.
+     *
+     * @param notes List of notes.
+     * @param markings Markings to use.
+     * @param spacing Spacing between markings.
+     * @param stringNumber String number.
+     * @return Map of character position to marking.
+     * @throws TabBuildingException Unable to represent the markings.
+     */
+    private static Map<Integer, String> buildPositionToMarking(final List<Note> notes,
+                                                               final Markings markings,
+                                                               final int spacing,
+                                                               final int stringNumber) throws TabBuildingException {
+
+        final Map<Integer, String> pos = new HashMap<>();
 
         for (Note n : notes) {
             if (n.getFret().getStringNumber() == stringNumber) {
@@ -75,7 +99,18 @@ public class SingleBarTablatureBuilder {
         return pos;
     }
 
-    private static int getPosition(int sixteenthNumber, Markings markings, int spacing) throws TabBuildingException {
+    /**
+     * Get the character position of a timing.
+     *
+     * @param sixteenthNumber Timing.
+     * @param markings Markings to show on the tab.
+     * @param spacing Spacing between markings.
+     * @return Character position.
+     * @throws TabBuildingException Unable to represent timing given the markings.
+     */
+    private static int getPosition(int sixteenthNumber,
+                                   Markings markings,
+                                   int spacing) throws TabBuildingException {
 
         if (markings == Markings.Tertiary) {
             return (spacing + 1) * sixteenthNumber;
@@ -94,10 +129,20 @@ public class SingleBarTablatureBuilder {
         return -1;
     }
 
-    private static Map<Integer, String> buildPositionToMarking(List<TimedChord> timedChords, Markings markings, int spacing)
-            throws TabBuildingException {
+    /**
+     * Build a map of character position to markings.
+     *
+     * @param timedChords Timed chords.
+     * @param markings Markings to show.
+     * @param spacing Spacing between markings.
+     * @return Map of character position to markings.
+     * @throws TabBuildingException Unable to build tab.
+     */
+    private static Map<Integer, String> buildPositionToMarking(final List<TimedChord> timedChords,
+                                                               final Markings markings,
+                                                               final int spacing) throws TabBuildingException {
 
-        Map<Integer, String> pos = new HashMap<>();
+        final Map<Integer, String> pos = new HashMap<>();
 
         for (TimedChord timedChord : timedChords) {
             int i = SingleBarTablatureBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), markings, spacing);
@@ -114,9 +159,12 @@ public class SingleBarTablatureBuilder {
      * @param nBeats Number of main beats, e.g. 4 for 4/4.
      * @param spacing Number of spaces between markings.
      * @return Ruler.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Invalid number of beats or spacing.
      */
-    protected static String buildRuler(Markings markings, int nBeats, int spacing) throws TabBuildingException {
+    static String buildRuler(final Markings markings,
+                             final int nBeats,
+                             final int spacing) throws TabBuildingException {
+
         // Preconditions
         if (nBeats < 0) {
             throw new TabBuildingException("Invalid number of beats: " + nBeats);
@@ -161,9 +209,11 @@ public class SingleBarTablatureBuilder {
      * @param positionToMarking Map of index to marking, e.g. fret number, tilde, etc.
      * @param spacer Character to use to create the 'background' of the line.
      * @return Single line.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Invalid number of elements, position or text.
      */
-    protected static String buildLine(int nElements, Map<Integer, String> positionToMarking, char spacer)
+    private static String buildLine(final int nElements,
+                                    final Map<Integer, String> positionToMarking,
+                                    final char spacer)
             throws TabBuildingException {
 
         // Precondition
@@ -179,13 +229,13 @@ public class SingleBarTablatureBuilder {
         for (Map.Entry<Integer, String> entry : positionToMarking.entrySet()) {
 
             // Get the position of the fret number
-            Integer position = entry.getKey();
+            final Integer position = entry.getKey();
             if (position < 0 || position >= nElements) {
                 throw new TabBuildingException("Invalid position (" + position + " for a line of length " + nElements);
             }
 
             // Get the fret number
-            String fret = entry.getValue();
+            final String fret = entry.getValue();
 
             // Check the characters will fit onto the line
             if (position + fret.length() > nElements) {
@@ -208,9 +258,10 @@ public class SingleBarTablatureBuilder {
      * @param nElements Number of elements (typically dashes).
      * @param positionToMarking Map of index to marking, e.g. fret number, tilde, etc.
      * @return Single tab line.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Unable to build line of tab.
      */
-    protected static String buildTabLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
+    static String buildTabLine(final int nElements,
+                               final Map<Integer, String> positionToMarking) throws TabBuildingException {
         return SingleBarTablatureBuilder.buildLine(nElements, positionToMarking, SingleBarTablatureBuilder.lineCharacter);
     }
 
@@ -220,9 +271,10 @@ public class SingleBarTablatureBuilder {
      * @param nElements Number of elements.
      * @param positionToMarking Map of index to chord markings.
      * @return Single chord line.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Unable to build line of chords.
      */
-    protected static String buildChordLine(int nElements, Map<Integer, String> positionToMarking) throws TabBuildingException {
+    static String buildChordLine(final int nElements,
+                                 final Map<Integer, String> positionToMarking) throws TabBuildingException {
         return SingleBarTablatureBuilder.buildLine(nElements, positionToMarking, ' ');
     }
 
