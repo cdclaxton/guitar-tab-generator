@@ -25,6 +25,12 @@ The config.properties file contains configuration parameters that need to be set
 
 ### Usage examples
 
+To show the help:
+
+```
+java -jar guitartabgenerator.jar -h
+```
+
 To construct tab in the normal key for the music and open the video (if present):
 
 ```
