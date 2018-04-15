@@ -40,8 +40,12 @@ public final class GuitarTabGenerator {
          * @param transposeKey Transpose to musical key.
          * @param transposeUp Transpose up?
          */
-        ParsedCmdArgs(boolean help, Optional<String> inputFile, Optional<String> outputFolder, boolean video,
-                      Optional<String> transposeKey, Optional<Boolean> transposeUp) {
+        ParsedCmdArgs(final boolean help,
+                      final Optional<String> inputFile,
+                      final Optional<String> outputFolder,
+                      final boolean video,
+                      final Optional<String> transposeKey,
+                      final Optional<Boolean> transposeUp) {
             this.help = help;
             this.inputFile = inputFile;
             this.outputFolder = outputFolder;
@@ -95,49 +99,49 @@ public final class GuitarTabGenerator {
          *
          * @return True if tab should be generated.
          */
-        public boolean generateTab() { return this.outputFolder.isPresent(); }
+        boolean generateTab() { return this.outputFolder.isPresent(); }
 
         /**
          * Transpose the tab?
          *
          * @return True if the tab should be transposed.
          */
-        public boolean transposeTab() { return this.transposeKey.isPresent(); }
+        boolean transposeTab() { return this.transposeKey.isPresent(); }
 
         /**
          * Should the tool's help be shown?
          *
          * @return True if the help should be shown.
          */
-        public boolean showHelp() { return help; }
+        boolean showHelp() { return help; }
 
         /**
          * Should the video be shown (if it is available)?
          *
          * @return True if the video should be shown.
          */
-        public boolean showVideo() { return this.video; }
+        boolean showVideo() { return this.video; }
 
         /**
          * Get the file path of the specification file.
          *
          * @return Specification file path.
          */
-        public Optional<String> getInputFile() { return inputFile; }
+        Optional<String> getInputFile() { return inputFile; }
 
         /**
          * Get the location where the tab should be written to.
          *
          * @return Output location (if provided by on the CLI).
          */
-        public Optional<String> getOutputFolder() { return this.outputFolder; }
+        Optional<String> getOutputFolder() { return this.outputFolder; }
 
         /**
          * Get the key to transpose the music to.
          *
          * @return Musical key (if present).
          */
-        public Optional<String> getTransposeKey() { return this.transposeKey; }
+        Optional<String> getTransposeKey() { return this.transposeKey; }
 
         /**
          * Transpose up?
