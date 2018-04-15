@@ -1,33 +1,62 @@
 package com.github.cdclaxton.guitartabgenerator.sheetmusic;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SheetMusic {
+public final class SheetMusic {
 
-    private Header header;
-    private Metadata metadata;
-    private List<Section> sections;
+    private final Header header;
+    private final Metadata metadata;
+    private final List<Section> sections;
 
-    public SheetMusic(Header header, Metadata metadata, List<Section> sections) {
+    /**
+     * Construct an object to represent the sheet music.
+     *
+     * @param header Header (title, artist, etc.)
+     * @param metadata Metadata.
+     * @param sections Sections (each with title, text and musical bars).
+     */
+    public SheetMusic(final Header header, final Metadata metadata, final List<Section> sections) {
         this.header = header;
         this.metadata = metadata;
         this.sections = sections;
     }
 
+    /**
+     * Get the header of the sheet music.
+     *
+     * @return Header.
+     */
     public Header getHeader() {
-        return header;
+        return Header.newInstance(header);
     }
 
+    /**
+     * Get the metadata.
+     *
+     * @return Metadata.
+     */
     public Metadata getMetadata() {
         return metadata;
     }
 
+    /**
+     * Get the sections.
+     *
+     * @return Sections.
+     */
     public List<Section> getSections() {
-        return sections;
+        return new ArrayList<>(sections);
     }
 
-    public Section getSection(int section) {
-        return this.sections.get(section);
+    /**
+     * Get a specific section by index.
+     *
+     * @param index Index of the section.
+     * @return Section.
+     */
+    public Section getSection(int index) {
+        return this.sections.get(index);
     }
 
 }

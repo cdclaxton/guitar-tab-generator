@@ -5,36 +5,39 @@ import com.github.cdclaxton.guitartabgenerator.music.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SheetMusicTransposition {
+public final class SheetMusicTransposition {
 
     /**
      * Transpose sheet music.
      *
      * @param sheetMusic Sheet music to transpose.
-     * @param newKey Key to transpose to.
+     * @param newKey Musical key to transpose to.
      * @param up Transpose up?
      * @param maxFretNumber Maximum fret number.
      * @return Transposed sheet music.
-     * @throws InvalidKeyException
-     * @throws InvalidChordException
-     * @throws TranspositionException
+     * @throws InvalidKeyException Invalid key.
+     * @throws InvalidChordException Invalid chord.
+     * @throws TranspositionException Unable to transpose the music.
      */
-    public static SheetMusic transpose(SheetMusic sheetMusic, String newKey, boolean up, int maxFretNumber)
+    public static SheetMusic transpose(final SheetMusic sheetMusic, final String newKey,
+                                       final boolean up, final int maxFretNumber)
             throws InvalidKeyException, InvalidChordException, TranspositionException {
 
-        // Create a new header
-        Header newHeader = sheetMusic.getHeader();
-        //newHeader.setKey(new Key(newKey));
+        // Create a new header (just the key changes)
+        Header currentHeader = sheetMusic.getHeader();
+        Header newHeader = new Header(currentHeader.getTitle(), currentHeader.getArtist(), new Key(newKey),
+                currentHeader.getTimeSignature());
 
         // Transpose each of the sections
-        List<Section> sections = sheetMusic.getSections();
-        for (int i = 0; i < sections.size(); i++) {
-            sections.set(i, SheetMusicTransposition.transposeSection(sections.get(i),
+        List<Section> currentSections = sheetMusic.getSections();
+        List<Section> newSections = new ArrayList<>(currentSections.size());
+        for (int i = 0; i < currentSections.size(); i++) {
+            newSections.add(SheetMusicTransposition.transposeSection(currentSections.get(i),
                     sheetMusic.getHeader().getKey().getKey(), newKey, up, maxFretNumber));
         }
 
         // Instantiate and return the transposed sheet music
-        return new SheetMusic(newHeader, sheetMusic.getMetadata(), sections);
+        return new SheetMusic(newHeader, sheetMusic.getMetadata(), newSections);
     }
 
     /**
@@ -46,17 +49,17 @@ public class SheetMusicTransposition {
      * @param up Transpose up?
      * @param maxFretNumber Maximum fret number.
      * @return Transposed section
-     * @throws InvalidChordException
-     * @throws TranspositionException
+     * @throws InvalidChordException Invalid chord.
+     * @throws TranspositionException Unable to transpose section.
      */
-    static Section transposeSection(Section section, String currentKey, String newKey, boolean up,
-                                    int maxFretNumber) throws InvalidChordException, TranspositionException {
+    private static Section transposeSection(final Section section, final String currentKey, final String newKey,
+                                            final boolean up, final int maxFretNumber)
+            throws InvalidChordException, TranspositionException {
 
         // Transpose each of the bars to the new key
-        List<Bar> bars = new ArrayList<>();
+        List<Bar> bars = new ArrayList<>(section.getBars().size());
         for (int i = 0; i < section.getBars().size(); i++) {
-            bars.add(BarTransposition.transposeBar(section.getBars().get(i), currentKey, newKey,
-                    up, maxFretNumber));
+            bars.add(BarTransposition.transposeBar(section.getBars().get(i), currentKey, newKey, up, maxFretNumber));
         }
 
         // Instantiate and return a new section

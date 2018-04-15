@@ -30,6 +30,16 @@ public final class Bar {
     }
 
     /**
+     * Create a new instance of the bar.
+     *
+     * @param bar Bar.
+     * @return New instance.
+     */
+    public static Bar newInstance(Bar bar) {
+        return new Bar(bar.timeSignature, bar.getNotes(), bar.getTimedChords());
+    }
+
+    /**
      * Get the time signature of the bar.
      *
      * @return Time signature.

@@ -17,7 +17,7 @@ public final class BarBuilder {
      *
      * @param timeSignature Time signature of the bar.
      */
-    BarBuilder(final Bar.TimeSignature timeSignature) {
+    public BarBuilder(final Bar.TimeSignature timeSignature) {
         this.timeSignature = timeSignature;
     }
 
@@ -30,7 +30,7 @@ public final class BarBuilder {
      * @throws InvalidTimingException Sixteenth note timing is invalid.
      * @throws InvalidChordException Chord is invalid.
      */
-    BarBuilder addTimedChord(int sixteenthTiming, String chord)
+    public BarBuilder addTimedChord(int sixteenthTiming, String chord)
             throws InvalidTimingException, InvalidChordException {
 
         this.timedChords.add(new TimedChord(new Timing(sixteenthTiming), chord));
@@ -48,7 +48,7 @@ public final class BarBuilder {
      * @throws InvalidFretNumberException Fret number is invalid.
      * @throws InvalidTimingException Timing is invalid.
      */
-    BarBuilder addNote(int stringNumber, int fret, int sixteenthTiming)
+    public BarBuilder addNote(int stringNumber, int fret, int sixteenthTiming)
             throws InvalidStringException, InvalidFretNumberException, InvalidTimingException {
 
         this.notes.add(new Note(new Fret(stringNumber, fret), new Timing(sixteenthTiming)));

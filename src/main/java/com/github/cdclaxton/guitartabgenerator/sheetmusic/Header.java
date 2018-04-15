@@ -28,6 +28,16 @@ public final class Header {
     }
 
     /**
+     * Get a new instance of the header.
+     *
+     * @param header Header.
+     * @return New instance.
+     */
+    public static Header newInstance(Header header) {
+        return new Header(header.title, header.artist, Key.newInstance(header.key), header.timeSignature);
+    }
+
+    /**
      * Get the title.
      *
      * @return Title.
