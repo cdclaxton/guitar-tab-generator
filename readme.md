@@ -56,3 +56,7 @@ The generated tab looks like this:
 ```
 <Add generated tab>
 ```
+
+## TODO
+
+- Implement tab building in 6/8 timing.
