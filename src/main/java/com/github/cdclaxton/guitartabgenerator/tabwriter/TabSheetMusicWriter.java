@@ -21,7 +21,7 @@ public class TabSheetMusicWriter {
      * @throws IOException Unable to write to file.
      */
     public static void writeLines(final List<String> lines,
-                           final String filepath) throws IOException {
+                                  final String filepath) throws IOException {
 
         logger.info("Writing tab to: " + filepath);
 

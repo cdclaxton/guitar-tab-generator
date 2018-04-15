@@ -300,8 +300,12 @@ public final class SheetMusicParser {
         if (!SheetMusicParser.isLineHeader(line)) {
             throw new ExtractionException("Invalid header: " + line);
         }
-        final String[] parts = line.split("=");
-        return new ExtractedHeader(parts[0].trim(), parts[1].trim());
+
+        final int index = line.indexOf("=");
+        final String key = line.substring(0, index).trim();
+        final String value = line.substring(index+1, line.length()).trim();
+
+        return new ExtractedHeader(key, value);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -53,8 +53,12 @@ class SheetMusicParserTest {
 
     @Test
     void testExtractHeader() throws ExtractionException {
-        assertTrue(new ExtractedHeader("title", "My Song").equals(SheetMusicParser.extractHeader("title = My Song")));
-        assertTrue(new ExtractedHeader("artist", "Bryan Adams").equals(SheetMusicParser.extractHeader("artist = Bryan Adams")));
+        assertEquals(new ExtractedHeader("title", "My Song"), SheetMusicParser.extractHeader("title = My Song"));
+        assertEquals(new ExtractedHeader("artist", "Bryan Adams"), SheetMusicParser.extractHeader("artist = Bryan Adams"));
+
+        // Line containing the delimiter in the value
+        assertEquals(new ExtractedHeader("metadata.video", "https://www.youtube.com/watch?v=vg5qDljEw7Q"),
+                SheetMusicParser.extractHeader("metadata.video = https://www.youtube.com/watch?v=vg5qDljEw7Q"));
     }
 
     @Test

@@ -275,13 +275,19 @@ public final class GuitarTabGenerator {
 
         // Show a video?
         if (cmdLine.showVideo()) {
+            Optional<String> url = Optional.empty();
             if (cmdLine.transposeKey.isPresent()) {
                 // Show video in required key
                 logger.info("Show video in key: " + cmdLine.transposeKey.get());
+                url = sheetMusicInRequiredKey.getMetadata().findUrl(cmdLine.transposeKey.get());
             } else {
                 // Show video in usual key
                 logger.info("Show video in normal key");
+                url = sheetMusicInRequiredKey.getMetadata().findUrl();
             }
+
+            logger.info("URL is: " + url);
+            url.ifPresent(WebBrowserLauncher::launch);
         }
 
     }
