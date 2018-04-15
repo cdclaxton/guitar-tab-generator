@@ -20,26 +20,39 @@ There is a simple command line interface (CLI) to:
 
 The config.properties file contains configuration parameters that need to be set:
 
-- page.width=<number of characters>
+- page.width -- number of characters wide
+- max.fret -- maximum fret number, e.g. 22
 
 ### Usage examples
 
-In general:
+To construct tab in the normal key for the music and open the video (if present):
 
 ```
-java -jar guitartabgenerator.jar -spec <file> -tab <file> -transpose <key> -video
+java -jar guitartabgenerator.jar -i <file> -o <folder> -v
+```
+
+To transpose tab to a new key (transposing up):
+
+```
+java -jar guitartabgenerator.jar -i <file> -o <folder> -u <key>
+```
+
+To transpose tab to a new key (transposing down):
+
+```
+java -jar guitartabgenerator.jar -i <file> -o <folder> -d <key>
 ```
 
 To launch the the video in the 'standard' key:
 
 ```
-java -jar guitartabgenerator.jar -spec <file> -video
+java -jar guitartabgenerator.jar -i <file> -v
 ```
 
 To launch the video in the required key:
 
 ```
-java -jar guitartabgenerator.jar -spec <file> -transpose <key> -video
+java -jar guitartabgenerator.jar -i <file> -u <key> -v
 ```
 
 ## Example
