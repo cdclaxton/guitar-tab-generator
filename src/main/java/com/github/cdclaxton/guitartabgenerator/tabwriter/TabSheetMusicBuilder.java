@@ -18,9 +18,10 @@ public final class TabSheetMusicBuilder {
      * @param sheetMusic Sheet music.
      * @param pageWidth Number of characters width of the page.
      * @return Sheet music lines.
-     * @throws TabBuildingException
+     * @throws TabBuildingException Unable to build the sheet music.
      */
-    public static List<String> buildTabSheetMusic(SheetMusic sheetMusic, int pageWidth) throws TabBuildingException {
+    public static List<String> buildTabSheetMusic(final SheetMusic sheetMusic,
+                                                  final int pageWidth) throws TabBuildingException {
 
         // List to hold each of the lines of sheet music
         List<String> sheetMusicLines = new ArrayList<>();
@@ -43,11 +44,13 @@ public final class TabSheetMusicBuilder {
      * Build the text lines for a single section for a sheet of tab.
      *
      * @param section Section to build.
-     * @param pageWidth
-     * @return
-     * @throws TabBuildingException
+     * @param pageWidth Page width in characters.
+     * @return Fully-constructed section.
+     * @throws TabBuildingException Unable to layout the bars.
      */
-    static List<String> buildSection(Section section, int pageWidth) throws TabBuildingException {
+    static List<String> buildSection(final Section section,
+                                     final int pageWidth) throws TabBuildingException {
+
         List<String> lines = new ArrayList<>();
 
         if (section.getName() != null) {
@@ -71,8 +74,10 @@ public final class TabSheetMusicBuilder {
      * @param pageWidth Width of the page in characters.
      * @return List of text lines representing the header.
      */
-    static List<String> buildHeader(Header header, int pageWidth) {
-        List<String> headerLines = new ArrayList<>();
+    private static List<String> buildHeader(final Header header,
+                                            final int pageWidth) {
+
+        final List<String> headerLines = new ArrayList<>();
 
         // Add the song title
         if (header.getTitle() != null) {
