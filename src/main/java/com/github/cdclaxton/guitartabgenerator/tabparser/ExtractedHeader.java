@@ -2,21 +2,37 @@ package com.github.cdclaxton.guitartabgenerator.tabparser;
 
 import java.util.Objects;
 
-public class ExtractedHeader implements ExtractedComponent {
+public final class ExtractedHeader implements ExtractedComponent {
 
-    private String key;
-    private String value;
+    private final String key;
+    private final String value;
 
-    public ExtractedHeader(String key, String value) {
+    /**
+     * Extracted header element.
+     *
+     * @param key Key (e.g. artist).
+     * @param value Value associated with the key.
+     */
+    ExtractedHeader(final String key, final String value) {
         this.key = key;
         this.value = value;
     }
 
+    /**
+     * Get the extracted header element's key.
+     *
+     * @return Key.
+     */
     public String getKey() {
         return key;
     }
 
-    public String getValue() {
+    /**
+     * Get the extracted header element's value.
+     *
+     * @return Value.
+     */
+    String getValue() {
         return value;
     }
 
@@ -29,4 +45,8 @@ public class ExtractedHeader implements ExtractedComponent {
                 Objects.equals(value, that.value);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value);
+    }
 }
