@@ -9,18 +9,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class TabSheetMusicWriter {
+class TabSheetMusicWriter {
 
-    private static Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
 
     /**
      * Write a list of lines to a file.
      *
      * @param lines Lines to write.
      * @param filepath Path of the file to write.
-     * @throws IOException
+     * @throws IOException Unable to write to file.
      */
-    public static void writeLines(List<String> lines, String filepath) throws IOException {
+    static void writeLines(final List<String> lines, final String filepath) throws IOException {
 
         logger.info("Writing tab to: " + filepath);
 

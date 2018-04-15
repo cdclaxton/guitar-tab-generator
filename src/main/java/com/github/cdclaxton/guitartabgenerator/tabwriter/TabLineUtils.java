@@ -2,7 +2,7 @@ package com.github.cdclaxton.guitartabgenerator.tabwriter;
 
 import com.google.common.base.Strings;
 
-public class TabLineUtils {
+final class TabLineUtils {
 
     /**
      * Pad a line to the left.
@@ -12,7 +12,7 @@ public class TabLineUtils {
      * @param paddingChar Character to ue to pad.
      * @return Padded line.
      */
-    public static String padLeft(String line, int padding, char paddingChar) {
+    static String padLeft(final String line, final int padding, final char paddingChar) {
         if (line == null) {
             throw new IllegalArgumentException("Can't pad a null string");
         }
@@ -28,7 +28,7 @@ public class TabLineUtils {
      * @param paddingChar Character to ue to pad.
      * @return Padded line.
      */
-    public static String padRight(String line, int padding, char paddingChar) {
+    static String padRight(final String line, final int padding, final char paddingChar) {
         if (line == null) {
             throw new IllegalArgumentException("Can't pad a null string");
         }
