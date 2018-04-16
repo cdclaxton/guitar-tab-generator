@@ -138,9 +138,9 @@ class SingleBarTablatureBuilder {
      * @return Map of character position to markings.
      * @throws TabBuildingException Unable to build tab.
      */
-    private static Map<Integer, String> buildPositionToMarking(final List<TimedChord> timedChords,
-                                                               final Markings markings,
-                                                               final int spacing) throws TabBuildingException {
+    static Map<Integer, String> buildPositionToMarking(final List<TimedChord> timedChords,
+                                                       final Markings markings,
+                                                       final int spacing) throws TabBuildingException {
 
         final Map<Integer, String> pos = new HashMap<>();
 
