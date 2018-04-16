@@ -1,0 +1,15 @@
+title = Living for your glory
+artist = Tim Hughes
+key = C
+time.signature = 4/4
+
+[Verse]
+(1/Am) 1/d7 1+/g5 2/d7 2+/b5
+(1/C) 1/d5 1+/g5 2/d5 2+/b5
+(1/F) 1/d7 1+/g5 2/d7 2+/b6
+
+[Chorus]
+(1/Fsus2) 1/b10 1+/g10 2/b10 2+/g10 3/b10 3+/g10 4/b10 4+/g10
+(1/G 3/Am) 1/b12 1+/g12 2/b12 2+/g12 3/b13 3+/g12 4/b13 4+/g12
+(1/Fsus2) 1/b10 1+/g10 2/b10 2+/g10 3/b10 3+/g10 4/b10 4+/g10
+(1/G 3/C) 1/b12 1+/g12 2/b12 2+/g12 3/b13 3+/g12 4/b13 4+/g12
