@@ -287,7 +287,12 @@ public final class GuitarTabGenerator {
             }
 
             logger.info("URL is: " + url);
-            url.ifPresent(WebBrowserLauncher::launch);
+            if (url.isPresent()) {
+                logger.info("Opening web browser");
+                url.ifPresent(WebBrowserLauncher::launch);
+            } else {
+                logger.info("No video to show");
+            }
         }
 
     }
