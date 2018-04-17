@@ -101,4 +101,12 @@ class ChordTest {
         assertEquals(new Chord("C", "7", Optional.of("E")), Chord.build("C7/E"));
     }
 
+    @Test
+    void getMusicNotation() {
+        assertEquals("C", new Chord("C", "", Optional.empty()).getMusicNotation());
+        assertEquals("C#", new Chord("C#", "", Optional.empty()).getMusicNotation());
+        assertEquals("C#m", new Chord("C#", "m", Optional.empty()).getMusicNotation());
+        assertEquals("C#m7/E", new Chord("C#", "m7", Optional.of("E")).getMusicNotation());
+    }
+
 }

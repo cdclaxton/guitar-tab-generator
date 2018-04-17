@@ -61,6 +61,19 @@ public final class Chord {
     }
 
     /**
+     * Get the music notation version of the chord.
+     *
+     * @return Chord in musical notation.
+     */
+    public String getMusicNotation() {
+        if (this.getBassNote().isPresent()) {
+            return rootNote + symbols + "/" + bassNote.get();
+        } else {
+            return rootNote + symbols;
+        }
+    }
+
+    /**
      * Create a new instance of the chord.
      *
      * @param chord Chord to make a new instance of.

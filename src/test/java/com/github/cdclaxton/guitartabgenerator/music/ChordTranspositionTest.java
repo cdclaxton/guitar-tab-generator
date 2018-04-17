@@ -24,11 +24,11 @@ class ChordTranspositionTest {
 
     @Test
     void testBaseNoteToIndex() throws TranspositionException {
-        assertEquals(0, ChordTransposition.baseNoteToIndex("A"));
-        assertEquals(1, ChordTransposition.baseNoteToIndex("A#"));
-        assertEquals(1, ChordTransposition.baseNoteToIndex("Bb"));
-        assertEquals(11, ChordTransposition.baseNoteToIndex("G#"));
-        assertEquals(11, ChordTransposition.baseNoteToIndex("Ab"));
+        assertEquals(0, ChordTransposition.rootNoteToIndex("A"));
+        assertEquals(1, ChordTransposition.rootNoteToIndex("A#"));
+        assertEquals(1, ChordTransposition.rootNoteToIndex("Bb"));
+        assertEquals(11, ChordTransposition.rootNoteToIndex("G#"));
+        assertEquals(11, ChordTransposition.rootNoteToIndex("Ab"));
     }
 
     @Test
