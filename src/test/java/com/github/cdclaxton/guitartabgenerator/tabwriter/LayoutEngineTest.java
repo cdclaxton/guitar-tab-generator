@@ -16,22 +16,22 @@ class LayoutEngineTest {
         Fret fret = new Fret(1, 0);
 
         List<Note> notes = Arrays.asList(new Note(fret, new Timing(0)));
-        List<TimedChord> chords = Arrays.asList(new TimedChord(new Timing(0), "C#"));
+        List<TimedChord> chords = Arrays.asList(new TimedChord(new Timing(0), Chord.build("C#")));
         Bar bar = new Bar(Bar.TimeSignature.Four4, notes, chords);
         assertEquals(SingleBarTablatureBuilder.Markings.Main, LayoutEngine.compactLayout(bar));
 
         List<Note> notes2 = Arrays.asList(new Note(fret, new Timing(0)));
-        List<TimedChord> chords2 = Arrays.asList(new TimedChord(new Timing(4), "C#"));
+        List<TimedChord> chords2 = Arrays.asList(new TimedChord(new Timing(4), Chord.build("C#")));
         Bar bar2 = new Bar(Bar.TimeSignature.Four4, notes2, chords2);
         assertEquals(SingleBarTablatureBuilder.Markings.Main, LayoutEngine.compactLayout(bar2));
 
         List<Note> notes3 = Arrays.asList(new Note(fret, new Timing(0)));
-        List<TimedChord> chords3 = Arrays.asList(new TimedChord(new Timing(6), "C#"));
+        List<TimedChord> chords3 = Arrays.asList(new TimedChord(new Timing(6), Chord.build("C#")));
         Bar bar3 = new Bar(Bar.TimeSignature.Four4, notes3, chords3);
         assertEquals(SingleBarTablatureBuilder.Markings.Secondary, LayoutEngine.compactLayout(bar3));
 
         List<Note> notes4 = Arrays.asList(new Note(fret, new Timing(0)));
-        List<TimedChord> chords4 = Arrays.asList(new TimedChord(new Timing(3), "C#"));
+        List<TimedChord> chords4 = Arrays.asList(new TimedChord(new Timing(3), Chord.build("C#")));
         Bar bar4 = new Bar(Bar.TimeSignature.Four4, notes4, chords4);
         assertEquals(SingleBarTablatureBuilder.Markings.Tertiary, LayoutEngine.compactLayout(bar4));
     }

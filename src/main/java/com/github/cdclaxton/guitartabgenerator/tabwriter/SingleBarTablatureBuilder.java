@@ -146,7 +146,7 @@ class SingleBarTablatureBuilder {
 
         for (TimedChord timedChord : timedChords) {
             int i = SingleBarTablatureBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), markings, spacing);
-            pos.put(i, timedChord.getChord());
+            pos.put(i, timedChord.getChord().musicNotation());
         }
 
         return pos;

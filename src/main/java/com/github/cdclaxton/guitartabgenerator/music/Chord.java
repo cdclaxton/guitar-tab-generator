@@ -65,7 +65,7 @@ public final class Chord {
      *
      * @return Chord in musical notation.
      */
-    public String getMusicNotation() {
+    public String musicNotation() {
         if (this.getBassNote().isPresent()) {
             return rootNote + symbols + "/" + bassNote.get();
         } else {
@@ -93,7 +93,7 @@ public final class Chord {
         boolean parsable = true;
         try {
             Chord.build(chord);
-        } catch (TranspositionException e) {
+        } catch (InvalidChordException e) {
             parsable = false;
         }
         return parsable;
@@ -104,9 +104,9 @@ public final class Chord {
      *
      * @param chord Chord to parse.
      * @return Parsed chord.
-     * @throws TranspositionException Unable to parse chord.
+     * @throws InvalidChordException Unable to parse chord.
      */
-    public static Chord build(final String chord) throws TranspositionException {
+    public static Chord build(final String chord) throws InvalidChordException {
 
         final String pattern = "^([ABCDEFG][#b]?)([A-Za-z0-9]*)(/[ABCDEFG][#b]?)?$";
         final Pattern compiledPattern = Pattern.compile(pattern);
@@ -121,7 +121,7 @@ public final class Chord {
             parsedChord = new Chord(rootNote, symbols, bassNote);
         } else {
             logger.error("Can't parse chord: " + chord);
-            throw new TranspositionException("Can't parse chord: " + chord);
+            throw new InvalidChordException("Can't parse chord: " + chord);
         }
 
         logger.debug("Chord " + chord + " --> " + parsedChord);

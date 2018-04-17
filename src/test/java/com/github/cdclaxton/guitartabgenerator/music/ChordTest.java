@@ -58,7 +58,7 @@ class ChordTest {
     }
 
     @Test
-    void build() throws TranspositionException {
+    void build() throws InvalidChordException {
 
         // Major
         assertEquals(new Chord("C", "", Optional.empty()), Chord.build("C"));
@@ -103,10 +103,10 @@ class ChordTest {
 
     @Test
     void getMusicNotation() {
-        assertEquals("C", new Chord("C", "", Optional.empty()).getMusicNotation());
-        assertEquals("C#", new Chord("C#", "", Optional.empty()).getMusicNotation());
-        assertEquals("C#m", new Chord("C#", "m", Optional.empty()).getMusicNotation());
-        assertEquals("C#m7/E", new Chord("C#", "m7", Optional.of("E")).getMusicNotation());
+        assertEquals("C", new Chord("C", "", Optional.empty()).musicNotation());
+        assertEquals("C#", new Chord("C#", "", Optional.empty()).musicNotation());
+        assertEquals("C#m", new Chord("C#", "m", Optional.empty()).musicNotation());
+        assertEquals("C#m7/E", new Chord("C#", "m7", Optional.of("E")).musicNotation());
     }
 
 }

@@ -150,150 +150,150 @@ class ExtractedBarTest {
     void testNotationToChord() throws ExtractionException, InvalidTimingException, InvalidChordException {
 
         // Major
-        assertEquals(new TimedChord(new Timing(0), "D"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("D")),
                 ExtractedBar.notationToChord("1/D"));
 
-        assertEquals(new TimedChord(new Timing(0), "D/F#"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("D/F#")),
                 ExtractedBar.notationToChord("1/D/F#"));
 
-        assertEquals(new TimedChord(new Timing(0), "Db"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Db")),
                 ExtractedBar.notationToChord("1/Db"));
 
-        assertEquals(new TimedChord(new Timing(0), "Db/A"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Db/A")),
                 ExtractedBar.notationToChord("1/Db/A"));
 
-        assertEquals(new TimedChord(new Timing(0), "D#"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("D#")),
                 ExtractedBar.notationToChord("1/D#"));
 
-        assertEquals(new TimedChord(new Timing(0), "D#/F#"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("D#/F#")),
                 ExtractedBar.notationToChord("1/D#/F#"));
 
-        assertEquals(new TimedChord(new Timing(15), "D"),
+        assertEquals(new TimedChord(new Timing(15), Chord.build("D")),
                 ExtractedBar.notationToChord("4a/D"));
 
-        assertEquals(new TimedChord(new Timing(15), "D/F#"),
+        assertEquals(new TimedChord(new Timing(15), Chord.build("D/F#")),
                 ExtractedBar.notationToChord("4a/D/F#"));
 
-        assertEquals(new TimedChord(new Timing(15), "D#"),
+        assertEquals(new TimedChord(new Timing(15), Chord.build("D#")),
                 ExtractedBar.notationToChord("4a/D#"));
 
-        assertEquals(new TimedChord(new Timing(15), "D#/F#"),
+        assertEquals(new TimedChord(new Timing(15), Chord.build("D#/F#")),
                 ExtractedBar.notationToChord("4a/D#/F#"));
 
         // Minor
-        assertEquals(new TimedChord(new Timing(0), "Dbm"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Dbm")),
                 ExtractedBar.notationToChord("1/Dbm"));
 
-        assertEquals(new TimedChord(new Timing(0), "Dbm/C"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Dbm/C")),
                 ExtractedBar.notationToChord("1/Dbm/C"));
 
-        assertEquals(new TimedChord(new Timing(0), "G#m7"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("G#m7")),
                 ExtractedBar.notationToChord("1/G#m7"));
 
-        assertEquals(new TimedChord(new Timing(0), "G#m7/A"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("G#m7/A")),
                 ExtractedBar.notationToChord("1/G#m7/A"));
 
         // Diminished
-        assertEquals(new TimedChord(new Timing(0), "Cdim"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Cdim")),
                 ExtractedBar.notationToChord("1/Cdim"));
 
-        assertEquals(new TimedChord(new Timing(0), "Cdim/B"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Cdim/B")),
                 ExtractedBar.notationToChord("1/Cdim/B"));
 
-        assertEquals(new TimedChord(new Timing(0), "C#dim"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("C#dim")),
                 ExtractedBar.notationToChord("1/C#dim"));
 
-        assertEquals(new TimedChord(new Timing(0), "C#dim/B"),
-                ExtractedBar.notationToChord("1/Cdim/B"));
+        assertEquals(new TimedChord(new Timing(0), Chord.build("C#dim/B")),
+                ExtractedBar.notationToChord("1/C#dim/B"));
 
-        assertEquals(new TimedChord(new Timing(0), "Dbdim"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Dbdim")),
                 ExtractedBar.notationToChord("1/Dbdim"));
 
-        assertEquals(new TimedChord(new Timing(0), "Dbdim/A"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Dbdim/A")),
                 ExtractedBar.notationToChord("1/Dbdim/A"));
 
         // Suspended
-        assertEquals(new TimedChord(new Timing(0), "Fsus2"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Fsus2")),
                 ExtractedBar.notationToChord("1/Fsus2"));
 
-        assertEquals(new TimedChord(new Timing(0), "Fsus2/E"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Fsus2/E")),
                 ExtractedBar.notationToChord("1/Fsus2/E"));
 
-        assertEquals(new TimedChord(new Timing(0), "Fsus4"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Fsus4")),
                 ExtractedBar.notationToChord("1/Fsus4"));
 
-        assertEquals(new TimedChord(new Timing(0), "Fsus4/E"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Fsus4/E")),
                 ExtractedBar.notationToChord("1/Fsus4/E"));
 
-        assertEquals(new TimedChord(new Timing(0), "F2"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("F2")),
                 ExtractedBar.notationToChord("1/F2"));
 
-        assertEquals(new TimedChord(new Timing(0), "F2/A"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("F2/A")),
                 ExtractedBar.notationToChord("1/F2/A"));
 
-        assertEquals(new TimedChord(new Timing(0), "F4"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("F4")),
                 ExtractedBar.notationToChord("1/F4"));
 
-        assertEquals(new TimedChord(new Timing(0), "F4/G"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("F4/G")),
                 ExtractedBar.notationToChord("1/F4/G"));
 
-        assertEquals(new TimedChord(new Timing(0), "Db2"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Db2")),
                 ExtractedBar.notationToChord("1/Db2"));
 
-        assertEquals(new TimedChord(new Timing(0), "Db2/Bb"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Db2/Bb")),
                 ExtractedBar.notationToChord("1/Db2/Bb"));
 
-        assertEquals(new TimedChord(new Timing(0), "D#2"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("D#2")),
                 ExtractedBar.notationToChord("1/D#2"));
 
-        assertEquals(new TimedChord(new Timing(0), "D#2/F#"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("D#2/F#")),
                 ExtractedBar.notationToChord("1/D#2/F#"));
 
         // Major seventh
-        assertEquals(new TimedChord(new Timing(0), "Gmaj7"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Gmaj7")),
                 ExtractedBar.notationToChord("1/Gmaj7"));
 
-        assertEquals(new TimedChord(new Timing(0), "Gmaj7/D"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Gmaj7/D")),
                 ExtractedBar.notationToChord("1/Gmaj7/D"));
 
-        assertEquals(new TimedChord(new Timing(0), "G#maj7"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("G#maj7")),
                 ExtractedBar.notationToChord("1/G#maj7"));
 
-        assertEquals(new TimedChord(new Timing(0), "G#maj7/D#"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("G#maj7/D#")),
                 ExtractedBar.notationToChord("1/G#maj7/D#"));
 
         // Minor seventh
-        assertEquals(new TimedChord(new Timing(0), "Gm7"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Gm7")),
                 ExtractedBar.notationToChord("1/Gm7"));
 
-        assertEquals(new TimedChord(new Timing(0), "Gm7/B"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Gm7/B")),
                 ExtractedBar.notationToChord("1/Gm7/B"));
 
-        assertEquals(new TimedChord(new Timing(0), "Gbm7"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Gbm7")),
                 ExtractedBar.notationToChord("1/Gbm7"));
 
-        assertEquals(new TimedChord(new Timing(0), "Gbm7/B"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Gbm7/B")),
                 ExtractedBar.notationToChord("1/Gbm7/B"));
 
         // Extended
-        assertEquals(new TimedChord(new Timing(0), "A9"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("A9")),
                 ExtractedBar.notationToChord("1/A9"));
 
-        assertEquals(new TimedChord(new Timing(0), "A9/E"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("A9/E")),
                 ExtractedBar.notationToChord("1/A9/E"));
 
         // Augmented
-        assertEquals(new TimedChord(new Timing(0), "Aaug"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Aaug")),
                 ExtractedBar.notationToChord("1/Aaug"));
 
-        assertEquals(new TimedChord(new Timing(0), "Aaug/C"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("Aaug/C")),
                 ExtractedBar.notationToChord("1/Aaug/C"));
 
         // Dominant seventh
-        assertEquals(new TimedChord(new Timing(0), "G7"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("G7")),
                 ExtractedBar.notationToChord("1/G7"));
 
-        assertEquals(new TimedChord(new Timing(0), "G7/F"),
+        assertEquals(new TimedChord(new Timing(0), Chord.build("G7/F")),
                 ExtractedBar.notationToChord("1/G7/F"));
     }
 
@@ -337,19 +337,19 @@ class ExtractedBarTest {
     void testParseChords() throws ExtractionException, InvalidTimingException, InvalidChordException {
         List<TimedChord> chords = ExtractedBar.parseChords("1/Db");
         assertEquals(1, chords.size());
-        assertEquals("Db", chords.get(0).getChord());
+        assertEquals("Db", chords.get(0).getChord().musicNotation());
         assertEquals(0, chords.get(0).getTiming().getSixteenthNumber());
 
         List<TimedChord> chords2 = ExtractedBar.parseChords("1/Db 2+/F");
         assertEquals(2, chords2.size());
-        assertEquals("Db", chords2.get(0).getChord());
+        assertEquals("Db", chords2.get(0).getChord().musicNotation());
         assertEquals(0, chords2.get(0).getTiming().getSixteenthNumber());
-        assertEquals("F", chords2.get(1).getChord());
+        assertEquals("F", chords2.get(1).getChord().musicNotation());
         assertEquals(6, chords2.get(1).getTiming().getSixteenthNumber());
 
         List<TimedChord> chords3 = ExtractedBar.parseChords("1/Dbm");
         assertEquals(1, chords3.size());
-        assertEquals("Dbm", chords3.get(0).getChord());
+        assertEquals("Dbm", chords3.get(0).getChord().musicNotation());
         assertEquals(0, chords3.get(0).getTiming().getSixteenthNumber());
 
         List<TimedChord> chords4 = ExtractedBar.parseChords("");

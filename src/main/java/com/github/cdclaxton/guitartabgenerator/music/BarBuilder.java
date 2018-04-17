@@ -28,10 +28,9 @@ public final class BarBuilder {
      * @param chord Chord.
      * @return BarBuilder.
      * @throws InvalidTimingException Sixteenth note timing is invalid.
-     * @throws InvalidChordException Chord is invalid.
      */
     public BarBuilder addTimedChord(final int sixteenthTiming,
-                                    final String chord) throws InvalidTimingException, InvalidChordException {
+                                    final Chord chord) throws InvalidTimingException {
 
         this.timedChords.add(new TimedChord(new Timing(sixteenthTiming), chord));
         return this;

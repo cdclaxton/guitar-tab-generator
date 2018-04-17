@@ -145,7 +145,7 @@ public final class ExtractedBar implements ExtractedComponent {
 
         logger.debug("Parsing timed chord: " + chord);
 
-        final String pattern = "([1-6][+ea]?)/([A-G].*)";
+        final String pattern = "([1-6][+ea]?)/(.*)";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(chord);
         if (matcher.find()) {
@@ -153,11 +153,12 @@ public final class ExtractedBar implements ExtractedComponent {
             String timingString = matcher.group(1);
             Timing timing = new Timing(ExtractedBar.timingNotationToSixteenth(timingString));
 
-            // Extract the chord
+            // Extract the chord and parse
             String chordPart = matcher.group(2);
+            Chord parsedChord = Chord.build(chordPart);
 
             // Create and return a timed chord
-            return new TimedChord(timing, chordPart);
+            return new TimedChord(timing, parsedChord);
 
         } else {
             throw new ExtractionException("Can't extract chord and timing from: " + chord);
