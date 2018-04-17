@@ -18,12 +18,12 @@ class BarTranspositionTest {
             int initialFret = RandomGenerators.randomFret(1,22);
 
             Bar bar = new BarBuilder(Bar.TimeSignature.Four4)
-                    .addTimedChord(chordTiming, "C")
+                    .addTimedChord(chordTiming, Chord.build("C"))
                     .addNote(1, initialFret, noteTiming)
                     .build();
 
             Bar barExpected = new BarBuilder(Bar.TimeSignature.Four4)
-                    .addTimedChord(chordTiming, "B")
+                    .addTimedChord(chordTiming, Chord.build("B"))
                     .addNote(1,initialFret-1, noteTiming)
                     .build();
 
@@ -44,13 +44,13 @@ class BarTranspositionTest {
             int noteTiming = RandomGenerators.randomTiming();
 
             Bar bar = new BarBuilder(Bar.TimeSignature.Four4)
-                    .addTimedChord(chordTiming, "C")
+                    .addTimedChord(chordTiming, Chord.build("C"))
                     .addNote(lowerString, 2, noteTiming)
                     .addNote(upperString, 2, noteTiming)
                     .build();
 
             Bar barExpected = new BarBuilder(Bar.TimeSignature.Four4)
-                    .addTimedChord(chordTiming, "D")
+                    .addTimedChord(chordTiming, Chord.build("D"))
                     .addNote(lowerString, 4, noteTiming)
                     .addNote(upperString, 4, noteTiming)
                     .build();
@@ -87,12 +87,12 @@ class BarTranspositionTest {
 
         // Notes that would fall on the same string after transposition
         Bar bar1 = new BarBuilder(Bar.TimeSignature.Four4)
-                .addTimedChord(0, "C")
+                .addTimedChord(0, Chord.build("C"))
                 .addNote(1,1,0)
                 .addNote(2,3,4)
                 .build();
         Bar bar1Expected = new BarBuilder(Bar.TimeSignature.Four4)
-                .addTimedChord(0, "Bb")
+                .addTimedChord(0, Chord.build("Bb"))
                 .addNote(2,4,0)
                 .addNote(3,5,4)
                 .build();

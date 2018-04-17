@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,23 +87,25 @@ class SingleBarTablatureBuilderTest {
     }
 
     @Test
-    void testBuildPositionToMarkingSingleChord() throws InvalidTimingException, InvalidChordException {
-//        TimedChord timedChord1 = new TimedChord(new Timing(0), "Am");
-//        Map<Integer, String> posToMarking = SingleBarTablatureBuilder.buildPositionToMarking(Arrays.asList(timedChord1));
-//
-//        assertEquals(1, posToMarking.size());
-//        assertEquals(posToMarking.get(0), "Am");
+    void testBuildPositionToMarkingSingleChord() throws InvalidTimingException, InvalidChordException, TabBuildingException {
+        TimedChord timedChord1 = new TimedChord(new Timing(0), Chord.build("Am"));
+        Map<Integer, String> posToMarking = SingleBarTablatureBuilder.buildPositionToMarking(
+                Arrays.asList(timedChord1), SingleBarTablatureBuilder.Markings.Main, 3);
+
+        assertEquals(1, posToMarking.size());
+        assertEquals(posToMarking.get(0), "Am");
     }
 
     @Test
-    void testBuildPositionToMarkingTwoChords() throws InvalidTimingException, InvalidChordException {
-//        TimedChord timedChord1 = new TimedChord(new Timing(0), "Am");
-//        TimedChord timedChord2 = new TimedChord(new Timing(7), "C");
-//        Map<Integer, String> posToMarking = SingleBarTablatureBuilder.buildPositionToMarking(Arrays.asList(timedChord1, timedChord2));
-//
-//        assertEquals(2, posToMarking.size());
-//        assertEquals(posToMarking.get(0), "Am");
-//        assertEquals(posToMarking.get(7), "C");
+    void testBuildPositionToMarkingTwoChords() throws InvalidTimingException, InvalidChordException, TabBuildingException {
+        TimedChord timedChord1 = new TimedChord(new Timing(0), Chord.build("Am"));
+        TimedChord timedChord2 = new TimedChord(new Timing(8), Chord.build("C"));
+        Map<Integer, String> posToMarking = SingleBarTablatureBuilder.buildPositionToMarking(
+                Arrays.asList(timedChord1, timedChord2), SingleBarTablatureBuilder.Markings.Main, 3);
+
+        assertEquals(2, posToMarking.size());
+        assertEquals(posToMarking.get(0), "Am");
+        assertEquals(posToMarking.get(8), "C");
     }
 
     @Test
@@ -117,9 +120,9 @@ class SingleBarTablatureBuilderTest {
                 new Note(new Fret(3, 7), new Timing(5))
         );
         List<TimedChord> timedChords = Arrays.asList(
-                new TimedChord(new Timing(0), "D"),
-                new TimedChord(new Timing(4), "Bm"),
-                new TimedChord(new Timing(8), "F#m")
+                new TimedChord(new Timing(0), Chord.build("D")),
+                new TimedChord(new Timing(4), Chord.build("Bm")),
+                new TimedChord(new Timing(8), Chord.build("F#m"))
         );
         Bar bar = new Bar(Bar.TimeSignature.Four4, notes, timedChords);
 
@@ -143,9 +146,9 @@ class SingleBarTablatureBuilderTest {
                 new Note(new Fret(3, 4), new Timing(6))
         );
         List<TimedChord> timedChords = Arrays.asList(
-                new TimedChord(new Timing(0), "D"),
-                new TimedChord(new Timing(4), "Bm"),
-                new TimedChord(new Timing(8), "F#m")
+                new TimedChord(new Timing(0), Chord.build("D")),
+                new TimedChord(new Timing(4), Chord.build("Bm")),
+                new TimedChord(new Timing(8), Chord.build("F#m"))
         );
         Bar bar = new Bar(Bar.TimeSignature.Four4, notes, timedChords);
 
@@ -169,9 +172,9 @@ class SingleBarTablatureBuilderTest {
                 new Note(new Fret(3, 4), new Timing(8))
         );
         List<TimedChord> timedChords = Arrays.asList(
-                new TimedChord(new Timing(0), "D"),
-                new TimedChord(new Timing(4), "Bm"),
-                new TimedChord(new Timing(8), "F#m")
+                new TimedChord(new Timing(0), Chord.build("D")),
+                new TimedChord(new Timing(4), Chord.build("Bm")),
+                new TimedChord(new Timing(8), Chord.build("F#m"))
         );
         Bar bar = new Bar(Bar.TimeSignature.Four4, notes, timedChords);
 

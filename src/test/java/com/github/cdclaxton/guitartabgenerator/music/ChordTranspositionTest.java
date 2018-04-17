@@ -2,16 +2,18 @@ package com.github.cdclaxton.guitartabgenerator.music;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChordTranspositionTest {
 
     @Test
     void testIsMinorKey() {
-        assertEquals(true, ChordTransposition.isMinorKey("Dm"));
-        assertEquals(true, ChordTransposition.isMinorKey("D#m"));
-        assertEquals(false, ChordTransposition.isMinorKey("D"));
-        assertEquals(false, ChordTransposition.isMinorKey("D#"));
+        assertTrue(ChordTransposition.isMinorKey("Dm"));
+        assertTrue(ChordTransposition.isMinorKey("D#m"));
+        assertFalse(ChordTransposition.isMinorKey("D"));
+        assertFalse(ChordTransposition.isMinorKey("D#"));
     }
 
     @Test
@@ -24,11 +26,11 @@ class ChordTranspositionTest {
 
     @Test
     void testBaseNoteToIndex() throws TranspositionException {
-        assertEquals(0, ChordTransposition.baseNoteToIndex("A"));
-        assertEquals(1, ChordTransposition.baseNoteToIndex("A#"));
-        assertEquals(1, ChordTransposition.baseNoteToIndex("Bb"));
-        assertEquals(11, ChordTransposition.baseNoteToIndex("G#"));
-        assertEquals(11, ChordTransposition.baseNoteToIndex("Ab"));
+        assertEquals(0, ChordTransposition.rootNoteToIndex("A"));
+        assertEquals(1, ChordTransposition.rootNoteToIndex("A#"));
+        assertEquals(1, ChordTransposition.rootNoteToIndex("Bb"));
+        assertEquals(11, ChordTransposition.rootNoteToIndex("G#"));
+        assertEquals(11, ChordTransposition.rootNoteToIndex("Ab"));
     }
 
     @Test
@@ -58,43 +60,52 @@ class ChordTranspositionTest {
     }
 
     @Test
-    void testSplitChord() throws TranspositionException {
-        assertEquals("C", ChordTransposition.splitChord("C").getBase());
-        assertEquals("", ChordTransposition.splitChord("C").getRest());
+    void transposeChord() throws InvalidChordException, TranspositionException {
 
-        assertEquals("C#", ChordTransposition.splitChord("C#m").getBase());
-        assertEquals("m", ChordTransposition.splitChord("C#m").getRest());
+        // No transposition
+        assertEquals(Chord.build("A"),
+                ChordTransposition.transposeChord(Chord.build("A"), "A", "A"));
 
-        assertEquals("C#", ChordTransposition.splitChord("C#m7").getBase());
-        assertEquals("m7", ChordTransposition.splitChord("C#m7").getRest());
+        assertEquals(Chord.build("D"),
+                ChordTransposition.transposeChord(Chord.build("D"), "A", "A"));
 
-        assertEquals("Bb", ChordTransposition.splitChord("Bb").getBase());
-        assertEquals("", ChordTransposition.splitChord("Bb").getRest());
+        assertEquals(Chord.build("C#m"),
+                ChordTransposition.transposeChord(Chord.build("C#m"), "C#m", "C#m"));
 
-        assertEquals("Bb", ChordTransposition.splitChord("Bbm").getBase());
-        assertEquals("m", ChordTransposition.splitChord("Bbm").getRest());
+        assertEquals(Chord.build("C#m7"),
+                ChordTransposition.transposeChord(Chord.build("C#m7"), "C#m", "C#m"));
 
-        assertEquals("Bb", ChordTransposition.splitChord("Bbm7").getBase());
-        assertEquals("m7", ChordTransposition.splitChord("Bbm7").getRest());
-    }
+        // Transpose
+        assertEquals(Chord.build("Bb"),
+                ChordTransposition.transposeChord(Chord.build("A"), "A", "Bb"));
 
-    @Test
-    void testTransposeChord() throws TranspositionException {
-        assertEquals("A", ChordTransposition.transposeChord("A", "A", "A"));
-        assertEquals("C#m", ChordTransposition.transposeChord("C#m", "E", "E"));
-        assertEquals("C#m7", ChordTransposition.transposeChord("C#m7", "E","E"));
-        assertEquals("D", ChordTransposition.transposeChord("D", "A", "A"));
+        assertEquals(Chord.build("Bb"),
+                ChordTransposition.transposeChord(Chord.build("A"), "A", "Bb"));
 
-        assertEquals("Bb", ChordTransposition.transposeChord("A", "A", "Bb"));
-        assertEquals("C", ChordTransposition.transposeChord("A", "A", "C"));
-        assertEquals("G", ChordTransposition.transposeChord("F", "C", "D"));
-        assertEquals("G#m", ChordTransposition.transposeChord("F#m", "G", "A"));
+        assertEquals(Chord.build("C"),
+                ChordTransposition.transposeChord(Chord.build("A"), "A", "C"));
 
-        assertEquals("A/C#", ChordTransposition.transposeChord("A/C#", "A", "A"));
-        assertEquals("B/D#", ChordTransposition.transposeChord("A/C#", "A", "B"));
-        assertEquals("C/E", ChordTransposition.transposeChord("A/C#", "A", "C"));
-        assertEquals("B/D#", ChordTransposition.transposeChord("A/C#", "D", "E"));
-        assertEquals("C#m/B", ChordTransposition.transposeChord("Bm/A", "G", "A"));
+        assertEquals(Chord.build("G"),
+                ChordTransposition.transposeChord(Chord.build("F"), "C", "D"));
+
+        assertEquals(Chord.build("G#m"),
+                ChordTransposition.transposeChord(Chord.build("F#m"), "G", "A"));
+
+        // Transpose with slash chords
+        assertEquals(Chord.build("A/C#"),
+                ChordTransposition.transposeChord(Chord.build("A/C#"), "A", "A"));
+
+        assertEquals(Chord.build("B/D#"),
+                ChordTransposition.transposeChord(Chord.build("A/C#"), "A", "B"));
+
+        assertEquals(Chord.build("C/E"),
+                ChordTransposition.transposeChord(Chord.build("A/C#"), "A", "C"));
+
+        assertEquals(Chord.build("B/D#"),
+                ChordTransposition.transposeChord(Chord.build("A/C#"), "D", "E"));
+
+        assertEquals(Chord.build("C#m/B"),
+                ChordTransposition.transposeChord(Chord.build("Bm/A"), "G", "A"));
     }
 
     @Test

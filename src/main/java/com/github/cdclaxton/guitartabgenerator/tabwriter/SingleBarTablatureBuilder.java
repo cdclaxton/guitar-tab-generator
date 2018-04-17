@@ -138,15 +138,15 @@ class SingleBarTablatureBuilder {
      * @return Map of character position to markings.
      * @throws TabBuildingException Unable to build tab.
      */
-    private static Map<Integer, String> buildPositionToMarking(final List<TimedChord> timedChords,
-                                                               final Markings markings,
-                                                               final int spacing) throws TabBuildingException {
+    static Map<Integer, String> buildPositionToMarking(final List<TimedChord> timedChords,
+                                                       final Markings markings,
+                                                       final int spacing) throws TabBuildingException {
 
         final Map<Integer, String> pos = new HashMap<>();
 
         for (TimedChord timedChord : timedChords) {
             int i = SingleBarTablatureBuilder.getPosition(timedChord.getTiming().getSixteenthNumber(), markings, spacing);
-            pos.put(i, timedChord.getChord());
+            pos.put(i, timedChord.getChord().musicNotation());
         }
 
         return pos;

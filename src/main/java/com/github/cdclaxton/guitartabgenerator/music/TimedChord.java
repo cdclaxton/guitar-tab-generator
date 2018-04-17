@@ -6,28 +6,19 @@ import java.util.regex.Pattern;
 public final class TimedChord {
 
     private final Timing timing;
-    private final String chord;
-
-    private static final String validNotes = "Ab|A|A#|Bb|B|C|C#|Db|D|D#|Eb|E|F|F#|Gb|G|G#";
-    private static final String chordPattern = "^(" + validNotes + ")m?(/(" + validNotes + "))?$";
-    private final Pattern pattern = Pattern.compile(chordPattern);
+    private final Chord chord;
 
     /**
      * Instantiate a timed chord (i.e. a chord with a time).
      *
      * @param timing Timing of the chord.
      * @param chord Chord.
-     * @throws InvalidChordException Invalid chord.
      */
     public TimedChord(final Timing timing,
-                      final String chord) throws InvalidChordException {
-
-        if (!isValid(chord)) {
-            throw new InvalidChordException("Chord (" + chord + ") is not valid");
-        }
+                      final Chord chord) {
 
         this.timing = Timing.newInstance(timing);
-        this.chord = chord;
+        this.chord = Chord.newInstance(chord);
     }
 
     /**
@@ -37,21 +28,7 @@ public final class TimedChord {
      * @return New timed chord.
      */
     public static TimedChord newInstance(TimedChord timedChord) {
-        try {
-            return new TimedChord(Timing.newInstance(timedChord.timing), timedChord.chord);
-        } catch (InvalidChordException e) {
-            throw new IllegalStateException("Timed chord is now invalid!");
-        }
-    }
-
-    /**
-     * Is the chord valid?
-     *
-     * @param chord Chord to check.
-     * @return True if the chord is valid.
-     */
-    private boolean isValid(String chord) {
-        return chord.length() > 0 && this.pattern.matcher(chord).find();
+         return new TimedChord(Timing.newInstance(timedChord.timing), timedChord.chord);
     }
 
     /**
@@ -59,8 +36,8 @@ public final class TimedChord {
      *
      * @return Chord.
      */
-    public String getChord() {
-        return chord;
+    public Chord getChord() {
+        return Chord.newInstance(chord);
     }
 
     /**
