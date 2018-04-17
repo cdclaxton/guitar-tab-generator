@@ -145,7 +145,7 @@ public final class ExtractedBar implements ExtractedComponent {
 
         logger.debug("Parsing timed chord: " + chord);
 
-        final String pattern = "([1-6][+ea]?)/([A-G][b#]?)";
+        final String pattern = "([1-6][+ea]?)/([A-G].*)";
         final Pattern compiledPattern = Pattern.compile(pattern);
         final Matcher matcher = compiledPattern.matcher(chord);
         if (matcher.find()) {
