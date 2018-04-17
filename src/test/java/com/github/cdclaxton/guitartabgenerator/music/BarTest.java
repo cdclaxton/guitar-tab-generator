@@ -20,8 +20,8 @@ class BarTest {
                 .addNote(2, 12, 1)
                 .build();
         List<TimedChord> timedChords = new TimedChordsBuilder()
-                .addTimedChord("C#m", 0)
-                .addTimedChord("E", 8)
+                .addTimedChord(Chord.build("C#m"), 0)
+                .addTimedChord(Chord.build("E"), 8)
                 .build();
         Bar bar = new Bar(timeSignature, notes, timedChords);
         assertEquals(notes, bar.getNotes());
@@ -54,25 +54,25 @@ class BarTest {
                 .addNote(2, 12, 1)
                 .build();
         List<TimedChord> timedChords = new TimedChordsBuilder()
-                .addTimedChord("C#m", 0)
-                .addTimedChord("E", 8)
+                .addTimedChord(Chord.build("F#m"), 0)
+                .addTimedChord(Chord.build("E"), 8)
                 .build();
         Bar bar = new Bar(timeSignature, notes, timedChords);
         assertEquals(timedChords, bar.getTimedChords());
 
         // Mutate the timed chords that were used to construct the bar
-        timedChords.add(new TimedChord(new Timing(0), "B"));
+        timedChords.add(new TimedChord(new Timing(0), Chord.build("B")));
 
         // Check the constructor used an immutable version of the timed chords
         List<TimedChord> expectedTimedChords = new TimedChordsBuilder()
-                .addTimedChord("C#m", 0)
-                .addTimedChord("E", 8)
+                .addTimedChord(Chord.build("F#m"), 0)
+                .addTimedChord(Chord.build("E"), 8)
                 .build();
         assertEquals(expectedTimedChords, bar.getTimedChords());
 
         // Check that mutating the chords obtained from the bar doesn't modify the original bar
         List<TimedChord> timedChords1 = bar.getTimedChords();
-        timedChords1.add(new TimedChord(new Timing(0), "B"));
+        timedChords1.add(new TimedChord(new Timing(0), Chord.build("B")));
 
         assertEquals(expectedTimedChords, bar.getTimedChords());
     }

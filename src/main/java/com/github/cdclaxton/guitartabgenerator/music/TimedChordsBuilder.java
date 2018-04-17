@@ -18,7 +18,7 @@ public final class TimedChordsBuilder {
      * @throws InvalidTimingException Timing is invalid.
      * @throws InvalidChordException Chord is invalid.
      */
-    TimedChordsBuilder addTimedChord(final String chord,
+    TimedChordsBuilder addTimedChord(final Chord chord,
                                      final int timing) throws InvalidTimingException, InvalidChordException {
 
         this.timedChords.add(new TimedChord(new Timing(timing), chord));

@@ -18,11 +18,12 @@ public final class SheetMusicParser {
 
     private static final Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
 
-    private SheetMusicParser() {}
+    private SheetMusicParser() {
+    }
 
     /**
      * Parse sheet music from a text file.
-     *
+     * <p>
      * Very simple parser in this MVP.
      *
      * @param file File containing the sheet music.
@@ -47,12 +48,12 @@ public final class SheetMusicParser {
      *
      * @param components List of components.
      * @return Parsed sheet music.
-     * @throws InvalidKeyException Musical key is invalid.
-     * @throws ExtractionException Unable to perform extraction.
-     * @throws InvalidStringException String number is invalid.
+     * @throws InvalidKeyException        Musical key is invalid.
+     * @throws ExtractionException        Unable to perform extraction.
+     * @throws InvalidStringException     String number is invalid.
      * @throws InvalidFretNumberException Fret number is invalid.
-     * @throws InvalidTimingException Invalid timing.
-     * @throws InvalidChordException Invalid chord.
+     * @throws InvalidTimingException     Invalid timing.
+     * @throws InvalidChordException      Invalid chord.
      */
     private static SheetMusic componentsToSheetMusic(final List<ExtractedComponent> components)
             throws InvalidKeyException, ExtractionException, InvalidStringException, InvalidFretNumberException,
@@ -68,14 +69,14 @@ public final class SheetMusicParser {
     /**
      * Parse the extracted components into sections (title, text, bars) of the sheet music.
      *
-     * @param components List of extracted components from the sheet music.
+     * @param components    List of extracted components from the sheet music.
      * @param timeSignature Time signature of the music.
      * @return List of sections.
-     * @throws ExtractionException Component was probably misidentified.
-     * @throws InvalidStringException String number is invalid.
+     * @throws ExtractionException        Component was probably misidentified.
+     * @throws InvalidStringException     String number is invalid.
      * @throws InvalidFretNumberException Fret number is invalid.
-     * @throws InvalidTimingException Timing of a note is invalid.
-     * @throws InvalidChordException Chord is invalid.
+     * @throws InvalidTimingException     Timing of a note is invalid.
+     * @throws InvalidChordException      Chord is invalid.
      */
     private static List<Section> componentsToSections(final List<ExtractedComponent> components,
                                                       final Bar.TimeSignature timeSignature)
@@ -96,18 +97,18 @@ public final class SheetMusicParser {
             if (component instanceof ExtractedSectionHeader) {
 
                 // As there is a section in progress, but a new section has started, add the previous section to list
-               if (sectionInProgress) {
-                   Section section = new Section(name, text, bars);
-                   sections.add(section);
+                if (sectionInProgress) {
+                    Section section = new Section(name, text, bars);
+                    sections.add(section);
 
-                   // Clear out the temporary variables
-                   text = new ArrayList<>();
-                   bars = new ArrayList<>();
-               }
-               sectionInProgress = true;
+                    // Clear out the temporary variables
+                    text = new ArrayList<>();
+                    bars = new ArrayList<>();
+                }
+                sectionInProgress = true;
 
-               ExtractedSectionHeader sectionHeader = (ExtractedSectionHeader) component;
-               name = sectionHeader.getName();
+                ExtractedSectionHeader sectionHeader = (ExtractedSectionHeader) component;
+                name = sectionHeader.getName();
             }
 
             // A section can contain zero or more lines of text
@@ -225,7 +226,7 @@ public final class SheetMusicParser {
      *
      * @param file File to parse.
      * @return List of extracted components of the sheet music.
-     * @throws IOException Unable to read the file.
+     * @throws IOException         Unable to read the file.
      * @throws ExtractionException Unable to parse a line from the file.
      */
     private static List<ExtractedComponent> readSheetMusic(final File file) throws IOException, ExtractionException {
@@ -303,7 +304,7 @@ public final class SheetMusicParser {
 
         final int index = line.indexOf("=");
         final String key = line.substring(0, index).trim();
-        final String value = line.substring(index+1, line.length()).trim();
+        final String value = line.substring(index + 1, line.length()).trim();
 
         return new ExtractedHeader(key, value);
     }

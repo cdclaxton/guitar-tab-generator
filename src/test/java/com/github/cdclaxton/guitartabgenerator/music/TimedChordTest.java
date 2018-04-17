@@ -1,6 +1,7 @@
 package com.github.cdclaxton.guitartabgenerator.music;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class TimedChordTest {
 
@@ -10,63 +11,63 @@ class TimedChordTest {
     TimedChordTest() throws InvalidTimingException {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testValidSimpleMajorChords() throws InvalidChordException {
-        assertEquals("A", new TimedChord(validTiming, "A").getChord());
-        assertEquals("A#", new TimedChord(validTiming, "A#").getChord());
-        assertEquals("Bb", new TimedChord(validTiming, "Bb").getChord());
-        assertEquals("B", new TimedChord(validTiming, "B").getChord());
-        assertEquals("C", new TimedChord(validTiming, "C").getChord());
-        assertEquals("C#", new TimedChord(validTiming, "C#").getChord());
-        assertEquals("Db", new TimedChord(validTiming, "Db").getChord());
-        assertEquals("D", new TimedChord(validTiming, "D").getChord());
-        assertEquals("D#", new TimedChord(validTiming, "D#").getChord());
-        assertEquals("Eb", new TimedChord(validTiming, "Eb").getChord());
-        assertEquals("E", new TimedChord(validTiming, "E").getChord());
-        assertEquals("F", new TimedChord(validTiming, "F").getChord());
-        assertEquals("F#", new TimedChord(validTiming, "F#").getChord());
-        assertEquals("Gb", new TimedChord(validTiming, "Gb").getChord());
-        assertEquals("G", new TimedChord(validTiming, "G").getChord());
-        assertEquals("G#", new TimedChord(validTiming, "G#").getChord());
-        assertEquals("Ab", new TimedChord(validTiming, "Ab").getChord());
+        assertEquals("A", new TimedChord(validTiming, Chord.build("A")).getChord().musicNotation());
+        assertEquals("A#", new TimedChord(validTiming, Chord.build("A#")).getChord().musicNotation());
+        assertEquals("Bb", new TimedChord(validTiming, Chord.build("Bb")).getChord().musicNotation());
+        assertEquals("B", new TimedChord(validTiming, Chord.build("B")).getChord().musicNotation());
+        assertEquals("C", new TimedChord(validTiming, Chord.build("C")).getChord().musicNotation());
+        assertEquals("C#", new TimedChord(validTiming, Chord.build("C#")).getChord().musicNotation());
+        assertEquals("Db", new TimedChord(validTiming, Chord.build("Db")).getChord().musicNotation());
+        assertEquals("D", new TimedChord(validTiming, Chord.build("D")).getChord().musicNotation());
+        assertEquals("D#", new TimedChord(validTiming, Chord.build("D#")).getChord().musicNotation());
+        assertEquals("Eb", new TimedChord(validTiming, Chord.build("Eb")).getChord().musicNotation());
+        assertEquals("E", new TimedChord(validTiming, Chord.build("E")).getChord().musicNotation());
+        assertEquals("F", new TimedChord(validTiming, Chord.build("F")).getChord().musicNotation());
+        assertEquals("F#", new TimedChord(validTiming, Chord.build("F#")).getChord().musicNotation());
+        assertEquals("Gb", new TimedChord(validTiming, Chord.build("Gb")).getChord().musicNotation());
+        assertEquals("G", new TimedChord(validTiming, Chord.build("G")).getChord().musicNotation());
+        assertEquals("G#", new TimedChord(validTiming, Chord.build("G#")).getChord().musicNotation());
+        assertEquals("Ab", new TimedChord(validTiming, Chord.build("Ab")).getChord().musicNotation());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testValidSimpleMinorChords() throws InvalidChordException {
-        assertEquals("Am", new TimedChord(validTiming, "Am").getChord());
-        assertEquals("A#m", new TimedChord(validTiming, "A#m").getChord());
-        assertEquals("Bbm", new TimedChord(validTiming, "Bbm").getChord());
-        assertEquals("Bm", new TimedChord(validTiming, "Bm").getChord());
-        assertEquals("Cm", new TimedChord(validTiming, "Cm").getChord());
-        assertEquals("C#m", new TimedChord(validTiming, "C#m").getChord());
-        assertEquals("Dbm", new TimedChord(validTiming, "Dbm").getChord());
-        assertEquals("Dm", new TimedChord(validTiming, "Dm").getChord());
-        assertEquals("D#m", new TimedChord(validTiming, "D#m").getChord());
-        assertEquals("Ebm", new TimedChord(validTiming, "Ebm").getChord());
-        assertEquals("Em", new TimedChord(validTiming, "Em").getChord());
-        assertEquals("Fm", new TimedChord(validTiming, "Fm").getChord());
-        assertEquals("F#m", new TimedChord(validTiming, "F#m").getChord());
-        assertEquals("Gbm", new TimedChord(validTiming, "Gbm").getChord());
-        assertEquals("Gm", new TimedChord(validTiming, "Gm").getChord());
-        assertEquals("G#m", new TimedChord(validTiming, "G#m").getChord());
-        assertEquals("Abm", new TimedChord(validTiming, "Abm").getChord());
+        assertEquals("Am", new TimedChord(validTiming, Chord.build("Am")).getChord().musicNotation());
+        assertEquals("A#m", new TimedChord(validTiming, Chord.build("A#m")).getChord().musicNotation());
+        assertEquals("Bbm", new TimedChord(validTiming, Chord.build("Bbm")).getChord().musicNotation());
+        assertEquals("Bm", new TimedChord(validTiming, Chord.build("Bm")).getChord().musicNotation());
+        assertEquals("Cm", new TimedChord(validTiming, Chord.build("Cm")).getChord().musicNotation());
+        assertEquals("C#m", new TimedChord(validTiming, Chord.build("C#m")).getChord().musicNotation());
+        assertEquals("Dbm", new TimedChord(validTiming, Chord.build("Dbm")).getChord().musicNotation());
+        assertEquals("Dm", new TimedChord(validTiming, Chord.build("Dm")).getChord().musicNotation());
+        assertEquals("D#m", new TimedChord(validTiming, Chord.build("D#m")).getChord().musicNotation());
+        assertEquals("Ebm", new TimedChord(validTiming, Chord.build("Ebm")).getChord().musicNotation());
+        assertEquals("Em", new TimedChord(validTiming, Chord.build("Em")).getChord().musicNotation());
+        assertEquals("Fm", new TimedChord(validTiming, Chord.build("Fm")).getChord().musicNotation());
+        assertEquals("F#m", new TimedChord(validTiming, Chord.build("F#m")).getChord().musicNotation());
+        assertEquals("Gbm", new TimedChord(validTiming, Chord.build("Gbm")).getChord().musicNotation());
+        assertEquals("Gm", new TimedChord(validTiming, Chord.build("Gm")).getChord().musicNotation());
+        assertEquals("G#m", new TimedChord(validTiming, Chord.build("G#m")).getChord().musicNotation());
+        assertEquals("Abm", new TimedChord(validTiming, Chord.build("Abm")).getChord().musicNotation());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testValidDifferentBassChords() throws InvalidChordException {
-        assertEquals("A/C#", new TimedChord(validTiming, "A/C#").getChord());
-        assertEquals("Am/C", new TimedChord(validTiming, "Am/C").getChord());
-        assertEquals("C#m/E", new TimedChord(validTiming, "C#m/E").getChord());
-        assertEquals("D/A", new TimedChord(validTiming, "D/A").getChord());
-        assertEquals("Eb/G", new TimedChord(validTiming, "Eb/G").getChord());
+        assertEquals("A/C#", new TimedChord(validTiming, Chord.build("A/C#")).getChord().musicNotation());
+        assertEquals("Am/C", new TimedChord(validTiming, Chord.build("Am/C")).getChord().musicNotation());
+        assertEquals("C#m/E", new TimedChord(validTiming, Chord.build("C#m/E")).getChord().musicNotation());
+        assertEquals("D/A", new TimedChord(validTiming, Chord.build("D/A")).getChord().musicNotation());
+        assertEquals("Eb/G", new TimedChord(validTiming, Chord.build("Eb/G")).getChord().musicNotation());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testConstructorInvalidChords() {
-        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, "-1"));
-        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, "H"));
-        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, "H/C#"));
-        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, "a"));
+        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, Chord.build("-1")));
+        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, Chord.build("H")));
+        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, Chord.build("H/C#")));
+        assertThrows(InvalidChordException.class, () -> new TimedChord(validTiming, Chord.build("a")));
     }
 
 }

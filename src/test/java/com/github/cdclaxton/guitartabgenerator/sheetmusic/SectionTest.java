@@ -19,7 +19,7 @@ class SectionTest {
         text.add("Line-2");
 
         Bar bar1 = new BarBuilder(Bar.TimeSignature.Four4)
-                .addTimedChord(0, "C#m")
+                .addTimedChord(0, Chord.build("C#m"))
                 .addNote(1, 0, 0)
                 .build();
         List<Bar> bars = new ArrayList<>();
@@ -39,7 +39,7 @@ class SectionTest {
 
         // Mutate the bars and check the section isn't mutated
         Bar bar2 = new BarBuilder(Bar.TimeSignature.Four4)
-                .addTimedChord(0, "E")
+                .addTimedChord(0, Chord.build("E"))
                 .addNote(2, 0, 0)
                 .build();
         bars.add(bar2);
