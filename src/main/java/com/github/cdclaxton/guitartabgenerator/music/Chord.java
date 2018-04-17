@@ -34,6 +34,33 @@ public final class Chord {
     }
 
     /**
+     * Get the root note of the chord.
+     *
+     * @return Root note.
+     */
+    public String getRootNote() {
+        return rootNote;
+    }
+
+    /**
+     * Get the symbols associated with the chord.
+     *
+     * @return Symbols.
+     */
+    public String getSymbols() {
+        return symbols;
+    }
+
+    /**
+     * Get the bass note.
+     *
+     * @return Bass note.
+     */
+    public Optional<String> getBassNote() {
+        return bassNote;
+    }
+
+    /**
      * Create a new instance of the chord.
      *
      * @param chord Chord to make a new instance of.
