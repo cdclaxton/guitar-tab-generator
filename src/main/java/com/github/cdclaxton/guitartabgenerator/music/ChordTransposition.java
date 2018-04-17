@@ -13,8 +13,9 @@ final class ChordTransposition {
     private static final String[] notes = {"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
     private static final String[] enharmonicNotes = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
     private static final int numberNotes = 12;
-    private static final Logger logger = LoggerFactory.getLogger(SheetMusicParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChordTransposition.class);
 
+    @Deprecated
     public static class ChordParts {
         private String base;
         private String rest;
@@ -67,8 +68,8 @@ final class ChordTransposition {
         logger.debug("Transposing chord " + chord + " from key " + oldKey + " to key " + newKey);
 
         // Check the keys are valid
-        if (!Key.isValid(oldKey)) throw new TranspositionException("Key " + oldKey + " is not valid");
-        if (!Key.isValid(newKey)) throw new TranspositionException("Key " + newKey + " is not valid");
+        if (!Key.isValid(oldKey)) throw new TranspositionException("Old key " + oldKey + " is not valid");
+        if (!Key.isValid(newKey)) throw new TranspositionException("New key " + newKey + " is not valid");
 
         // Check the keys together are valid
         final boolean oldKeyIsMajor = Key.isMajorKey(oldKey);
