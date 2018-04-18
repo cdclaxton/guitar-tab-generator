@@ -17,7 +17,7 @@ import java.util.List;
 public class DocxWriter {
 
     /**
-     * Write the line to a docx file.
+     * Write the lines to a docx file.
      *
      * @param lines Lines to write.
      * @param filePath Path of the docx file to write.
