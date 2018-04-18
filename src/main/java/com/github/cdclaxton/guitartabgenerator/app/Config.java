@@ -11,6 +11,10 @@ public final class Config {
     private final int pageWidth;
     private final int maxFret;
 
+    private final String docxFontFamily;
+    private final int docxFontSize;
+    private final int docxPageWidth;
+
     /**
      * Instantiate the config a config.properties file.
      *
@@ -27,6 +31,9 @@ public final class Config {
         // Extract the values
         this.pageWidth = Integer.valueOf(prop.getProperty("page.width"));
         this.maxFret = Integer.valueOf(prop.getProperty("max.fret"));
+        this.docxFontFamily = prop.getProperty("docx.font.family");
+        this.docxFontSize = Integer.valueOf(prop.getProperty("docx.font.size"));
+        this.docxPageWidth = Integer.valueOf(prop.getProperty("docx.page.width"));
     }
 
     /**
@@ -43,9 +50,40 @@ public final class Config {
      */
     int getMaxFret() { return maxFret; }
 
+    /**
+     * Font family to use in the docx file.
+     *
+     * @return Font family.
+     */
+    public String getDocxFontFamily() {
+        return docxFontFamily;
+    }
+
+    /**
+     * Font size to use in the docx file.
+     *
+     * @return Font size.
+     */
+    public int getDocxFontSize() {
+        return docxFontSize;
+    }
+
+    /**
+     * Number of characters across a docx page.
+     *
+     * @return Page width in characters.
+     */
+    public int getDocxPageWidth() {
+        return docxPageWidth;
+    }
+
     @Override
     public String toString() {
-        return "Config[pageWidth=" + this.pageWidth + ",maxFret=" + this.maxFret + "]";
+        return "Config[pageWidth=" + this.pageWidth +
+                ",maxFret=" + this.maxFret +
+                ",docxFontFamily=" + this.docxFontFamily +
+                ",docxFontSize=" + this.docxFontSize +
+                ",docxPageWidth" + this.docxPageWidth + "]";
     }
 
     @Override
@@ -54,11 +92,14 @@ public final class Config {
         if (o == null || getClass() != o.getClass()) return false;
         Config config = (Config) o;
         return pageWidth == config.pageWidth &&
-                maxFret == config.maxFret;
+                maxFret == config.maxFret &&
+                docxFontSize == config.docxFontSize &&
+                docxPageWidth == config.docxPageWidth &&
+                Objects.equals(docxFontFamily, config.docxFontFamily);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pageWidth, maxFret);
+        return Objects.hash(pageWidth, maxFret, docxFontFamily, docxFontSize, docxPageWidth);
     }
 }
