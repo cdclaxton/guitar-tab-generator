@@ -17,18 +17,16 @@ import java.util.List;
 public class DocxWriter {
 
     /**
-     * Write the lines to a docx file.
+     * Build a docx file (all lines in the same font and size).
      *
-     * @param lines Lines to write.
-     * @param filePath Path of the docx file to write.
-     * @param fontFamily Font family, e.g. Consolas.
-     * @param fontSize Font size, e.g. 9.
-     * @throws IOException Unable to write the file.
+     * @param lines Lines to write to the file.
+     * @param fontFamily Font family.
+     * @param fontSize Font size.
+     * @return Apache POI docx file.
      */
-    public static void writeDocx(List<String> lines,
-                                 String filePath,
-                                 String fontFamily,
-                                 int fontSize) throws IOException {
+    public static XWPFDocument buildDocx(final List<String> lines,
+                                         final String fontFamily,
+                                         final int fontSize) {
 
         // Create a blank Word document
         XWPFDocument document = new XWPFDocument();
@@ -59,6 +57,26 @@ public class DocxWriter {
             run.setFontFamily(fontFamily);
             run.setText(line);
         }
+
+        return document;
+    }
+
+    /**
+     * Write the lines to a docx file.
+     *
+     * @param lines Lines to write.
+     * @param filePath Path of the docx file to write.
+     * @param fontFamily Font family, e.g. Consolas.
+     * @param fontSize Font size, e.g. 9.
+     * @throws IOException Unable to write the file.
+     */
+    public static void buildAndWriteDocx(List<String> lines,
+                                         String filePath,
+                                         String fontFamily,
+                                         int fontSize) throws IOException {
+
+        // Build the docx file
+        XWPFDocument document = buildDocx(lines, fontFamily, fontSize);
 
         // Write the document
         FileOutputStream out = new FileOutputStream(new File(filePath));
