@@ -1,6 +1,7 @@
 package com.github.cdclaxton.guitartabgenerator.app;
 
 import com.github.cdclaxton.guitartabgenerator.music.*;
+import com.github.cdclaxton.guitartabgenerator.pdftabwriter.DocxToPdf;
 import com.github.cdclaxton.guitartabgenerator.pdftabwriter.DocxWriter;
 import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusic;
 import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusicTransposition;
@@ -10,6 +11,7 @@ import com.github.cdclaxton.guitartabgenerator.tabwriter.TabBuildingException;
 import com.github.cdclaxton.guitartabgenerator.tabwriter.TabSheetMusicBuilder;
 import com.github.cdclaxton.guitartabgenerator.tabwriter.TabSheetMusicWriter;
 import org.apache.commons.cli.*;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -248,6 +250,9 @@ public final class GuitarTabGenerator {
                 case "docx":
                     pageWidth = config.getDocxPageWidth();
                     break;
+                case "pdf":
+                    pageWidth = config.getDocxPageWidth();
+                    break;
                 default:
                     logger.error("Unknown output format: " + format);
                     System.exit(-1);
@@ -383,6 +388,10 @@ public final class GuitarTabGenerator {
                 logger.info("Writing docx file: " + filePath);
                 writeDocxFile(tab, filePath, docxFontFamily, docxFontSize);
                 break;
+            case "pdf":
+                logger.info("Writing PDF file: " + filePath);
+                writePdfFile(tab, filePath, docxFontFamily, docxFontSize);
+                break;
             case "txt":
                 logger.info("Writing txt file: " + filePath);
                 writeTextFile(tab, filePath);
@@ -394,7 +403,31 @@ public final class GuitarTabGenerator {
     }
 
     /**
-     * Write a docx file containing the line.
+     * Write a PDF file containing the lines.
+     *
+     * @param lines Data to write.
+     * @param filePath Path of the file to write.
+     * @param fontFamily Font family to use for all text, e.g. Consolas.
+     * @param fontSize Font size, e.g. 9.
+     */
+    private static void writePdfFile(final List<String> lines,
+                                     final String filePath,
+                                     final String fontFamily,
+                                     final int fontSize) {
+
+        // Build the docx file
+        XWPFDocument document = DocxWriter.buildDocx(lines, fontFamily, fontSize);
+
+        // Write to PDF
+        try {
+            DocxToPdf.convertToPdf(document, filePath);
+        } catch (IOException e) {
+            logger.error("Unable to write PDF: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Write a docx file containing the lines.
      *
      * @param lines Data to write.
      * @param filePath Path of the file to write.
@@ -407,7 +440,7 @@ public final class GuitarTabGenerator {
                                       final int fontSize) {
 
         try {
-            DocxWriter.writeDocx(lines, filePath, fontFamily, fontSize);
+            DocxWriter.buildAndWriteDocx(lines, filePath, fontFamily, fontSize);
         } catch (IOException e) {
             logger.error("Unable to write docx file: " + e.getMessage());
         }
