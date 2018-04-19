@@ -229,7 +229,7 @@ public final class GuitarTabGenerator {
         SheetMusic sheetMusic = readSheetMusic(cmdLine.inputFile.get());
 
         // Generate guitar tab?
-        if (cmdLine.generateTab()) {
+        if (cmdLine.generateTab() && cmdLine.getOutputFolder().isPresent()) {
 
             // Transpose the sheet music (if required)
             SheetMusic sheetMusicInRequiredKey = transposeSheetMusic(sheetMusic,
@@ -272,6 +272,15 @@ public final class GuitarTabGenerator {
 
     }
 
+    /**
+     * Transpose the sheet music (if required).
+     *
+     * @param sheetMusic Sheet music.
+     * @param transposeKey Key to which to transpose the music.
+     * @param transposeUp Transpose up?
+     * @param maxFret Maximum fret number.
+     * @return Potentially transposed sheet music.
+     */
     private static SheetMusic transposeSheetMusic(final SheetMusic sheetMusic,
                                                   Optional<String> transposeKey,
                                                   Optional<Boolean> transposeUp,
@@ -301,6 +310,12 @@ public final class GuitarTabGenerator {
         return sheetMusicInRequiredKey;
     }
 
+    /**
+     * Show a video (open browser).
+     *
+     * @param sheetMusic Sheet music.
+     * @param transposeKey Transpose to a different key, if defined.
+     */
     private static void showVideo(final SheetMusic sheetMusic,
                                   final Optional<String> transposeKey) {
 
@@ -320,6 +335,12 @@ public final class GuitarTabGenerator {
         url.ifPresent(WebBrowserLauncher::launch);
     }
 
+    /**
+     * Parse the command line arguments.
+     *
+     * @param args Command line arguments.
+     * @return Parsed args.
+     */
     private static ParsedCmdArgs parseCommandLineArgs(final String[] args) {
         ParsedCmdArgs cmdLine = null;
         try {
@@ -332,6 +353,11 @@ public final class GuitarTabGenerator {
         return cmdLine;
     }
 
+    /**
+     * Read the config.
+     *
+     * @return Config.
+     */
     private static Config readConfig() {
         Config config = null;
         try {
@@ -344,6 +370,12 @@ public final class GuitarTabGenerator {
         return config;
     }
 
+    /**
+     * Read the sheet music.
+     *
+     * @param filePath Path from which to read the sheet music.
+     * @return Sheet music.
+     */
     private static SheetMusic readSheetMusic(final String filePath) {
         logger.info("Reading specification from file: " + filePath);
         final Optional<SheetMusic> sheetMusic = parseSheetMusic(filePath);
@@ -358,6 +390,16 @@ public final class GuitarTabGenerator {
         return sheetMusic.get();
     }
 
+    /**
+     * Write sheet music to file.
+     *
+     * @param sheetMusic Sheet music to write.
+     * @param outputFormat Output format, e.g. txt.
+     * @param outputFolder Output folder (where the sheet music will be written).
+     * @param pageWidth Number of characters per line.
+     * @param docxFontFamily Font family to use for docx files.
+     * @param docxFontSize Font size to use for docx files.
+     */
     private static void writeSheetMusic(final SheetMusic sheetMusic,
                                         final String outputFormat,
                                         final String outputFolder,
