@@ -1,6 +1,7 @@
 package com.github.cdclaxton.guitartabgenerator.app;
 
 import com.github.cdclaxton.guitartabgenerator.music.*;
+import com.github.cdclaxton.guitartabgenerator.pdftabwriter.DocxWriter;
 import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusic;
 import com.github.cdclaxton.guitartabgenerator.sheetmusic.SheetMusicTransposition;
 import com.github.cdclaxton.guitartabgenerator.tabparser.ExtractionException;
@@ -34,6 +35,7 @@ public final class GuitarTabGenerator {
         private boolean video;
         private Optional<String> transposeKey;
         private Optional<Boolean> transposeUp;
+        private Optional<String> format;
 
         /**
          * Construct a ParsedCmdArgs object.
@@ -44,19 +46,22 @@ public final class GuitarTabGenerator {
          * @param video Show a video?
          * @param transposeKey Transpose to musical key.
          * @param transposeUp Transpose up?
+         * @param format Output format.
          */
         ParsedCmdArgs(final boolean help,
                       final Optional<String> inputFile,
                       final Optional<String> outputFolder,
                       final boolean video,
                       final Optional<String> transposeKey,
-                      final Optional<Boolean> transposeUp) {
+                      final Optional<Boolean> transposeUp,
+                      final Optional<String> format) {
             this.help = help;
             this.inputFile = inputFile;
             this.outputFolder = outputFolder;
             this.video = video;
             this.transposeKey = transposeKey;
             this.transposeUp = transposeUp;
+            this.format = format;
         }
 
         /**
@@ -79,6 +84,10 @@ public final class GuitarTabGenerator {
 
             // Output folder
             if (cmd.hasOption("output")) this.outputFolder = Optional.of(cmd.getOptionValue("output"));
+
+            // Output format
+            if (cmd.hasOption("format")) this.format = Optional.of(cmd.getOptionValue("format"));
+            else this.format = Optional.empty();
 
             // Check that both transpose up and transpose down haven't been defined
             if (cmd.hasOption("up") && cmd.hasOption("down")) throw new IllegalArgumentException("Only one transpose per run");
@@ -155,12 +164,22 @@ public final class GuitarTabGenerator {
          */
         Optional<Boolean> getTransposeUp() { return this.transposeUp; }
 
+        /**
+         * Output format.
+         *
+         * @return Output format.
+         */
+        public Optional<String> getFormat() {
+            return format;
+        }
+
         @Override
         public String toString() {
             return "ParsedCmdArgs[" +
                     "help=" + this.help + ","  +
                     "input=" + this.inputFile + "," +
                     "output=" + this.outputFolder + "," +
+                    "format=" + this.format + "," +
                     "transpose=" + this.transposeKey + "," +
                     "video=" + this.video + "]";
         }
@@ -175,12 +194,13 @@ public final class GuitarTabGenerator {
                     Objects.equals(inputFile, that.inputFile) &&
                     Objects.equals(outputFolder, that.outputFolder) &&
                     Objects.equals(transposeKey, that.transposeKey) &&
-                    Objects.equals(transposeUp, that.transposeUp);
+                    Objects.equals(transposeUp, that.transposeUp) &&
+                    Objects.equals(format, that.format);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(help, inputFile, outputFolder, video, transposeKey, transposeUp);
+            return Objects.hash(help, inputFile, outputFolder, video, transposeKey, transposeUp, format);
         }
     }
 
@@ -192,104 +212,221 @@ public final class GuitarTabGenerator {
     public static void main(String[] args) {
 
         // Parse the command line arguments
-        ParsedCmdArgs cmdLine = null;
-        try {
-            cmdLine = new ParsedCmdArgs(args);
-        } catch (ParseException e) {
-            logger.error("Failed to parse command line arguments");
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        ParsedCmdArgs cmdLine = parseCommandLineArgs(args);
 
         // Read the config.properties file
-        Config config = null;
-        try {
-            config = new Config("config.properties");
-            logger.info("Config.properties read - " + config.toString());
-        } catch (IOException e) {
-            logger.error("Invalid config.properties file");
-            logger.error(e.getMessage());
-            System.exit(-1);
-        }
+        Config config = readConfig();
 
         // Just show the help?
         if (cmdLine.showHelp()) showHelpAndExit();
 
         // Read the sheet music
-        logger.info("Reading specification from file: " + cmdLine.inputFile.get());
-        final Optional<SheetMusic> sheetMusic = parseSheetMusic(cmdLine.inputFile.get());
+        if (!cmdLine.inputFile.isPresent()) {
+            throw new IllegalStateException("No sheet music to process. Can't continue.");
+        }
+        SheetMusic sheetMusic = readSheetMusic(cmdLine.inputFile.get());
+
+        // Generate guitar tab?
+        if (cmdLine.generateTab()) {
+
+            // Transpose the sheet music (if required)
+            SheetMusic sheetMusicInRequiredKey = transposeSheetMusic(sheetMusic,
+                    cmdLine.transposeKey, cmdLine.transposeUp, config.getMaxFret());
+
+            // Determine the output format
+            String format = config.getDefaultFormat();
+            if (cmdLine.getFormat().isPresent()) {
+                format = cmdLine.getFormat().get();
+            }
+
+            // Determine the page width
+            int pageWidth = 0;
+            switch (format) {
+                case "txt":
+                    pageWidth = config.getPageWidth();
+                    break;
+                case "docx":
+                    pageWidth = config.getDocxPageWidth();
+                    break;
+                default:
+                    logger.error("Unknown output format: " + format);
+                    System.exit(-1);
+            }
+
+            // Write the sheet music
+            writeSheetMusic(sheetMusicInRequiredKey,
+                    format,
+                    cmdLine.getOutputFolder().get(),
+                    pageWidth,
+                    config.getDocxFontFamily(),
+                    config.getDocxFontSize());
+        }
+
+        // Show a video?
+        if (cmdLine.showVideo()) showVideo(sheetMusic, cmdLine.transposeKey);
+
+    }
+
+    private static SheetMusic transposeSheetMusic(final SheetMusic sheetMusic,
+                                                  Optional<String> transposeKey,
+                                                  Optional<Boolean> transposeUp,
+                                                  int maxFret) {
+
+        SheetMusic sheetMusicInRequiredKey = null;
+
+        if (transposeKey.isPresent() && transposeUp.isPresent()) {
+            // Generate transposed tab
+            logger.info("Transposing to key: " + transposeKey.get());
+            try {
+                sheetMusicInRequiredKey = SheetMusicTransposition.transpose(sheetMusic,
+                        transposeKey.get(), transposeUp.get(), maxFret);
+            } catch (InvalidKeyException e) {
+                logger.error("Invalid key: " + e.getMessage());
+            } catch (InvalidChordException e) {
+                logger.error("Invalid chord: " + e.getMessage());
+            } catch (TranspositionException e) {
+                logger.error("Unable to transpose: " + e.getMessage());
+            }
+        } else {
+            // Generate tab in the same key as the specification file
+            logger.info("No transposition");
+            sheetMusicInRequiredKey = sheetMusic;
+        }
+
+        return sheetMusicInRequiredKey;
+    }
+
+    private static void showVideo(final SheetMusic sheetMusic,
+                                  final Optional<String> transposeKey) {
+
+        Optional<String> url;
+
+        if (transposeKey.isPresent()) {
+            // Show video in required key
+            logger.info("Show video in key: " + transposeKey.get());
+            url = sheetMusic.getMetadata().findUrl(transposeKey.get());
+        } else {
+            // Show video in usual key
+            logger.info("Show video in normal key");
+            url = sheetMusic.getMetadata().findUrl();
+        }
+
+        logger.info("URL is: " + url);
+        url.ifPresent(WebBrowserLauncher::launch);
+    }
+
+    private static ParsedCmdArgs parseCommandLineArgs(final String[] args) {
+        ParsedCmdArgs cmdLine = null;
+        try {
+            cmdLine = new ParsedCmdArgs(args);
+        } catch (ParseException e) {
+            logger.error("Failed to parse command line arguments");
+            System.exit(-1);
+        }
+
+        return cmdLine;
+    }
+
+    private static Config readConfig() {
+        Config config = null;
+        try {
+            config = new Config("config.properties");
+            logger.info("Config.properties read - " + config.toString());
+        } catch (IOException e) {
+            logger.error("Invalid config.properties file: " + e.getMessage());
+            System.exit(-1);
+        }
+        return config;
+    }
+
+    private static SheetMusic readSheetMusic(final String filePath) {
+        logger.info("Reading specification from file: " + filePath);
+        final Optional<SheetMusic> sheetMusic = parseSheetMusic(filePath);
         if (!sheetMusic.isPresent()) {
             logger.error("Aborting due to input specification failure");
             System.exit(-1);
         }
         logger.info("Sheet music read: " + sheetMusic.get().getHeader().getTitle() +
                 " - " + sheetMusic.get().getHeader().getArtist() +
-                        " [" + sheetMusic.get().getHeader().getKey().getKey() + "]");
+                " [" + sheetMusic.get().getHeader().getKey().getKey() + "]");
 
-        // Generate guitar tab?
-        SheetMusic sheetMusicInRequiredKey = null;
-        if (cmdLine.generateTab()) {
-            if (cmdLine.transposeKey.isPresent()) {
-                // Generate transposed tab
-                logger.info("Transposing to key: " + cmdLine.transposeKey.get());
-                try {
-                    sheetMusicInRequiredKey = SheetMusicTransposition.transpose(sheetMusic.get(),
-                            cmdLine.getTransposeKey().get(), cmdLine.getTransposeUp().get(), config.getMaxFret());
-                } catch (InvalidKeyException e) {
-                    logger.error("Invalid key: " + e.getMessage());
-                } catch (InvalidChordException e) {
-                    logger.error("Invalid chord: " + e.getMessage());
-                } catch (TranspositionException e) {
-                    logger.error("Unable to transpose: " + e.getMessage());
-                }
-            } else {
-                // Generate tab in the same key as the specification file
-                logger.info("No transposition");
-                sheetMusicInRequiredKey = sheetMusic.get();
-            }
+        return sheetMusic.get();
+    }
 
-            // Build the sheet music
-            List<String> tab = null;
-            try {
-                tab = TabSheetMusicBuilder.buildTabSheetMusic(sheetMusicInRequiredKey, config.getPageWidth());
-            } catch (TabBuildingException e) {
-                logger.error("Unable to build guitar tab: " + e.getMessage());
-                System.exit(-1);
-            }
+    private static void writeSheetMusic(final SheetMusic sheetMusic,
+                                        final String outputFormat,
+                                        final String outputFolder,
+                                        final int pageWidth,
+                                        final String docxFontFamily,
+                                        final int docxFontSize) {
 
-            // Build the filename for the tab
-            String filePath = buildTabFilename(sheetMusicInRequiredKey.getHeader().getTitle(),
-                    sheetMusicInRequiredKey.getHeader().getArtist(),
-                    sheetMusicInRequiredKey.getHeader().getKey().getKey(),
-                    cmdLine.outputFolder.get());
-            logger.info("Writing tab to: " + filePath);
-
-            // Write the tab
-            try {
-                TabSheetMusicWriter.writeLines(tab, filePath);
-            } catch (IOException e) {
-                logger.error("Can't write file to: " + filePath);
-                logger.error(e.getMessage());
-            }
+        // Create the tab
+        List<String> tab = null;
+        try {
+            tab = TabSheetMusicBuilder.buildTabSheetMusic(sheetMusic, pageWidth);
+            logger.info("Tab built");
+        } catch (TabBuildingException e) {
+            logger.error("Unable to build guitar tab: " + e.getMessage());
+            System.exit(-1);
         }
 
-        // Show a video?
-        if (cmdLine.showVideo()) {
-            Optional<String> url;
-            if (cmdLine.transposeKey.isPresent()) {
-                // Show video in required key
-                logger.info("Show video in key: " + cmdLine.transposeKey.get());
-                url = sheetMusic.get().getMetadata().findUrl(cmdLine.transposeKey.get());
-            } else {
-                // Show video in usual key
-                logger.info("Show video in normal key");
-                url = sheetMusic.get().getMetadata().findUrl();
-            }
+        // Build the output filename
+        String filePath = buildTabFilename(sheetMusic.getHeader().getTitle(),
+                sheetMusic.getHeader().getArtist(),
+                sheetMusic.getHeader().getKey().getKey(),
+                outputFolder,
+                outputFormat);
 
-            logger.info("URL is: " + url);
-            url.ifPresent(WebBrowserLauncher::launch);
+        // Write to file
+        switch (outputFormat) {
+            case "docx":
+                logger.info("Writing docx file: " + filePath);
+                writeDocxFile(tab, filePath, docxFontFamily, docxFontSize);
+                break;
+            case "txt":
+                logger.info("Writing txt file: " + filePath);
+                writeTextFile(tab, filePath);
+                break;
+            default:
+                logger.error("Unknown file type: " + outputFormat);
+                break;
         }
+    }
 
+    /**
+     * Write a docx file containing the line.
+     *
+     * @param lines Data to write.
+     * @param filePath Path of the file to write.
+     * @param fontFamily Font family to use for all text, e.g. Consolas.
+     * @param fontSize Font size, e.g. 9.
+     */
+    private static void writeDocxFile(final List<String> lines,
+                                      final String filePath,
+                                      final String fontFamily,
+                                      final int fontSize) {
+
+        try {
+            DocxWriter.writeDocx(lines, filePath, fontFamily, fontSize);
+        } catch (IOException e) {
+            logger.error("Unable to write docx file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Write a text file containing the lines.
+     *
+     * @param lines Data to write.
+     * @param filePath Path of the file to write.
+     */
+    private static void writeTextFile(final List<String> lines,
+                                      final String filePath) {
+        try {
+            TabSheetMusicWriter.writeLines(lines, filePath);
+        } catch (IOException e) {
+            logger.error("Can't write file to: " + filePath);
+            logger.error(e.getMessage());
+        }
     }
 
     /**
@@ -299,17 +436,19 @@ public final class GuitarTabGenerator {
      * @param artist Song artist.
      * @param key Musical key.
      * @param folder Folder where the tab will be stored.
+     * @param extension File extension (without the dot), e.g. txt.
      * @return Filename with path.
      */
     static String buildTabFilename(final String title,
                                    final String artist,
                                    final String key,
-                                   final String folder) {
+                                   final String folder,
+                                   final String extension) {
 
         String fullFolder = folder;
         if (!folder.endsWith("/"))  fullFolder = fullFolder + "/";
 
-        return fullFolder + title + " (" + artist + ") - " + key + ".txt";
+        return fullFolder + title + " (" + artist + ") - " + key + "." + extension;
     }
 
     /**
@@ -370,6 +509,15 @@ public final class GuitarTabGenerator {
                 .desc("folder where the tab will be written to")
                 .build();
         options.addOption(tab);
+
+        // Output format
+        Option format = Option.builder("f")
+                .longOpt("format")
+                .hasArg()
+                .argName("format")
+                .desc("tab format")
+                .build();
+        options.addOption(format);
 
         // Transpose
         Option transposeUp = Option.builder("u")

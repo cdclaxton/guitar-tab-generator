@@ -19,7 +19,7 @@ class GuitarTabGeneratorTest {
 
         GuitarTabGenerator.ParsedCmdArgs expected = new GuitarTabGenerator.ParsedCmdArgs(
                 true, null, Optional.empty(), false,
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
         assertEquals(expected, parsed);
     }
 
@@ -30,7 +30,7 @@ class GuitarTabGeneratorTest {
 
         GuitarTabGenerator.ParsedCmdArgs expected = new GuitarTabGenerator.ParsedCmdArgs(
                 false, Optional.of("test.txt"), Optional.empty(), true,
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
         assertEquals(expected, parsed);
     }
 
@@ -41,7 +41,7 @@ class GuitarTabGeneratorTest {
 
         GuitarTabGenerator.ParsedCmdArgs expected = new GuitarTabGenerator.ParsedCmdArgs(
                 false, Optional.of("test.txt"), Optional.of("folder"), false,
-                Optional.empty(), Optional.empty());
+                Optional.empty(), Optional.empty(), Optional.empty());
         assertEquals(expected, parsed);
     }
 
@@ -52,7 +52,7 @@ class GuitarTabGeneratorTest {
 
         GuitarTabGenerator.ParsedCmdArgs expected = new GuitarTabGenerator.ParsedCmdArgs(
                 false, Optional.of("test.txt"), Optional.of("folder"), false,
-                Optional.of("C#"), Optional.of(true));
+                Optional.of("C#"), Optional.of(true), Optional.empty());
         assertEquals(expected, parsed);
     }
 
@@ -63,7 +63,7 @@ class GuitarTabGeneratorTest {
 
         GuitarTabGenerator.ParsedCmdArgs expected = new GuitarTabGenerator.ParsedCmdArgs(
                 false, Optional.of("test.txt"), Optional.of("folder"), false,
-                Optional.of("C#"), Optional.of(false));
+                Optional.of("C#"), Optional.of(false), Optional.empty());
         assertEquals(expected, parsed);
     }
 
@@ -74,7 +74,7 @@ class GuitarTabGeneratorTest {
 
         GuitarTabGenerator.ParsedCmdArgs expected = new GuitarTabGenerator.ParsedCmdArgs(
                 false, Optional.of("test.txt"), Optional.of("folder"), true,
-                Optional.of("C#"), Optional.of(true));
+                Optional.of("C#"), Optional.of(true), Optional.empty());
         assertEquals(expected, parsed);
     }
 
@@ -85,7 +85,7 @@ class GuitarTabGeneratorTest {
 
         GuitarTabGenerator.ParsedCmdArgs expected = new GuitarTabGenerator.ParsedCmdArgs(
                 false, Optional.of("test.txt"), Optional.of("folder"), true,
-                Optional.of("C#"), Optional.of(false));
+                Optional.of("C#"), Optional.of(false), Optional.empty());
         assertEquals(expected, parsed);
     }
 
@@ -111,6 +111,6 @@ class GuitarTabGeneratorTest {
         String folder = "./tab/";
 
         assertEquals("./tab/How great is our God (Chris Tomlin) - Db.txt",
-                GuitarTabGenerator.buildTabFilename(title, artist, key, folder));
+                GuitarTabGenerator.buildTabFilename(title, artist, key, folder, "txt"));
     }
 }

@@ -15,6 +15,10 @@ class ConfigTest {
 
         assertEquals(100, config.getPageWidth());
         assertEquals(20, config.getMaxFret());
+        assertEquals("docx", config.getDefaultFormat());
+        assertEquals("Consolas", config.getDocxFontFamily());
+        assertEquals(9, config.getDocxFontSize());
+        assertEquals(114, config.getDocxPageWidth());
     }
 
 }
