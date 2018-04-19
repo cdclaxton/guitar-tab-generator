@@ -8,9 +8,9 @@ import java.util.Properties;
 
 public final class Config {
 
-    private final int pageWidth;
     private final int maxFret;
-
+    private final int pageWidth;
+    private final String defaultFormat;
     private final String docxFontFamily;
     private final int docxFontSize;
     private final int docxPageWidth;
@@ -34,6 +34,7 @@ public final class Config {
         this.docxFontFamily = prop.getProperty("docx.font.family");
         this.docxFontSize = Integer.valueOf(prop.getProperty("docx.font.size"));
         this.docxPageWidth = Integer.valueOf(prop.getProperty("docx.page.width"));
+        this.defaultFormat = prop.getProperty("default.format");
     }
 
     /**
@@ -77,10 +78,20 @@ public final class Config {
         return docxPageWidth;
     }
 
+    /**
+     * Default output format.
+     *
+     * @return Default format.
+     */
+    public String getDefaultFormat() {
+        return defaultFormat;
+    }
+
     @Override
     public String toString() {
         return "Config[pageWidth=" + this.pageWidth +
                 ",maxFret=" + this.maxFret +
+                ",defaultFormat=" + this.defaultFormat +
                 ",docxFontFamily=" + this.docxFontFamily +
                 ",docxFontSize=" + this.docxFontSize +
                 ",docxPageWidth" + this.docxPageWidth + "]";
@@ -91,15 +102,16 @@ public final class Config {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Config config = (Config) o;
-        return pageWidth == config.pageWidth &&
-                maxFret == config.maxFret &&
+        return maxFret == config.maxFret &&
+                pageWidth == config.pageWidth &&
                 docxFontSize == config.docxFontSize &&
                 docxPageWidth == config.docxPageWidth &&
+                Objects.equals(defaultFormat, config.defaultFormat) &&
                 Objects.equals(docxFontFamily, config.docxFontFamily);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pageWidth, maxFret, docxFontFamily, docxFontSize, docxPageWidth);
+        return Objects.hash(maxFret, pageWidth, defaultFormat, docxFontFamily, docxFontSize, docxPageWidth);
     }
 }
