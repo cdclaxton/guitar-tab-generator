@@ -3,6 +3,7 @@ package com.github.cdclaxton.guitartabgenerator.pdftabwriter;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
@@ -30,6 +31,10 @@ public class DocxWriter {
 
         // Create a blank Word document
         XWPFDocument document = new XWPFDocument();
+
+        // Create styles
+        XWPFStyles styles = document.createStyles();
+        //styles.setSpellingLanguage("English");
 
         // Set the page margins
         CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
